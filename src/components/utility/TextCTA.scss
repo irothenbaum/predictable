@@ -1,0 +1,7 @@
+@use '../../styles/all';
+
+.text-cta {
+  @include all.hover-cta();
+  color: all.$blue;
+  text-decoration: underline;
+}

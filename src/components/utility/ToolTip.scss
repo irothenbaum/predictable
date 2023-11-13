@@ -1,0 +1,67 @@
+@use '../../styles/all';
+
+.tooltip {
+  position: relative;
+
+  .tooltip-label-container {
+    cursor: pointer;
+    position: absolute;
+    text-align: center;
+    display: flex;
+    overflow: visible;
+    align-items: center;
+    z-index: 2;
+
+    .tooltip-label {
+      cursor: pointer;
+      transition: all all.$transition;
+      position: relative;
+      display: inline-block;
+      padding: all.$spaceExtraSmall;
+      margin: 0 auto;
+      color: all.$white;
+      border-radius: all.$borderRadiusSmall;
+      background-color: all.$black;
+      font-size: all.$fontSize5;
+    }
+
+    @include all.medium-and-below {
+      // no tool tips on mobile
+      display: none !important;
+    }
+  }
+
+  &.anchor-bottom, &.anchor-top {
+    .tooltip-label-container {
+      left: 0;
+      width: 100%;
+    }
+  }
+
+  &.anchor-right, &.anchor-left {
+    .tooltip-label-container {
+      top: 10%;
+      height: 100%;
+    }
+  }
+
+  &.anchor-top {
+    .tooltip-label { bottom: -100%;}
+    &:hover,&.hovered { .tooltip-label { bottom: 0; } }
+  }
+
+  &.anchor-bottom {
+    .tooltip-label { top: -100%; }
+    &:hover,&.hovered { .tooltip-label { top: 0; } }
+  }
+
+  &.anchor-left {
+    .tooltip-label { right: -100%; }
+    &:hover,&.hovered { .tooltip-label { right: 0; } }
+  }
+
+  &.anchor-right {
+    .tooltip-label { left: -100%; }
+    &:hover,&.hovered { .tooltip-label { left: 0; } }
+  }
+}

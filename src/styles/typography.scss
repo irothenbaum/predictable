@@ -1,0 +1,14 @@
+$fontFamilyRegular: 'regular';
+
+@font-face {
+  font-family: $fontFamilyRegular;
+  src: url('/public/fonts/LASER.ttf');
+}
+
+$fontFamilyBody: 'arial', sans-serif;
+
+$fontSize1: 2.5rem;
+$fontSize2: 1.8rem;
+$fontSize3: 1.2rem;
+$fontSize4: 1rem;
+$fontSize5: 0.8rem;

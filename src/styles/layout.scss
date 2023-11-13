@@ -1,0 +1,63 @@
+$spaceExtraExtraLarge: 4rem;
+$spaceExtraLarge: 3rem;
+$spaceLarge: 2rem;
+$spaceMediumLarge: 1.5rem;
+$spaceMedium: 1rem;
+$spaceSmall: 0.5rem;
+$spaceExtraSmall: 0.25rem;
+$spaceExtraExtraSmall: 0.12rem;
+
+$screenSmallMin: 0px;
+$screenSmallMax: 600px;
+$screenMediumMin: 601px;
+$screenMediumMax: 1024px;
+$screenLargeMin: 1025px;
+$screenLargeMax: 1440px;
+
+$contentWidth: $screenLargeMax;
+
+$borderRadiusExtraLarge: 20px;
+$borderRadiusLarge: 10px;
+$borderRadiusMedium: 6px;
+$borderRadiusSmall: 4px;
+
+@mixin large-and-below {
+  @media screen and (max-width: $screenLargeMax) {
+    @content;
+  }
+}
+
+@mixin large-and-up {
+  @media screen and (min-width: $screenLargeMin) {
+    @content;
+  }
+}
+
+@mixin medium-and-up {
+  @media screen and (min-width: $screenMediumMin) {
+    @content;
+  }
+}
+
+@mixin medium-and-below {
+  @media screen and (max-width: $screenMediumMax) {
+    @content;
+  }
+}
+
+@mixin small-and-below {
+  @media screen and (max-width: $screenSmallMax) {
+    @content;
+  }
+}
+
+@mixin flex-row($breakPoint: $screenMediumMax) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+
+  @media screen and (max-width: $breakPoint) {
+    flex-direction: column;
+  }
+}

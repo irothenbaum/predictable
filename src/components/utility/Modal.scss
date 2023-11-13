@@ -1,0 +1,55 @@
+@use "../../styles/all";
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity all.$transition;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.open {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+    background-color: all.$shadow;
+    cursor: pointer;
+  }
+
+  .modal-content {
+    position: relative;
+    z-index: 11;
+    padding: all.$spaceMedium;
+    border-radius: all.$borderRadiusLarge;
+    background-color: all.$white;
+    @include all.shadow();
+
+    @include all.medium-and-up {
+      max-width: 80%;
+    }
+
+    .close-icon {
+      @include all.hover-cta();
+      font-size: all.$fontSize5;
+      position: absolute;
+      top: -1 * all.$spaceLarge;
+      padding: all.$spaceSmall;
+      right: 0;
+      color: all.$white;
+    }
+  }
+}

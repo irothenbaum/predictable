@@ -1,0 +1,49 @@
+/* primary */
+
+$black: #2c2a2d;
+$nearBlack: #49454b;
+$darkGrey: #7d7a7f;
+$grey: #a6a1a9;
+$lightGrey: #d9d0d2;
+$offWhite: #f5f0e4;
+$white: #fffcf3;
+
+$shadowExtraSoft: rgba($black, 0.10);
+$shadowSoft: rgba($black, 0.25);
+$shadow: rgba($black, 0.50);
+$shadowHard: rgba($black, 0.80);
+
+$sunbeamExtraSoft: rgba($white, 0.10);
+$sunbeamSoft: rgba($white, 0.25);
+$sunbeam: rgba($white, 0.50);
+$sunbeamHard: rgba($white, 0.80);
+
+
+$primaryColor: #00e6ff;
+$primaryColorDark: #009eaf;
+$primaryColorLight: #91f2ff;
+
+$secondaryColor: #ffa600;
+$secondaryColorDark: #b47600;
+$secondaryColorLight: #ffc35e;
+
+$greenColor: #00ff3c;
+$greenColorDark: #00a928;
+$greenColorLight: #8effa7;
+
+$redColor: #ff0062;
+$redColorDark: #b20048;
+$redColorLight: #ff6299;
+
+$copyColor: $black;
+$copyColorSoft: $shadowHard;
+$copyColorExtraSoft: $shadow;
+
+$ctaColor: $primaryColor;
+$ctaColorDark: $primaryColorDark;
+
+$ctaColorSecondary: $secondaryColor;
+$ctaColorSecondaryDark: $secondaryColorDark;
+
+$ctaColorTertiary: $greenColor;
+$ctaColorTertiaryDark: $greenColorDark;

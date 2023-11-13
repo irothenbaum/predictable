@@ -1,0 +1,127 @@
+@use './constants.scss';
+@use './layout.scss';
+@use './colors.scss';
+@use './typography.scss';
+
+@mixin hover-cta {
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity constants.$transition;
+  &:hover {
+    opacity: 0.9;
+  }
+  &:active {
+    opacity: 1;
+  }
+}
+
+@mixin ellipsis() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin link-text() {
+  text-decoration: underline;
+  color: colors.$secondaryColorDark;
+  cursor: pointer;
+  transition: color constants.$transition;
+
+  &:hover {
+    color: colors.$secondaryColor;
+  }
+}
+
+@mixin disable-text-selection() {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+@mixin shadow($amount: 10px, $color: colors.$shadowSoft) {
+  box-shadow: 0 0 $amount 0 $color;
+}
+
+@mixin candy-cane-background($deg: 135deg, $tintColor: colors.$shadowExtraSoft) {
+  background-image: linear-gradient(135deg,
+          transparent 0, transparent 10%,
+          $tintColor 10%, $tintColor 20%,
+          transparent 20%, transparent 30%,
+          $tintColor 30%, $tintColor 40%,
+          transparent 40%, transparent 50%,
+          $tintColor 50%, $tintColor 60%,
+          transparent 60%, transparent 70%,
+          $tintColor 70%, $tintColor 80%,
+          transparent 80%, transparent 90%,
+          $tintColor 90%, $tintColor 100%,
+  )
+}
+
+@mixin overlay-fill($bg: colors.$sunbeamHard) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $bg;
+  border-radius: layout.$borderRadiusMedium;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity constants.$transition;
+}
+
+@mixin square-icon($width: 42px) {
+  display: inline-block;
+  flex-shrink: 0;
+  height: $width;
+  width: $width;
+  text-align: center;
+  line-height: $width;
+  border-radius: layout.$borderRadiusSmall;
+  border: 1px solid colors.$lightGrey;
+  background-color: colors.$white;
+}
+
+@mixin input-box() {
+  line-height: 1.5em;
+  width: 100%;
+  border-radius: layout.$borderRadiusMedium;
+  border: 1px solid colors.$lightGrey;
+  padding: layout.$spaceSmall;
+  background-color: colors.$white;
+
+  &::placeholder {
+    color: colors.$grey;
+  }
+}
+
+@mixin piece($child, $mainColor: colors.$offWhite, $shadeColor: colors.$lightGrey, $textColor: colors.$black, $depth: 15px) {
+  border-radius: 8px;
+  background-color: $shadeColor;
+  @include shadow(3px, colors.$shadowSoft);
+  padding: 2px;
+
+  #{$child} {
+    height: calc(100% - $depth);
+    width: calc(100% - $depth);
+    display: flex;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: center;
+    font-size: typography.$fontSize3;
+
+    background-color: $mainColor;
+    color: $textColor;
+
+    @include layout.medium-and-below {
+      height: calc(100% - #{$depth / 2});
+      width: calc(100% - #{$depth / 2});
+    }
+
+    @include layout.small-and-below {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+}
