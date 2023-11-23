@@ -1,3 +1,6 @@
+import {v4 as uuid} from 'uuid'
+import {PieceType} from './constants'
+
 /**
  * @param {string|Object<string, boolean>} classes
  * @returns {string}
@@ -59,7 +62,11 @@ export async function sha256(message, iterations = 1) {
  * @return {Promise<Generator>} // next().value is a number between 0 and 99
  */
 export async function randomGenerator(seedStr) {
-  const shas = await Promise.all([sha256(seedStr), sha256(seedStr, 2), sha256(seedStr, 3)])
+  const shas = await Promise.all([
+    sha256(seedStr),
+    sha256(seedStr, 2),
+    sha256(seedStr, 3),
+  ])
   const b64Code = btoa(shas.join(','))
 
   function* generator() {
@@ -86,19 +93,31 @@ export function pluralize(word, count, includeCount = false) {
 }
 
 /**
- * @param {Square} s
+ * @param {Coordinate} s
  * @return {string}
  */
 export function getSquareKey(s) {
   return `${s.row}-${s.column}`
 }
 
-
 /**
- * @param {Square} s1
- * @param {Square} s2
+ * @param {Coordinate} s1
+ * @param {Coordinate} s2
  * @return {boolean}
  */
 export function isSameSquare(s1, s2) {
   return s1.row === s2.row && s1.column === s2.column
+}
+
+export function pieceDefinitionToPiece(p) {
+  return {
+    id: uuid(),
+    ...p,
+    isPlayer: p.type === PieceType.Player,
+    isHazard: p.type === PieceType.Hazard,
+    isObstacle: p.type === PieceType.Obstacle,
+    isPlatform: p.type === PieceType.Platform,
+    isCoin: p.type === PieceType.Coin,
+    isGoal: p.type === PieceType.Goal,
+  }
 }

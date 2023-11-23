@@ -3,21 +3,7 @@
 $squareDepth: 10px;
 $halfSquareDepth: $squareDepth / 2;
 
-:root {
-  --depth: #{$squareDepth};
-  --half-depth: #{$squareDepth / 2};
-}
-
-@include all.small-and-below {
-  :root {
-    --depth: #{$squareDepth / 2};
-    --half-depth: #{$squareDepth / 4};
-  }
-}
-
 .world {
-  box-shadow: var(--depth) var(--depth) 30px 0 all.$shadowSoft;
-
   position: relative;
 
   .world-click-listener, .world-pieces-container {
@@ -52,6 +38,14 @@ $halfSquareDepth: $squareDepth / 2;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+
+    &:last-child {
+      .world-square {
+        &:after {
+         border-bottom: 1px solid all.$sunbeamSoft;
+        }
+      }
+    }
   }
 
   .world-square {
@@ -59,18 +53,9 @@ $halfSquareDepth: $squareDepth / 2;
     position: relative;
     background-color: all.$black;
 
-    .world-square-coords {
-      position: absolute;
-      bottom: all.$spaceSmall;
-      left: all.$spaceSmall;
-      color: all.$sunbeam;
-      font-size: all.$fontSize5;
-      z-index: 10;
-
-      @include all.medium-and-below {
-        bottom: all.$spaceExtraSmall;
-        left: all.$spaceExtraSmall;
-        font-size: 0.6rem;
+    &:first-child {
+      &:after {
+        border-left: 1px solid all.$sunbeamSoft;
       }
     }
 
@@ -83,6 +68,8 @@ $halfSquareDepth: $squareDepth / 2;
       left: 0;
       background-color: inherit;
       border: 1px solid all.$sunbeamSoft;
+      border-bottom: 0;
+      border-left: 0;
     }
   }
 }

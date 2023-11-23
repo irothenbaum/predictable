@@ -1,14 +1,16 @@
-import React from 'react'
-import SessionContext from '../contexts/SessionContext.js'
+import React, {useState} from 'react'
+import GameContext from '../contexts/GameContext.js'
 import Level from './gameplay/Level'
+import PropTypes from 'prop-types'
+import {LEVEL_TUTORIAL} from '../levels'
 
 function PredictableGame(props) {
   return (
-    <SessionContext.Provider value={{}}>
+    <GameContext.Provider value={{}}>
       <div className="predictable-game">
-        <Level />
+        <Level level={LEVEL_TUTORIAL} />
       </div>
-    </SessionContext.Provider>
+    </GameContext.Provider>
   )
 }
 

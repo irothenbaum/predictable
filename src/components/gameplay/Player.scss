@@ -1,9 +1,5 @@
 @use "../../styles/all";
 
 .player {
-  padding: all.$spaceSmall;
 
-  img {
-    filter: invert(72%) sepia(35%) saturate(3345%) hue-rotate(139deg) brightness(101%) contrast(107%);
-  }
 }

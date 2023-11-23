@@ -18,15 +18,11 @@ function Square(props) {
         black: props.isBlack,
         bounce: props.bounce,
       })}
-      style={props.style}>
-      <div className="world-square-depth" />
-      <div className="world-square-coords">{props.label}</div>
-    </div>
+      style={props.style}></div>
   )
 }
 
 Square.propTypes = {
-  label: PropTypes.string,
   isBlack: PropTypes.bool,
   bounce: PropTypes.bool,
   style: PropTypes.object,
@@ -42,7 +38,7 @@ function World(props) {
   const {setTimer, cancelAllTimers} = useDoOnceTimer()
 
   /**
-   * @param {Square} square
+   * @param {Coordinate} square
    */
   function animateSquare(square) {
     const squareKey = getSquareKey(square)
@@ -80,40 +76,32 @@ function World(props) {
 
   return (
     <div className={constructClassString('world', props.className)}>
-      {Array(props.dimension)
-        .fill(null)
-        .map((_, row) => {
-          return (
-            <div key={`${row}-row`} className="world-row">
-              {Array(props.dimension)
-                .fill(null)
-                .map((_, column) => {
-                  const squareKey = getSquareKey({row, column})
-                  const firstColumn = column === 0
-                  const lastRow = row === props.dimension - 1
-                  let label = ''
-                  if (lastRow) {
-                    label = String.fromCharCode(65 + column)
-                  }
-                  if (firstColumn) {
-                    label += props.dimension - row
-                  }
-                  return (
-                    <Square
-                      key={`${squareKey}-square`}
-                      isBlack={(row + column) % 2 === 1}
-                      bounce={interactedSquares[squareKey]}
-                      style={{paddingTop: relativeDimensionPercentage}}
-                      label={label}
-                    />
-                  )
-                })}
-            </div>
-          )
-        })}
+      <div>
+        {Array(props.dimension)
+          .fill(null)
+          .map((_, row) => {
+            return (
+              <div key={`${row}-row`} className="world-row">
+                {Array(props.dimension)
+                  .fill(null)
+                  .map((_, column) => {
+                    const squareKey = getSquareKey({row, column})
+                    return (
+                      <Square
+                        key={`${squareKey}-square`}
+                        isBlack={(row + column) % 2 === 1}
+                        bounce={interactedSquares[squareKey]}
+                        style={{paddingTop: relativeDimensionPercentage}}
+                      />
+                    )
+                  })}
+              </div>
+            )
+          })}
+      </div>
       <div className="world-pieces-container">
         {props.pieces.map(piece => {
-          const squareKey = getSquareKey(piece)
+          const squareKey = getSquareKey(piece.position)
           return (
             <div
               className={constructClassString('world-piece-container', {
@@ -218,6 +206,7 @@ const BoardEventListener = memo(props => {
 
 BoardEventListener.propTypes = {
   onClickSquare: PropTypes.func,
+  onHoverSquare: PropTypes.func,
   dimension: PropTypes.number,
 }
 
@@ -238,7 +227,7 @@ function getRelativePosition(e) {
 /**
  * @param {*} e
  * @param {number} squareSize
- * @return {Square}
+ * @return {Coordinate}
  */
 function getSquarePosition(e, squareSize) {
   const {x, y} = getRelativePosition(e)
