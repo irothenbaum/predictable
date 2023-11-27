@@ -6,36 +6,59 @@ import {PieceType} from '../../lib/constants'
 import Player from './Player'
 import useLevelControl from '../../hooks/useLevelControl'
 import PropTypes from 'prop-types'
-import GameLevels from '../../levels'
-import {pieceDefinitionToPiece} from '../../lib/utilities'
+import {instantiateLevelPieces, LevelData} from '../../levels'
+import Scrollable from '../utility/Scrollable'
+import Hazard from './Hazard'
+
+const typeToComponentMap = {
+  [PieceType.Player]: Player,
+  [PieceType.Hazard]: Hazard,
+}
 
 /**
  * @param {Piece} piece
  */
 function renderPiece(piece) {
-  switch (piece.type) {
-    case PieceType.Player:
-      return <Player piece={piece} />
+  const Component = typeToComponentMap[piece.type]
 
-    default:
-      return null
+  if (Component) {
+    return <Component piece={piece} />
+  } else {
+    console.warn(`Unknown piece type "${piece.type}"`)
+    return null
   }
 }
 
 function LevelInner(props) {
-  const {pieces, moves} = useContext(LevelContext)
-
+  const [worldHeight, setWorldHeight] = useState(0)
+  const {pieces, moves, gameBoard} = useContext(LevelContext)
   // call playMoves to submit the moves
   const {playMoves} = useLevelControl({})
-
   return (
     <div className="level">
       <div className="world-container">
-        <World renderPiece={renderPiece} pieces={pieces} dimension={8} />
+        <Scrollable height={worldHeight}>
+          <World
+            renderPiece={renderPiece}
+            pieces={pieces}
+            dimensionX={gameBoard.width}
+            dimensionY={gameBoard.height}
+            onRenderWorld={board => {
+              setWorldHeight(board.height)
+            }}
+          />
+        </Scrollable>
       </div>
     </div>
   )
 }
+
+LevelInner.propTypes = {
+  onWin: PropTypes.func.isRequired,
+  onLose: PropTypes.func.isRequired,
+}
+
+// --------------------------------------------------------------------------------
 
 function Level(props) {
   const [pieces, setPieces] = useState([])
@@ -43,13 +66,13 @@ function Level(props) {
   const [gameBoard, setGameBoard] = useState(HydratedLevel.gameBoard)
 
   useEffect(() => {
-    if (!props.level || !GameLevels[props.level]) {
+    if (!props.level || !LevelData[props.level]) {
       return
     }
 
     setMoves([])
-    setPieces(GameLevels[props.level].pieces.map(pieceDefinitionToPiece))
-    setGameBoard(GameLevels[props.level].gameBoard)
+    setPieces(instantiateLevelPieces(props.level))
+    setGameBoard(LevelData[props.level].gameBoard)
   }, [])
 
   return (
@@ -72,13 +95,15 @@ function Level(props) {
           setMoves(newMoves)
         },
       }}>
-      <LevelInner />
+      <LevelInner onWin={props.onWin} onLose={props.onLose} />
     </LevelContext.Provider>
   )
 }
 
 Level.propTypes = {
   level: PropTypes.string.isRequired,
+  onWin: PropTypes.func.isRequired,
+  onLose: PropTypes.func.isRequired,
 }
 
 export default Level

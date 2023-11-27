@@ -11,3 +11,7 @@ export const PieceType = {
   Coin: 'coin',
   Goal: 'goal',
 }
+
+export const VARIANT_LEFT_END = 'left-end'
+export const VARIANT_RIGHT_END = 'right-end'
+export const VARIANT_MIDDLE = 'middle'

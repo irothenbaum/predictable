@@ -108,16 +108,3 @@ export function getSquareKey(s) {
 export function isSameSquare(s1, s2) {
   return s1.row === s2.row && s1.column === s2.column
 }
-
-export function pieceDefinitionToPiece(p) {
-  return {
-    id: uuid(),
-    ...p,
-    isPlayer: p.type === PieceType.Player,
-    isHazard: p.type === PieceType.Hazard,
-    isObstacle: p.type === PieceType.Obstacle,
-    isPlatform: p.type === PieceType.Platform,
-    isCoin: p.type === PieceType.Coin,
-    isGoal: p.type === PieceType.Goal,
-  }
-}

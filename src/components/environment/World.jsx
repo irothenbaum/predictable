@@ -32,8 +32,10 @@ Square.propTypes = {
 
 function World(props) {
   // by dividing width by number of pieces we determine the percentage width/height of each square to the board
-  const relativeDimensionRatio = Math.round(10000 / props.dimension) / 100
-  const relativeDimensionPercentage = `${relativeDimensionRatio}%`
+  const relativeWidthRatio = Math.round(10000 / props.dimensionX) / 100
+  const relativeHeightRatio = Math.round(10000 / props.dimensionY) / 100
+  const relativeWidthPercentage = `${relativeWidthRatio}%`
+  const relativeHeightPercentage = `${relativeHeightRatio}%`
   const [interactedSquares, setInteractedSquares] = useState({})
   const {setTimer, cancelAllTimers} = useDoOnceTimer()
 
@@ -75,14 +77,20 @@ function World(props) {
   )
 
   return (
-    <div className={constructClassString('world', props.className)}>
+    <div
+      className={constructClassString('world', props.className)}
+      ref={r => {
+        if (r && r.clientHeight > 0) {
+          props.onRenderWorld({height: r.clientHeight})
+        }
+      }}>
       <div>
-        {Array(props.dimension)
+        {Array(props.dimensionY)
           .fill(null)
           .map((_, row) => {
             return (
               <div key={`${row}-row`} className="world-row">
-                {Array(props.dimension)
+                {Array(props.dimensionX)
                   .fill(null)
                   .map((_, column) => {
                     const squareKey = getSquareKey({row, column})
@@ -91,7 +99,7 @@ function World(props) {
                         key={`${squareKey}-square`}
                         isBlack={(row + column) % 2 === 1}
                         bounce={interactedSquares[squareKey]}
-                        style={{paddingTop: relativeDimensionPercentage}}
+                        style={{paddingTop: relativeWidthPercentage}} // we want the square to be a square by setting paddingTop to the same as width
                       />
                     )
                   })}
@@ -109,10 +117,10 @@ function World(props) {
               })}
               key={piece.id}
               style={{
-                top: `${relativeDimensionRatio * piece.position.row}%`,
-                left: `${relativeDimensionRatio * piece.position.column}%`,
-                width: relativeDimensionPercentage,
-                height: relativeDimensionPercentage,
+                top: `${relativeHeightRatio * piece.position.row}%`,
+                left: `${relativeWidthRatio * piece.position.column}%`,
+                width: relativeWidthPercentage,
+                height: relativeHeightPercentage,
               }}>
               {props.renderPiece(piece)}
             </div>
@@ -121,7 +129,7 @@ function World(props) {
       </div>
 
       <BoardEventListener
-        dimension={props.dimension}
+        horizontalSquareCount={props.dimensionX}
         onClickSquare={handleClickSquare}
         onHoverSquare={handleHoverSquare}
       />
@@ -131,7 +139,8 @@ function World(props) {
 
 World.propTypes = {
   renderPiece: PropTypes.func.isRequired,
-  dimension: PropTypes.number,
+  dimensionX: PropTypes.number,
+  dimensionY: PropTypes.number,
   pieces: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -142,6 +151,7 @@ World.propTypes = {
       }).isRequired,
     }),
   ),
+  onRenderWorld: PropTypes.func,
   onClickSquare: PropTypes.func,
   onPlacePiece: PropTypes.func,
   onHoverSquare: PropTypes.func,
@@ -187,12 +197,13 @@ const BoardEventListener = memo(props => {
     }
 
     const resizeObserver = new ResizeObserver(() => {
-      squareSize.current = boardRef.current.clientWidth / props.dimension
+      squareSize.current =
+        boardRef.current.clientWidth / props.horizontalSquareCount
     })
     resizeObserver.observe(boardRef.current)
 
     return () => resizeObserver.disconnect()
-  }, [props.dimension])
+  }, [props.horizontalSquareCount])
 
   return (
     <div
@@ -207,7 +218,7 @@ const BoardEventListener = memo(props => {
 BoardEventListener.propTypes = {
   onClickSquare: PropTypes.func,
   onHoverSquare: PropTypes.func,
-  dimension: PropTypes.number,
+  horizontalSquareCount: PropTypes.number,
 }
 
 // --------------------------------------------------------------------------------
