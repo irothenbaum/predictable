@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import './Button.scss'
-import {constructClassString} from '../../utilities'
+import {constructClassString} from '../../lib/utilities'
 
 export const VARIANT_PRIMARY = 'primary'
 export const VARIANT_SECONDARY = 'secondary'

@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 export const BOARD_SIZE = 8
 
 /**
@@ -12,6 +14,25 @@ export const PieceType = {
   Goal: 'goal',
 }
 
-export const VARIANT_LEFT_END = 'left-end'
-export const VARIANT_RIGHT_END = 'right-end'
-export const VARIANT_MIDDLE = 'middle'
+/**
+ * @enum {string}
+ */
+export const Variant = {
+  LeftEnd: 'left-end',
+  RightEnd: 'right-end',
+  Middle: 'middle',
+}
+
+export const PiecePropType = {
+  piece: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    position: PropTypes.shape({
+      row: PropTypes.number,
+      column: PropTypes.number,
+    }).isRequired,
+    velocity: PropTypes.shape({
+      rowChange: PropTypes.number,
+      columnChange: PropTypes.number,
+    }),
+  }).isRequired,
+}

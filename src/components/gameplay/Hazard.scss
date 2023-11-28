@@ -1,20 +1,7 @@
 @use "../../styles/all";
 
 .hazard {
-  background-color: all.$secondaryColorDark;
   height: 4em;
-  border-radius: 2em;
   width: 100%;
-  z-index: 2;
-  transform: translateY(0.5em);
-
-  &:after {
-    content: "";
-    display: block;
-    background-color: all.$secondaryColorLight;
-    border-radius: 2em;
-    width: 100%;
-    height: 100%;
-    transform: translateY(-1em);
-  }
+  @include all.depth('.hazard-inner', all.$hazardColor, all.$hazardColorDark);
 }

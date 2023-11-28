@@ -1,19 +1,19 @@
 import React from 'react'
-import './Hazard.scss'
+import './Obstacle.scss'
 import PropTypes from 'prop-types'
 import {constructClassString} from '../../lib/utilities'
 import VelocityIndicator from './VelocityIndicator'
 import {PiecePropType} from '../../lib/constants'
-function Hazard(props) {
+function Obstacle(props) {
   return (
-    <div className={constructClassString('hazard', props.piece.variant)}>
-      <div className="hazard-inner">
+    <div className={constructClassString('obstacle', props.piece.variant)}>
+      <div className="obstacle-inner">
         <VelocityIndicator velocity={props.piece.velocity} />
       </div>
     </div>
   )
 }
 
-Hazard.propTypes = PiecePropType
+Obstacle.propTypes = PiecePropType
 
-export default Hazard
+export default Obstacle

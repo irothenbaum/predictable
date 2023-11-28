@@ -1,0 +1,17 @@
+@use "../../styles/all";
+
+.velocity-indicator {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .magnitude {
+    font-size: all.$fontSize2;
+    color: all.$white;
+    margin: 0 all.$spaceSmall;
+    text-shadow: 0 3px 0 all.$shadow;
+    position: relative;
+  }
+}

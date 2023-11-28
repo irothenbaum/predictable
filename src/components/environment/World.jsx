@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import useDoOnceTimer from '../../hooks/useDoOnceTimer'
 import {
   constructClassString,
-  getSquareKey,
+  getCoordinateKey,
   isSameSquare,
 } from '../../lib/utilities'
 import {BOARD_SIZE} from '../../lib/constants'
@@ -43,7 +43,7 @@ function World(props) {
    * @param {Coordinate} square
    */
   function animateSquare(square) {
-    const squareKey = getSquareKey(square)
+    const squareKey = getCoordinateKey(square)
     setInteractedSquares(iS => ({...iS, [squareKey]: true}))
     setTimer(
       `animate-${squareKey}`,
@@ -93,7 +93,7 @@ function World(props) {
                 {Array(props.dimensionX)
                   .fill(null)
                   .map((_, column) => {
-                    const squareKey = getSquareKey({row, column})
+                    const squareKey = getCoordinateKey({row, column})
                     return (
                       <Square
                         key={`${squareKey}-square`}
@@ -109,7 +109,7 @@ function World(props) {
       </div>
       <div className="world-pieces-container">
         {props.pieces.map(piece => {
-          const squareKey = getSquareKey(piece.position)
+          const squareKey = getCoordinateKey(piece.position)
           return (
             <div
               className={constructClassString('world-piece-container', {
@@ -128,11 +128,11 @@ function World(props) {
         })}
       </div>
 
-      <BoardEventListener
-        horizontalSquareCount={props.dimensionX}
-        onClickSquare={handleClickSquare}
-        onHoverSquare={handleHoverSquare}
-      />
+      {/*<BoardEventListener*/}
+      {/*  horizontalSquareCount={props.dimensionX}*/}
+      {/*  onClickSquare={handleClickSquare}*/}
+      {/*  onHoverSquare={handleHoverSquare}*/}
+      {/*/>*/}
     </div>
   )
 }

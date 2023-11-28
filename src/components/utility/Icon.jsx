@@ -43,7 +43,7 @@ import {
   faInfinity,
 } from '@fortawesome/free-solid-svg-icons'
 import {faCircle, faSquare} from '@fortawesome/free-regular-svg-icons'
-import {constructClassString} from '../../utilities'
+import {constructClassString} from '../../lib/utilities'
 
 export const CHEVRON_LEFT = faChevronLeft
 export const CHEVRON_RIGHT = faChevronRight

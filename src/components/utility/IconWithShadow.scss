@@ -1,0 +1,17 @@
+@use "../../styles/all";
+
+.icon-with-shadow {
+  position: relative;
+
+  .icon-container {
+    font-size: all.$fontSize2;
+    color: all.$white;
+    position: absolute;
+    z-index: 3;
+
+    &.shadow {
+      color: all.$shadow;
+      position: static;
+    }
+  }
+}

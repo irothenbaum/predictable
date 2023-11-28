@@ -96,7 +96,7 @@ export function pluralize(word, count, includeCount = false) {
  * @param {Coordinate} s
  * @return {string}
  */
-export function getSquareKey(s) {
+export function getCoordinateKey(s) {
   return `${s.row}-${s.column}`
 }
 

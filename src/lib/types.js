@@ -11,6 +11,18 @@
  * @property {Board} gameBoard
  */
 
+/**
+ * @typedef {Object} LevelDefinition
+ * @property {Board} gameBoard
+ * @property {Array<PieceDefinition>} pieces
+ */
+
+/**
+ * This is used in the level.json files as a shorthand for piece + positions
+ * @typedef {Coordinate & Velocity} PieceDefinition
+ * @property {PieceType} type
+ */
+
 // -----------------------------------------------------------------
 // GAME
 
@@ -37,50 +49,47 @@
  * @property {string} id
  * @property {PieceType} type
  * @property {Coordinate} position
+ * @property {Velocity} velocity
+ * @property {Variant?} variant
  */
 
 /**
- * @typedef {Piece} AbstractPiece
- * @property {boolean?} isPlayer
- * @property {boolean?} isHazard
- * @property {boolean?} isObstacle
- * @property {boolean?} isPlatform
- * @property {boolean?} isCoin
- * @property {boolean?} isGoal
- * @property {Velocity?} velocity
- */
-
-/**
- * @typedef {AbstractPiece} Player
+ * @typedef {Piece} Player
  * @property {boolean} isPlayer
  */
 
 /**
  * If the player lands on this, it dies
- * @typedef {AbstractPiece} Hazard
+ * @typedef {Piece} Hazard
  * @property {boolean} isHazard
  */
 
 /**
  * The player cannot land on this (move will be ignored)
- * @typedef {AbstractPiece} Obstacle
+ * @typedef {Piece} Obstacle
  * @property {boolean} isObstacle
  */
 
 /**
  * If the player lands on this, it will move the player in the direction of the platform velocity
- * @typedef {AbstractPiece} Platform
+ * @typedef {Piece} Platform
  * @property {boolean} isPlatform
  */
 
 /**
- * @typedef {AbstractPiece} Coin
+ * If the player lands on this, it will be collected and the score will increase
+ * @typedef {Piece} Coin
  * @property {boolean} isCoin
  * @property {number} value
  * @property {boolean} isCollected
  */
 
 /**
- * @typedef {AbstractPiece} Goal
+ * If the player lands on this, the level is complete
+ * @typedef {Piece} Goal
  * @property {boolean} isGoal
+ */
+
+/**
+ * @typedef {Player & Hazard & Obstacle & Platform & Coin & Goal} AbstractPiece
  */

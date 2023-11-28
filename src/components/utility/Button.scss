@@ -19,11 +19,11 @@ $shiftAmount: 3px;
     }
   }
 
-  &,button {
+  &, button {
     transition: all all.$transition;
   }
 
-  @include all.piece('button', all.$ctaColor, all.$ctaColorDark, all.$white);
+  @include all.button('button', all.$ctaColor, all.$ctaColorDark, all.$white);
 
   &.secondary {
     background-color: all.$ctaColorSecondaryDark;

@@ -1,0 +1,7 @@
+@use "../../styles/all";
+
+.obstacle {
+  height: 4em;
+  width: 100%;
+  @include all.depth('.obstacle-inner', all.$obstacleColor, all.$obstacleColorDark);
+}

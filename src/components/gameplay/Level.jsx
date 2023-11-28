@@ -3,16 +3,21 @@ import './Level.scss'
 import LevelContext, {HydratedLevel} from '../../contexts/LevelContext.js'
 import World from '../environment/World.jsx'
 import {PieceType} from '../../lib/constants'
-import Player from './Player'
 import useLevelControl from '../../hooks/useLevelControl'
 import PropTypes from 'prop-types'
 import {instantiateLevelPieces, LevelData} from '../../levels'
 import Scrollable from '../utility/Scrollable'
+
+import Player from './Player'
 import Hazard from './Hazard'
+import Obstacle from './Obstacle'
+import Platform from './Platform'
 
 const typeToComponentMap = {
   [PieceType.Player]: Player,
   [PieceType.Hazard]: Hazard,
+  [PieceType.Obstacle]: Obstacle,
+  [PieceType.Platform]: Platform,
 }
 
 /**
@@ -31,13 +36,20 @@ function renderPiece(piece) {
 
 function LevelInner(props) {
   const [worldHeight, setWorldHeight] = useState(0)
+  const [containerHeight, setContainerHeight] = useState(0)
   const {pieces, moves, gameBoard} = useContext(LevelContext)
   // call playMoves to submit the moves
   const {playMoves} = useLevelControl({})
   return (
     <div className="level">
-      <div className="world-container">
-        <Scrollable height={worldHeight}>
+      <div
+        className="world-container"
+        ref={r => {
+          if (r && r.clientHeight > 0) {
+            setContainerHeight(r.clientHeight)
+          }
+        }}>
+        <Scrollable height={worldHeight} viewHeight={containerHeight}>
           <World
             renderPiece={renderPiece}
             pieces={pieces}
