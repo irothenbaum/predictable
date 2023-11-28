@@ -95,7 +95,7 @@
   }
 }
 
-@mixin depth($child, $mainColor: colors.$offWhite, $shadeColor: colors.$lightGrey, $depth: 1em) {
+@mixin depth($child, $mainColor: colors.$offWhite, $shadeColor: colors.$lightGrey, $depth: 0.8em) {
   background-color: $shadeColor;
   border-radius: layout.$borderRadiusLarge;
   z-index: 2;
@@ -123,6 +123,13 @@
       border-bottom-left-radius: 0;
       border-top-left-radius: 0;
     }
+  }
+
+  &.left-end {
+    margin-left: 0.4em;
+  }
+  &.right-end {
+    margin-right: 0.4em;
   }
 }
 

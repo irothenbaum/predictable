@@ -3,9 +3,6 @@
 $transitionSpeed: 0.2s;
 $transition: $transitionSpeed ease-in-out;
 
-$shadowSmall: 0 0 4px -2px colors.$black;
-$shadowLarge: 0 0 12px -8px colors.$black;
-
-@function neg($val) {
-  @return $val * -1
-}
+// these should match the em scale in constants.js
+$squareSizeEmScale: 5;
+$squareSize: #{$squareSizeEmScale}em;

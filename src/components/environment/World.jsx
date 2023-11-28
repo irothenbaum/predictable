@@ -1,12 +1,7 @@
-import React, {memo, useCallback, useEffect, useRef, useState} from 'react'
+import React from 'react'
 import './World.scss'
 import PropTypes from 'prop-types'
-import useDoOnceTimer from '../../hooks/useDoOnceTimer'
-import {
-  constructClassString,
-  getCoordinateKey,
-  isSameSquare,
-} from '../../lib/utilities'
+import {constructClassString, getCoordinateKey} from '../../lib/utilities'
 import {BOARD_SIZE} from '../../lib/constants'
 
 // --------------------------------------------------------------------------------
@@ -36,45 +31,6 @@ function World(props) {
   const relativeHeightRatio = Math.round(10000 / props.dimensionY) / 100
   const relativeWidthPercentage = `${relativeWidthRatio}%`
   const relativeHeightPercentage = `${relativeHeightRatio}%`
-  const [interactedSquares, setInteractedSquares] = useState({})
-  const {setTimer, cancelAllTimers} = useDoOnceTimer()
-
-  /**
-   * @param {Coordinate} square
-   */
-  function animateSquare(square) {
-    const squareKey = getCoordinateKey(square)
-    setInteractedSquares(iS => ({...iS, [squareKey]: true}))
-    setTimer(
-      `animate-${squareKey}`,
-      () => {
-        setInteractedSquares(iS => {
-          const copy = {...iS}
-          delete copy[squareKey]
-          return copy
-        })
-      },
-      500,
-    )
-  }
-
-  const handleClickSquare = useCallback(
-    square => {
-      if (typeof props.onClickSquare === 'function') {
-        props.onClickSquare(square)
-      }
-    },
-    [props.onClickSquare],
-  )
-
-  const handleHoverSquare = useCallback(
-    square => {
-      if (typeof props.onHoverSquare === 'function') {
-        props.onHoverSquare(square)
-      }
-    },
-    [props.onHoverSquare],
-  )
 
   return (
     <div
@@ -98,7 +54,6 @@ function World(props) {
                       <Square
                         key={`${squareKey}-square`}
                         isBlack={(row + column) % 2 === 1}
-                        bounce={interactedSquares[squareKey]}
                         style={{paddingTop: relativeWidthPercentage}} // we want the square to be a square by setting paddingTop to the same as width
                       />
                     )
@@ -109,12 +64,9 @@ function World(props) {
       </div>
       <div className="world-pieces-container">
         {props.pieces.map(piece => {
-          const squareKey = getCoordinateKey(piece.position)
           return (
             <div
-              className={constructClassString('world-piece-container', {
-                bounce: interactedSquares[squareKey],
-              })}
+              className="world-piece-container"
               key={piece.id}
               style={{
                 top: `${relativeHeightRatio * piece.position.row}%`,
@@ -127,12 +79,6 @@ function World(props) {
           )
         })}
       </div>
-
-      {/*<BoardEventListener*/}
-      {/*  horizontalSquareCount={props.dimensionX}*/}
-      {/*  onClickSquare={handleClickSquare}*/}
-      {/*  onHoverSquare={handleHoverSquare}*/}
-      {/*/>*/}
     </div>
   )
 }
@@ -163,87 +109,3 @@ World.defaultProps = {
 }
 
 export default World
-
-// --------------------------------------------------------------------------------
-
-const BoardEventListener = memo(props => {
-  const squareSize = useRef(0)
-  const boardRef = useRef(null)
-  const lastHoveredSquare = useRef(null)
-
-  const handlePress = e => {
-    const thisSquare = getSquarePosition(e, squareSize.current)
-    if (typeof props.onClickSquare === 'function') {
-      props.onClickSquare(thisSquare)
-    }
-  }
-
-  const handleMove = e => {
-    const thisSquare = getSquarePosition(e, squareSize.current)
-    if (
-      !lastHoveredSquare.current ||
-      !isSameSquare(lastHoveredSquare.current, thisSquare)
-    ) {
-      lastHoveredSquare.current = thisSquare
-      if (typeof props.onHoverSquare === 'function') {
-        props.onHoverSquare(lastHoveredSquare.current)
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (!boardRef.current) {
-      return
-    }
-
-    const resizeObserver = new ResizeObserver(() => {
-      squareSize.current =
-        boardRef.current.clientWidth / props.horizontalSquareCount
-    })
-    resizeObserver.observe(boardRef.current)
-
-    return () => resizeObserver.disconnect()
-  }, [props.horizontalSquareCount])
-
-  return (
-    <div
-      className="world-click-listener"
-      onClick={handlePress}
-      onMouseMove={handleMove}
-      ref={boardRef}
-    />
-  )
-})
-
-BoardEventListener.propTypes = {
-  onClickSquare: PropTypes.func,
-  onHoverSquare: PropTypes.func,
-  horizontalSquareCount: PropTypes.number,
-}
-
-// --------------------------------------------------------------------------------
-// UTILITY FUNCTIONS
-
-/**
- * @param {*} e
- * @return {{x: number, y: number}}
- */
-function getRelativePosition(e) {
-  return {
-    x: e.nativeEvent.offsetX,
-    y: e.nativeEvent.offsetY,
-  }
-}
-
-/**
- * @param {*} e
- * @param {number} squareSize
- * @return {Coordinate}
- */
-function getSquarePosition(e, squareSize) {
-  const {x, y} = getRelativePosition(e)
-  return {
-    row: Math.floor(y / squareSize),
-    column: Math.floor(x / squareSize),
-  }
-}

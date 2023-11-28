@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import './Level.scss'
 import LevelContext, {HydratedLevel} from '../../contexts/LevelContext.js'
 import World from '../environment/World.jsx'
-import {PieceType} from '../../lib/constants'
+import {PieceType, squareSizeEmScale} from '../../lib/constants'
 import useLevelControl from '../../hooks/useLevelControl'
 import PropTypes from 'prop-types'
 import {instantiateLevelPieces, LevelData} from '../../levels'
@@ -44,6 +44,9 @@ function LevelInner(props) {
     <div className="level">
       <div
         className="world-container"
+        style={{
+          width: `${gameBoard.width * squareSizeEmScale}em`,
+        }}
         ref={r => {
           if (r && r.clientHeight > 0) {
             setContainerHeight(r.clientHeight)

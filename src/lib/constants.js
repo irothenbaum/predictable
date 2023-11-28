@@ -36,3 +36,6 @@ export const PiecePropType = {
     }),
   }).isRequired,
 }
+
+// TODO: Maybe 1 square size should be set the 1rem size?
+export const squareSizeEmScale = 5
