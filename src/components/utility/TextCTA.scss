@@ -2,6 +2,6 @@
 
 .text-cta {
   @include all.hover-cta();
-  color: all.$blue;
+  color: all.$primaryColor;
   text-decoration: underline;
 }

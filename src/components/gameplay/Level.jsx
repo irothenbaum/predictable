@@ -2,22 +2,25 @@ import React, {useContext, useEffect, useState} from 'react'
 import './Level.scss'
 import LevelContext, {HydratedLevel} from '../../contexts/LevelContext.js'
 import World from '../environment/World.jsx'
-import {PieceType, squareSizeEmScale} from '../../lib/constants'
+import {PieceType, squareSizeRemScale} from '../../lib/constants'
 import useLevelControl from '../../hooks/useLevelControl'
 import PropTypes from 'prop-types'
 import {instantiateLevelPieces, LevelData} from '../../levels'
 import Scrollable from '../utility/Scrollable'
 
-import Player from './Player'
-import Hazard from './Hazard'
-import Obstacle from './Obstacle'
-import Platform from './Platform'
+import Player from '../environment/Player'
+import Hazard from '../environment/Hazard'
+import Obstacle from '../environment/Obstacle'
+import Platform from '../environment/Platform'
+import MovesInput from './MovesInput'
+import MoveShadow from '../environment/MoveShadow'
 
 const typeToComponentMap = {
   [PieceType.Player]: Player,
   [PieceType.Hazard]: Hazard,
   [PieceType.Obstacle]: Obstacle,
   [PieceType.Platform]: Platform,
+  [PieceType.MoveShadow]: MoveShadow,
 }
 
 /**
@@ -37,15 +40,13 @@ function renderPiece(piece) {
 function LevelInner(props) {
   const [worldHeight, setWorldHeight] = useState(0)
   const [containerHeight, setContainerHeight] = useState(0)
-  const {pieces, moves, gameBoard} = useContext(LevelContext)
-  // call playMoves to submit the moves
-  const {playMoves} = useLevelControl({})
+  const {pieces, gameBoard} = useContext(LevelContext)
   return (
     <div className="level">
       <div
         className="world-container"
         style={{
-          width: `${gameBoard.width * squareSizeEmScale}em`,
+          width: `${gameBoard.width * squareSizeRemScale}rem`,
         }}
         ref={r => {
           if (r && r.clientHeight > 0) {
@@ -68,10 +69,7 @@ function LevelInner(props) {
   )
 }
 
-LevelInner.propTypes = {
-  onWin: PropTypes.func.isRequired,
-  onLose: PropTypes.func.isRequired,
-}
+LevelInner.propTypes = {}
 
 // --------------------------------------------------------------------------------
 
@@ -88,7 +86,7 @@ function Level(props) {
     setMoves([])
     setPieces(instantiateLevelPieces(props.level))
     setGameBoard(LevelData[props.level].gameBoard)
-  }, [])
+  }, [props.level])
 
   return (
     <LevelContext.Provider
@@ -97,6 +95,7 @@ function Level(props) {
         moves,
         gameBoard,
         setPieces,
+        playerPiece: pieces.find(p => p.isPlayer),
 
         queueMove: move => {
           setMoves([...moves, move])
@@ -110,7 +109,8 @@ function Level(props) {
           setMoves(newMoves)
         },
       }}>
-      <LevelInner onWin={props.onWin} onLose={props.onLose} />
+      <LevelInner />
+      <MovesInput onWin={props.onWin} onLose={props.onLose} />
     </LevelContext.Provider>
   )
 }

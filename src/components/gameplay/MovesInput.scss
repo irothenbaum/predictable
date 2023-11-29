@@ -1,0 +1,33 @@
+@use '../../styles/all';
+
+.moves-input-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+
+  .moves-input-buttons {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-size: all.$fontSize1;
+
+    .icon-with-shadow {
+      padding: all.$spaceSmall;
+      margin: all.$spaceSmall;
+    }
+  }
+
+  .moves-queue {
+    font-size: all.$fontSize3;
+    .icon-with-shadow {
+      display: inline-block;
+      color: all.$ctaColor;
+      padding: all.$spaceExtraSmall;
+    }
+  }
+}

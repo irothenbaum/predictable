@@ -1,6 +1,3 @@
-import {v4 as uuid} from 'uuid'
-import {PieceType} from './constants'
-
 /**
  * @param {string|Object<string, boolean>} classes
  * @returns {string}

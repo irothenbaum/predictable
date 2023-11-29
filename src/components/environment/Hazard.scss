@@ -4,4 +4,8 @@
   height: calc(#{all.$squareSize} * 0.6);
   width: 100%;
   @include all.depth('.hazard-inner', all.$hazardColor, all.$hazardColorDark);
+
+  .icon-with-shadow {
+    font-size: all.$fontSize3;
+  }
 }

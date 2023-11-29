@@ -12,6 +12,7 @@ export const PieceType = {
   Platform: 'platform',
   Coin: 'coin',
   Goal: 'goal',
+  MoveShadow: 'move-shadow',
 }
 
 /**
@@ -37,5 +38,5 @@ export const PiecePropType = {
   }).isRequired,
 }
 
-// TODO: Maybe 1 square size should be set the 1rem size?
-export const squareSizeEmScale = 5
+// this should match the rem scale in constants.scss
+export const squareSizeRemScale = 5

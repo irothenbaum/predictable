@@ -4,8 +4,6 @@ import Icon, {CHEVRON_LEFT, CHEVRON_RIGHT} from '../utility/Icon'
 import PropTypes from 'prop-types'
 import IconWithShadow from '../utility/IconWithShadow'
 
-const DEPTH = 3
-
 function VelocityIndicator(props) {
   if (!props.velocity || props.velocity.columnChange === 0) {
     return
@@ -15,15 +13,9 @@ function VelocityIndicator(props) {
 
   return (
     <div className="velocity-indicator">
-      {props.velocity.columnChange < 0 ? (
-        <IconWithShadow depth={DEPTH} icon={icon} />
-      ) : null}
-      <span className="magnitude" style={{top: -DEPTH}}>
-        {Math.abs(props.velocity.columnChange)}
-      </span>
-      {props.velocity.columnChange > 0 ? (
-        <IconWithShadow depth={DEPTH} icon={icon} />
-      ) : null}
+      {props.velocity.columnChange < 0 ? <IconWithShadow icon={icon} /> : null}
+      <span className="magnitude">{Math.abs(props.velocity.columnChange)}</span>
+      {props.velocity.columnChange > 0 ? <IconWithShadow icon={icon} /> : null}
     </div>
   )
 }

@@ -9,7 +9,7 @@
 
 html, body {
   // establish 1rem = 16px
-  font-size: 16px;
+  font-size: 20px;
   font-family: all.$fontFamilyRegular;
   text-transform: uppercase;
   width: 100%;
@@ -17,4 +17,12 @@ html, body {
   overflow: hidden;
   color: all.$copyColor;
   background-color: all.$black;
+
+  @include all.medium-and-below {
+    font-size: 16px;
+  }
+
+  @include all.small-and-below {
+    font-size: 12px;
+  }
 }

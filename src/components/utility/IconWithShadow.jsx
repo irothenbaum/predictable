@@ -2,19 +2,17 @@ import React from 'react'
 import './IconWithShadow.scss'
 import PropTypes from 'prop-types'
 import Icon from './Icon'
+import {constructClassString} from '../../lib/utilities'
 
 function IconWithShadow(props) {
-  const depthFormatted =
-    typeof props.depth === 'number' ? `${props.depth}px` : props.depth
-
   return (
-    <div className="icon-with-shadow">
-      <Icon
-        icon={props.icon}
-        style={{
-          transform: `translateY(-${depthFormatted})`,
-        }}
-      />
+    <div
+      className={constructClassString('icon-with-shadow', {
+        ['has-click-handler']: typeof props.onClick === 'function',
+        active: props.active,
+      })}
+      onClick={props.onClick}>
+      <Icon className={'top'} icon={props.icon} />
       <Icon className={'shadow'} icon={props.icon} />
     </div>
   )
@@ -26,7 +24,8 @@ IconWithShadow.defaultProps = {
 
 IconWithShadow.propTypes = {
   icon: PropTypes.any,
-  depth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  onClick: PropTypes.func,
+  active: PropTypes.bool,
 }
 
 export default IconWithShadow

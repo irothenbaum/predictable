@@ -5,6 +5,8 @@ import PropTypes from 'prop-types'
 function Scrollable(props) {
   const {scrollY} = useScroll({maxY: props.height - (props.viewHeight || 0)})
 
+  // TODO: At ability to zoom in and out + scroll horizontally
+
   return (
     <div
       style={{

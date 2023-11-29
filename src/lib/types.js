@@ -5,7 +5,7 @@
 /**
  * @typedef {Object} LevelContextData
  * @property {Array<Piece>} pieces
- * @property {Array<Coordinate>} moves
+ * @property {Array<Velocity>} moves
  * @property {Player} playerPiece
  * @property {number} score
  * @property {Board} gameBoard
@@ -54,6 +54,12 @@
  */
 
 /**
+ * @typedef {Piece} MoveShadow
+ * @property {boolean} isMoveShadow
+ * @property {number} moveIndex
+ */
+
+/**
  * @typedef {Piece} Player
  * @property {boolean} isPlayer
  */
@@ -91,5 +97,5 @@
  */
 
 /**
- * @typedef {Player & Hazard & Obstacle & Platform & Coin & Goal} AbstractPiece
+ * @typedef {Player & Hazard & Obstacle & Platform & Coin & Goal & MoveShadow} AbstractPiece
  */

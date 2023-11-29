@@ -3,11 +3,25 @@
 .icon-with-shadow {
   position: relative;
 
+  &.has-click-handler {
+    @include all.hover-cta;
+
+    &:hover, &.active {
+      .icon-container.top {
+        transform: translateY(-0.2em);
+      }
+    }
+  }
+
   .icon-container {
-    font-size: all.$fontSize3;
     color: all.$white;
     position: absolute;
     z-index: 3;
+    transition: transform all.$transition;
+
+    &.top {
+      transform: translateY(-0.1em);
+    }
 
     &.shadow {
       color: all.$shadow;

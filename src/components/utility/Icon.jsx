@@ -41,9 +41,20 @@ import {
   faCircleInfo,
   faClipboard,
   faInfinity,
+  faArrowLeft,
+  faArrowDown,
+  faArrowUp,
+  faArrowRight,
 } from '@fortawesome/free-solid-svg-icons'
-import {faCircle, faSquare} from '@fortawesome/free-regular-svg-icons'
+
+import {faCircle} from '@fortawesome/free-regular-svg-icons'
 import {constructClassString} from '../../lib/utilities'
+
+export const ARROW_LEFT = faArrowLeft
+export const ARROW_RIGHT = faArrowRight
+export const ARROW_UP = faArrowUp
+export const ARROW_DOWN = faArrowDown
+export const CIRCLE = faCircle
 
 export const CHEVRON_LEFT = faChevronLeft
 export const CHEVRON_RIGHT = faChevronRight
@@ -54,15 +65,12 @@ export const CHECK = faCheck
 export const CLOSE = faTimes
 export const RESET = faRotateLeft
 export const SETTINGS = faGear
-export const CHESS = faChess
-export const PAWN = faChessPawn
-export const KNIGHT = faChessKnight
-export const QUEEN = faChessQueen
 export const SHARE = faShare
 export const KING = faChessKing
 export const INFO = faCircleInfo
 export const INFINITY = faInfinity
 export const CLIPBOARD = faClipboard
+export const PLAY = faPlay
 
 function Icon(props) {
   return (
