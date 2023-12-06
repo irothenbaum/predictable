@@ -7,6 +7,7 @@ import {useEffect, useRef, useState} from 'react'
  * @property {number?} maxX
  * @property {number?} minX
  * @property {string?} horizontalScrollKey
+ * @property {string?} zoomKey
  */
 
 const DEFAULT_OPTIONS = {
@@ -16,6 +17,10 @@ const DEFAULT_OPTIONS = {
   minX: 0,
 }
 
+const MAX_ZOOM = 4
+const MIN_ZOOM = 0.25
+const ZOOM_SCALE = 1.35
+
 /**
  * @param {UseScrollOptions?} options
  * @return {{scrollY: number, scrollTo: scrollTo, scrollX: number}}
@@ -23,7 +28,9 @@ const DEFAULT_OPTIONS = {
 function useScroll(options) {
   const [scrollY, setScrollY] = useState(0)
   const [scrollX, setScrollX] = useState(0)
+  const [scale, setScale] = useState(1)
   const isShiftRef = useRef(false)
+  const isZoomRef = useRef(false)
   const optionsRef = useRef(options)
 
   // update the optionsRef when the options change
@@ -45,33 +52,42 @@ function useScroll(options) {
   // bind/unbind a scroll listener on mount
   useEffect(() => {
     const scrollHandler = e => {
-      if (isShiftRef.current) {
+      if (isZoomRef.current) {
+        const zoomChange = e.deltaY > 0 ? 1 / ZOOM_SCALE : ZOOM_SCALE
+        setScale(s => Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, s * zoomChange)))
+      } else if (isShiftRef.current) {
         setScrollX(s => clampX(s + e.deltaY))
       } else {
         setScrollY(s => clampY(s + e.deltaY))
       }
     }
 
-    const shiftDownHandler = e => {
+    const keyDownHandler = e => {
       if (e.key === options.horizontalScrollKey) {
         isShiftRef.current = true
       }
+      if (e.key === options.zoomKey) {
+        isZoomRef.current = true
+      }
     }
 
-    const shiftUpHandler = e => {
+    const keyUpHandler = e => {
       if (e.key === options.horizontalScrollKey) {
         isShiftRef.current = false
+      }
+      if (e.key === options.zoomKey) {
+        isZoomRef.current = false
       }
     }
 
     window.addEventListener('wheel', scrollHandler)
-    window.addEventListener('keydown', shiftDownHandler)
-    window.addEventListener('keyup', shiftUpHandler)
+    window.addEventListener('keydown', keyDownHandler)
+    window.addEventListener('keyup', keyUpHandler)
 
     return () => {
       window.removeEventListener('wheel', scrollHandler)
-      window.removeEventListener('keydown', shiftDownHandler)
-      window.removeEventListener('keyup', shiftUpHandler)
+      window.removeEventListener('keydown', keyDownHandler)
+      window.removeEventListener('keyup', keyUpHandler)
     }
   }, [])
 
@@ -88,6 +104,7 @@ function useScroll(options) {
     },
     scrollY: -scrollY, // we make it negative so that minus = down
     scrollX: -scrollX, // we make it negative so that minus = down
+    scale: scale,
   }
 }
 

@@ -18,6 +18,8 @@
   }
 
   .world-piece-container {
+    height: all.$squareSize;
+    width: all.$squareSize;
     position: absolute;
     display: flex;
     align-items: center;
@@ -25,6 +27,10 @@
     overflow: hidden;
 
     transition: top all.$transition, left all.$transition;
+
+    &._warped {
+      transition: none;
+    }
 
     &.bounce {
       animation: pop-up 0.5s ease-in-out, shadow-fade 0.5s ease-in-out;

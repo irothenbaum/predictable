@@ -79,13 +79,13 @@ function World(props) {
         {props.pieces.map(piece => {
           return (
             <div
-              className="world-piece-container"
+              className={constructClassString('world-piece-container', {
+                _warped: piece.position._warped,
+              })}
               key={piece.id}
               style={{
-                top: `${relativeHeightRatio * piece.position.row}%`,
-                left: `${relativeWidthRatio * piece.position.column}%`,
-                width: relativeWidthPercentage,
-                height: relativeHeightPercentage,
+                top: `${piece.position.row * squareSizeRemScale}rem`,
+                left: `${piece.position.column * squareSizeRemScale}rem`,
               }}>
               {props.renderPiece(piece)}
             </div>

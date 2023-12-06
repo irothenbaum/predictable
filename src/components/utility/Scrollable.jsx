@@ -7,10 +7,11 @@ function valOrZero(val) {
 }
 
 function Scrollable(props) {
-  const {scrollY, scrollX} = useScroll({
+  const {scrollY, scrollX, scale} = useScroll({
     maxY: valOrZero(props.height) - valOrZero(props.viewHeight),
     maxX: valOrZero(props.width) - valOrZero(props.viewWidth),
     horizontalScrollKey: 'Shift',
+    zoomKey: ' ',
   })
 
   let transforms = []
@@ -21,7 +22,8 @@ function Scrollable(props) {
     transforms.push(`translateX(${scrollX}px)`)
   }
 
-  // TODO: At ability to zoom in and out
+  // this isn't QUITE working right. Need the relative window position to stay consistent rather than just zooming into center
+  // transforms.push(`scale(${scale})`)
 
   return (
     <div
