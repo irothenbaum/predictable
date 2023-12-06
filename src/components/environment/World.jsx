@@ -1,8 +1,12 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import './World.scss'
 import PropTypes from 'prop-types'
-import {constructClassString, getCoordinateKey} from '../../lib/utilities'
-import {BOARD_SIZE} from '../../lib/constants'
+import {
+  constructClassString,
+  convertRemToPixels,
+  getCoordinateKey,
+} from '../../lib/utilities'
+import {squareSizeRemScale} from '../../lib/constants'
 
 // --------------------------------------------------------------------------------
 
@@ -32,13 +36,23 @@ function World(props) {
   const relativeWidthPercentage = `${relativeWidthRatio}%`
   const relativeHeightPercentage = `${relativeHeightRatio}%`
 
+  useEffect(() => {
+    props.onRenderWorld({
+      height: convertRemToPixels(props.dimensionY * squareSizeRemScale),
+      width: convertRemToPixels(props.dimensionX * squareSizeRemScale),
+    })
+  }, [props.dimensionX, props.dimensionY])
+
+  if (!props.dimensionX || !props.dimensionY) {
+    return null
+  }
+
   return (
     <div
       className={constructClassString('world', props.className)}
-      ref={r => {
-        if (r && r.clientHeight > 0) {
-          props.onRenderWorld({height: r.clientHeight})
-        }
+      style={{
+        width: `${props.dimensionX * squareSizeRemScale}rem`,
+        height: `${props.dimensionY * squareSizeRemScale}rem`,
       }}>
       <div>
         {Array(props.dimensionY)
@@ -54,7 +68,6 @@ function World(props) {
                       <Square
                         key={`${squareKey}-square`}
                         isBlack={(row + column) % 2 === 1}
-                        style={{paddingTop: relativeWidthPercentage}} // we want the square to be a square by setting paddingTop to the same as width
                       />
                     )
                   })}
@@ -104,7 +117,7 @@ World.propTypes = {
 }
 
 World.defaultProps = {
-  dimension: BOARD_SIZE,
+  dimension: 0,
   pieces: [],
 }
 

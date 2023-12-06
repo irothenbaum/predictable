@@ -31,8 +31,6 @@ function MovesInput(props) {
     onLose: props.onLose,
   })
 
-  console.log(isShowingMoves)
-
   return (
     <div className="moves-input-container">
       <div className="moves-input-buttons">

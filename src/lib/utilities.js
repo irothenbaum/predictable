@@ -105,3 +105,13 @@ export function getCoordinateKey(s) {
 export function isSameSquare(s1, s2) {
   return s1.row === s2.row && s1.column === s2.column
 }
+
+/**
+ * @param {number} rem
+ * @return {number}
+ */
+export function convertRemToPixels(rem) {
+  return (
+    rem * parseFloat(window.getComputedStyle(document.documentElement).fontSize)
+  )
+}

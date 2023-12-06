@@ -2,16 +2,32 @@ import React from 'react'
 import useScroll from '../../hooks/useScroll'
 import PropTypes from 'prop-types'
 
-function Scrollable(props) {
-  const {scrollY} = useScroll({maxY: props.height - (props.viewHeight || 0)})
+function valOrZero(val) {
+  return val || 0
+}
 
-  // TODO: At ability to zoom in and out + scroll horizontally
+function Scrollable(props) {
+  const {scrollY, scrollX} = useScroll({
+    maxY: valOrZero(props.height) - valOrZero(props.viewHeight),
+    maxX: valOrZero(props.width) - valOrZero(props.viewWidth),
+    horizontalScrollKey: 'Shift',
+  })
+
+  let transforms = []
+  if (props.viewHeight) {
+    transforms.push(`translateY(${scrollY}px)`)
+  }
+  if (props.viewWidth) {
+    transforms.push(`translateX(${scrollX}px)`)
+  }
+
+  // TODO: At ability to zoom in and out
 
   return (
     <div
       style={{
         transition: 'transform 0.2s ease-out',
-        transform: `translateY(${scrollY}px)`,
+        transform: transforms.join(' '),
       }}>
       {props.children}
     </div>
@@ -20,7 +36,9 @@ function Scrollable(props) {
 
 Scrollable.propTypes = {
   viewHeight: PropTypes.number,
-  height: PropTypes.number.isRequired,
+  viewWidth: PropTypes.number,
+  height: PropTypes.number,
+  width: PropTypes.number,
 }
 
 export default Scrollable

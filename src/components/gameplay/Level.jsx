@@ -39,7 +39,9 @@ function renderPiece(piece) {
 
 function LevelInner(props) {
   const [worldHeight, setWorldHeight] = useState(0)
+  const [worldWidth, setWorldWidth] = useState(0)
   const [containerHeight, setContainerHeight] = useState(0)
+  const [containerWidth, setContainerWidth] = useState(0)
   const {pieces, gameBoard} = useContext(LevelContext)
   return (
     <div className="level">
@@ -49,17 +51,27 @@ function LevelInner(props) {
           width: `${gameBoard.width * squareSizeRemScale}rem`,
         }}
         ref={r => {
-          if (r && r.clientHeight > 0) {
-            setContainerHeight(r.clientHeight)
+          if (r) {
+            if (r.clientHeight > 0) {
+              setContainerHeight(r.clientHeight)
+            }
+            if (r.clientWidth > 0) {
+              setContainerWidth(r.clientWidth)
+            }
           }
         }}>
-        <Scrollable height={worldHeight} viewHeight={containerHeight}>
+        <Scrollable
+          height={worldHeight}
+          width={worldWidth}
+          viewHeight={containerHeight}
+          viewWidth={containerWidth}>
           <World
             renderPiece={renderPiece}
             pieces={pieces}
             dimensionX={gameBoard.width}
             dimensionY={gameBoard.height}
             onRenderWorld={board => {
+              setWorldWidth(board.width)
               setWorldHeight(board.height)
             }}
           />

@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types'
 
-export const BOARD_SIZE = 8
-
 /**
  * @enum {string}
  */
