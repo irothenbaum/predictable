@@ -9,7 +9,9 @@ const MOVE_TIMER = 'timer'
 const MOVE_DELAY = 1000
 
 const OPPONENT_MOVE_TIMER = 'opponent-timer'
-const OPPONENT_MOVE_DELAY = MOVE_DELAY / 2
+const OPPONENT_MOVE_DELAY = 500 // this should match World.scss -> $pieceMoveSpeed
+
+const OPPONENT_MOVE_VELOCITY_TIMER = 'opponent-velocity-timer-'
 
 /**
  * @param {{onWin: function, onLose: function}} options
@@ -21,14 +23,16 @@ function useLevelControl(options) {
 
   const [isShowingMoves, setIsShowingMoves] = useState(false)
   const [revealingMoveIndex, setRevealingMoveIndex] = useState(null)
-  const {setTimer, cancelTimer, cancelAllTimers} = useDoOnceTimer()
+  const {setTimer, cancelAllTimers} = useDoOnceTimer()
 
   const handleWin = () => {
+    cancelAllTimers()
     setIsShowingMoves(false)
     options.onWin()
   }
 
   const handleLose = () => {
+    cancelAllTimers()
     setIsShowingMoves(false)
     options.onLose()
   }
@@ -37,15 +41,12 @@ function useLevelControl(options) {
   useEffect(() => {
     if (typeof revealingMoveIndex !== 'number' || !playerPiece) {
       // do nothing, we're not actually revealing yet
-      cancelTimer(MOVE_TIMER)
-      cancelTimer(OPPONENT_MOVE_TIMER)
+      cancelAllTimers()
       return
     }
 
-    // if we've revealed all moves, stop the timer and determine if we won or lost
+    // if we've revealed all moves, stop the timers and determine if we won or lost
     if (revealingMoveIndex === moves.length) {
-      cancelTimer(MOVE_TIMER)
-      cancelTimer(OPPONENT_MOVE_TIMER)
       const goalPiece = pieces.find(p => p.isGoal)
       if (goalPiece && isSameSquare(playerPiece.position, goalPiece.position)) {
         handleWin()
@@ -123,13 +124,13 @@ function useLevelControl(options) {
     setTimer(
       OPPONENT_MOVE_TIMER,
       () => {
-        // we check if there any collisions after the player moves
-        if (checkForHazardCollision(pieces)) {
+        // we check if there any collisions after the player moves, we do inside here so there's a delay between the player moving and the result happening
+        if (checkForHazardCollision(pieces, playerPiece)) {
           handleLose()
           return
         }
 
-        let piecesAfterEnvironmentMove = piecesAfterPlayerMove
+        const piecesAfterFilter = piecesAfterPlayerMove
           // remove any pieces (collected coins) from the board
           .filter(p => {
             if (p.isCoin && p.isCollected) {
@@ -137,10 +138,46 @@ function useLevelControl(options) {
             }
             return true
           })
-          .map(p => {
+
+        if (piecesAfterFilter.length !== piecesAfterPlayerMove.length) {
+          // update pieces immediately to remove any filtered pieces
+          setPieces(piecesAfterFilter)
+        }
+
+        // next we need to apply velocities, but we need to do it one step at a time
+        const velocityBuckets = piecesAfterFilter.reduce((agr, p) => {
+          if (p.velocity && !p.isMoveShadow) {
+            // we group pieces by their velocity magnitude from 0 to n - 1
+            // i.e., pieces with velocity 1 are in index 0, pieces with velocity 2 is in index 1, 3 is in index 2, etc
+            const magnitude = getHorizontalVelocityMagnitude(p.velocity) - 1
+            if (!agr[magnitude]) {
+              agr[magnitude] = []
+            }
+            agr[magnitude].push(p)
+          } else {
+            // this piece does not need to move, so it's not in a bucket
+          }
+          return agr
+        }, [])
+
+        if (velocityBuckets.length === 0) {
+          // no pieces need to move, so we can skip the rest of this
+          return
+        }
+
+        /**
+         * @param {Array<AbstractPiece>} piecesInThisBucket
+         * @param {number} bucketNumber
+         * @param {number} iterationsRemaining
+         */
+        const stepPieces = (
+          piecesInThisBucket,
+          bucketNumber,
+          iterationsRemaining,
+        ) => {
+          piecesInThisBucket.forEach(p => {
             // we apply any velocities to each piece (except move shadows)
-            if (p.velocity && !p.isMoveShadow) {
-              const normalizedVelocity = normalizeVelocity(p.velocity)
+            if (p.velocity) {
               // apply the velocity
               applyPieceVelocity(p, gameBoard)
 
@@ -157,58 +194,43 @@ function useLevelControl(options) {
                 }
               }
             }
-
-            return p
           })
-        //
-        // // next we need to apply velocities, but we need to do it one step at a time
-        // const velocityBuckets = piecesAfterEnvironmentMove.reduce((agr, p) => {
-        //   // we group pieces by their velocity magnitude from 0 to n - 1
-        //   // i.e., pieces with velocity 0 or 1 are in index 0, pieces with velocity 2 is in index 1, 3 is in index 2, etc
-        //   const magnitude =
-        //     (getHorizontalVelocityMagnitude(p.velocity) || 1) - 1
-        //   if (!agr[magnitude]) {
-        //     agr[magnitude] = []
-        //   }
-        //   agr[magnitude].push(p)
-        // }, [])
-        //
-        // // our velocity buckets now contain all pieces that need [index] number turns to complete their movements
-        //
-        // for (let i = 0; i < velocityBuckets.length; i++) {
-        //   velocityBuckets[i] = velocityBuckets[i].map(p => {
-        //     // we apply any velocities to each piece (except move shadows)
-        //     if (p.velocity && !p.isMoveShadow) {
-        //       const normalizedVelocity = normalizeVelocity(p.velocity)
-        //       // apply the velocity
-        //       applyPieceVelocity(p, gameBoard)
-        //
-        //       // if the player was on this platform, we apply that platform's velocity to the player
-        //       if (playerOnPlatform && p.id === playerOnPlatform.id) {
-        //         const playerNextCoord = applyVelocityToCoordinate(
-        //           playerPiece.position,
-        //           p.velocity,
-        //           gameBoard,
-        //         )
-        //         // can only move the player if it wasn't a warped move
-        //         if (!playerNextCoord._warped) {
-        //           playerPiece.position = playerNextCoord
-        //         }
-        //       }
-        //     }
-        //
-        //     return p
-        //   })
-        // }
 
-        // we check if there any collisions after the world pieces move
-        // TODO: for pieces with a velocity > 1 the piece could move through the player. Need to make this check more sophisticated
-        if (checkForHazardCollision(piecesAfterEnvironmentMove)) {
-          handleLose()
-          return
+          // we check if there any collisions after the world pieces move
+          if (checkForHazardCollision(piecesInThisBucket, playerPiece)) {
+            handleLose()
+            return
+          }
+
+          // the pieces are updated in place, so we just want to trigger a refresh
+          setPieces(prevPieces => [...prevPieces])
+
+          // if we have more velocity iterations to do, we set a timer to do them
+          if (iterationsRemaining > 0) {
+            setTimer(
+              OPPONENT_MOVE_VELOCITY_TIMER + bucketNumber,
+              () => {
+                stepPieces(
+                  piecesInThisBucket,
+                  bucketNumber,
+                  iterationsRemaining - 1,
+                )
+              },
+              OPPONENT_MOVE_DELAY / (bucketNumber + 1),
+            )
+          }
         }
 
-        setPieces(piecesAfterEnvironmentMove)
+        // our velocity buckets now contain all pieces that need [index + 1] number turns to complete their movements
+        for (let i = 0; i < velocityBuckets.length; i++) {
+          // if this bucket has no pieces, we skip it
+          if (!Array.isArray(velocityBuckets[i])) {
+            continue
+          }
+
+          const piecesInThisBucket = [...velocityBuckets[i]]
+          stepPieces(piecesInThisBucket, i, i)
+        }
       },
       OPPONENT_MOVE_DELAY,
     )
@@ -244,15 +266,10 @@ function useLevelControl(options) {
 
 /**
  * @param {Array<AbstractPiece>} pieces
+ * @param {Player} playerPiece
  * @returns {Hazard|null}
  */
-function checkForHazardCollision(pieces) {
-  const playerPiece = pieces.find(p => p.isPlayer)
-
-  if (!playerPiece) {
-    return null
-  }
-
+function checkForHazardCollision(pieces, playerPiece) {
   const hazards = pieces.filter(
     p => p.isHazard && isSameSquare(p.position, playerPiece.position),
   )
@@ -295,6 +312,8 @@ function applyVelocityToCoordinate(coord, velocity, gameBoard) {
  */
 function applyPieceVelocity(piece, gameBoard) {
   if (piece.velocity) {
+    // we always normalize because our pieces move in 1 square increments
+    const normalizedVelocity = normalizeVelocity(piece.velocity)
     // we do some clever +1, +2 , -1 stuff here to support warping the piece around the board
     // basically the piece will spend 2 turns outside the play area, first on the right (col: width + 1), then on the left (col: -1)
 
@@ -303,7 +322,7 @@ function applyPieceVelocity(piece, gameBoard) {
         row: piece.position.row,
         column: piece.position.column + 1,
       },
-      piece.velocity,
+      normalizedVelocity,
       {
         height: gameBoard.height,
         width: gameBoard.width + 2,

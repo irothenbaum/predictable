@@ -1,6 +1,6 @@
 {
   "gameBoard": {
-    "width": 6,
+    "width": 8,
     "height": 16
   },
   "pieces": [
@@ -14,13 +14,13 @@
       "type": "hazard",
       "row": 1,
       "column": 1,
-      "columnChange": -2
+      "columnChange": 2
     },
     {
       "type": "hazard",
       "row": 1,
       "column": 2,
-      "columnChange": -2
+      "columnChange": 2
     },
 
     {

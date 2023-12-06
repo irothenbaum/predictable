@@ -81,6 +81,8 @@ function World(props) {
             <div
               className={constructClassString('world-piece-container', {
                 _warped: piece.position._warped,
+                [`velocity-${Math.abs(piece.velocity.columnChange)}`]:
+                  piece.velocity,
               })}
               key={piece.id}
               style={{

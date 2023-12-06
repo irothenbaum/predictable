@@ -1,5 +1,7 @@
 @use "../../styles/all";
 
+$pieceMoveSpeed: 0.5s;
+
 .world {
   position: relative;
 
@@ -26,7 +28,7 @@
     justify-content: center;
     overflow: hidden;
 
-    transition: top all.$transition, left all.$transition;
+    transition: top $pieceMoveSpeed linear, left $pieceMoveSpeed linear;
 
     &._warped {
       transition: none;
@@ -34,6 +36,16 @@
 
     &.bounce {
       animation: pop-up 0.5s ease-in-out, shadow-fade 0.5s ease-in-out;
+    }
+
+    &.velocity-2 {
+      transition-duration: $pieceMoveSpeed / 2;
+    }
+    &.velocity-3 {
+      transition-duration: $pieceMoveSpeed / 3;
+    }
+    &.velocity-4 {
+      transition-duration: $pieceMoveSpeed / 4;
     }
   }
 
