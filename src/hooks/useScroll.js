@@ -24,7 +24,7 @@ function valOrZero(val) {
 }
 
 const MAX_ZOOM = 4
-const MIN_ZOOM = 0.25
+const MIN_ZOOM = 0.05
 const ZOOM_SCALE = 1.1
 
 /**
@@ -63,17 +63,42 @@ function useScroll(options) {
       settingsRef.current[axis === 'Y' ? 'contentHeight' : 'contentWidth']
     const scaleRef = settingsRef.current.scaleClone
 
-    const extraMinSpace = (viewDimension / 2) * Math.max(scaleRef - 1, 0)
+    const effectiveContentSize = contentDimension * scaleRef
 
-    const retVal = Math.min(
+    // I don't full understand why these equations work, but they seemingly do.
+    if (effectiveContentSize <= viewDimension) {
+      return ((contentDimension - viewDimension) / 2) * scaleRef
+    }
+
+    const extraMinSpace = (viewDimension / 2) * (scaleRef - 1)
+
+    return Math.min(
       Math.max(v, 0 - extraMinSpace),
       contentDimension * scaleRef - viewDimension - extraMinSpace,
     )
-
-    console.log(v, scaleRef, extraMinSpace, retVal)
-
-    return retVal
   }
+
+  /*
+  2400 - raw
+  0.275 - scale
+  715 - window
+  -230.5 - translate
+
+  2400 - raw
+  0.25 - scale
+  715 - window
+  -210 - translate
+
+  2400 - raw
+  0.2 - scale
+  715 - window
+  -174 - translate
+
+  2400 - raw
+  0.1 - scale
+  715 - window
+  -90 - translate
+   */
 
   const clampY = v => clamp(v, 'Y')
   const clampX = v => clamp(v, 'X')
