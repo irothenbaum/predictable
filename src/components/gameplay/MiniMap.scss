@@ -1,0 +1,30 @@
+@use '../../styles/all';
+
+.mini-map-container {
+  position: fixed;
+  top: all.$spaceMedium;
+  right: all.$spaceMedium;
+  z-index: 100;
+  transition: opacity 1s ease-out;
+  opacity: 0;
+
+  &.showing {
+    opacity: 1;
+    transition-duration: all.$transitionSpeed
+  }
+
+  .mini-map-content {
+    width: calc(2 * #{all.$squareSize});
+    height: 0;
+    border: 1px solid all.$black;
+    border-radius: 4px;
+    background-color: all.$redColorDark;
+    opacity: 0.5;
+  }
+
+  .mini-map-window {
+    position: absolute;
+    border: 2px solid all.$redColor;
+    border-radius: 4px;
+  }
+}

@@ -11,8 +11,19 @@ import {useEffect, useRef, useState} from 'react'
  */
 
 /**
- * @type {UseScrollOptions} ScrollSettings
+ * @typedef {UseScrollOptions} ScrollSettings
  * @property {number} scaleClone
+ */
+
+/**
+ * @typedef {Object} UseScrollReturnValue
+ * @property {number} scrollY
+ * @property {number} scrollX
+ * @property {number} scale
+ * @property {(y: number, x?: number) => void} scrollTo
+ * @property {(s: number) => void} zoomTo
+ * @property {(y: number, x?: number) => void} scrollRelative
+ * @property {(s: number) => void} zoomRelative
  */
 
 const DEFAULT_OPTIONS = {
@@ -29,7 +40,7 @@ const ZOOM_SCALE = 1.1
 
 /**
  * @param {UseScrollOptions?} options
- * @return {{scrollY: number, scrollTo: scrollTo, scrollX: number}}
+ * @return {UseScrollReturnValue}
  */
 function useScroll(options) {
   const [scrollY, setScrollY] = useState(0)
@@ -37,6 +48,7 @@ function useScroll(options) {
   const [scale, setScale] = useState(1)
   const isShiftRef = useRef(false)
   const isZoomRef = useRef(false)
+  /** @type {{current: ScrollSettings}} */
   const settingsRef = useRef(options)
 
   // update the settingsRef when the options change
@@ -77,28 +89,6 @@ function useScroll(options) {
       contentDimension * scaleRef - viewDimension - extraMinSpace,
     )
   }
-
-  /*
-  2400 - raw
-  0.275 - scale
-  715 - window
-  -230.5 - translate
-
-  2400 - raw
-  0.25 - scale
-  715 - window
-  -210 - translate
-
-  2400 - raw
-  0.2 - scale
-  715 - window
-  -174 - translate
-
-  2400 - raw
-  0.1 - scale
-  715 - window
-  -90 - translate
-   */
 
   const clampY = v => clamp(v, 'Y')
   const clampX = v => clamp(v, 'X')
@@ -156,6 +146,31 @@ function useScroll(options) {
         setScrollX(clampX(x))
       }
     },
+    /**
+     * @param {number} s
+     */
+    zoomTo(s) {
+      setScale(Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, s)))
+    },
+
+    /**
+     * @param {number} y
+     * @param {number?} x
+     */
+    scrollRelative(y, x) {
+      setScrollY(clampY(scrollY + y))
+      if (typeof x === 'number') {
+        setScrollX(clampX(scrollX + x))
+      }
+    },
+
+    /**
+     * @param {number} s
+     */
+    zoomRelative(s) {
+      setScale(Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, scale + s)))
+    },
+
     scrollY: -scrollY, // we make it negative so that minus = down
     scrollX: -scrollX, // we make it negative so that minus = down
     scale: scale,

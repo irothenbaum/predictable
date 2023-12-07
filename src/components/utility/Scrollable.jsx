@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import useScroll from '../../hooks/useScroll'
 import PropTypes from 'prop-types'
+import MiniMap from '../gameplay/MiniMap'
 
 function Scrollable(props) {
   const {scrollY, scrollX, scale} = useScroll({
@@ -12,6 +13,8 @@ function Scrollable(props) {
     zoomKey: ' ',
   })
 
+  console.log(scrollX, scrollY, scale)
+
   let transforms = []
   if (props.viewHeight) {
     transforms.push(`translateY(${scrollY}px)`)
@@ -20,19 +23,32 @@ function Scrollable(props) {
     transforms.push(`translateX(${scrollX}px)`)
   }
 
-  // this isn't QUITE working right. Need the relative window position to stay consistent rather than just zooming into center
   transforms.push(`scale(${scale})`)
 
   return (
-    <div
-      style={{
-        transition: 'transform 0.2s ease-out',
-        transform: transforms.join(' '),
-        height: '100%',
-        width: '100%',
-      }}>
-      {props.children}
-    </div>
+    <React.Fragment>
+      <MiniMap
+        content={{
+          height: props.height * scale,
+          width: props.width * scale,
+        }}
+        window={{
+          height: props.viewHeight,
+          width: props.viewWidth,
+          offsetLeft: -scrollX,
+          offsetTop: -scrollY,
+        }}
+      />
+      <div
+        style={{
+          transition: 'transform 0.2s ease-out',
+          transform: transforms.join(' '),
+          height: '100%',
+          width: '100%',
+        }}>
+        {props.children}
+      </div>
+    </React.Fragment>
   )
 }
 
