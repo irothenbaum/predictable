@@ -39,13 +39,13 @@ $pieceMoveSpeed: 0.5s;
     }
 
     &.velocity-2 {
-      transition-duration: $pieceMoveSpeed / 2;
+      transition-duration: calc($pieceMoveSpeed / 2);
     }
     &.velocity-3 {
-      transition-duration: $pieceMoveSpeed / 3;
+      transition-duration: calc($pieceMoveSpeed / 3);
     }
     &.velocity-4 {
-      transition-duration: $pieceMoveSpeed / 4;
+      transition-duration: calc($pieceMoveSpeed / 4);
     }
   }
 

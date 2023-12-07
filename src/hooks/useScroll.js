@@ -2,24 +2,30 @@ import {useEffect, useRef, useState} from 'react'
 
 /**
  * @typedef {Object} UseScrollOptions
- * @property {number?} maxY
- * @property {number?} minY
- * @property {number?} maxX
- * @property {number?} minX
+ * @property {number} contentHeight
+ * @property {number} viewHeight
+ * @property {number?} contentWidth
+ * @property {number?} viewWidth
  * @property {string?} horizontalScrollKey
  * @property {string?} zoomKey
  */
 
+/**
+ * @type {UseScrollOptions} ScrollSettings
+ * @property {number} scaleClone
+ */
+
 const DEFAULT_OPTIONS = {
-  maxY: Number.MAX_SAFE_INTEGER,
-  minY: 0,
-  maxX: Number.MAX_SAFE_INTEGER,
-  minX: 0,
+  scaleClone: 1,
+}
+
+function valOrZero(val) {
+  return val || 0
 }
 
 const MAX_ZOOM = 4
 const MIN_ZOOM = 0.25
-const ZOOM_SCALE = 1.35
+const ZOOM_SCALE = 1.1
 
 /**
  * @param {UseScrollOptions?} options
@@ -31,19 +37,42 @@ function useScroll(options) {
   const [scale, setScale] = useState(1)
   const isShiftRef = useRef(false)
   const isZoomRef = useRef(false)
-  const optionsRef = useRef(options)
+  const settingsRef = useRef(options)
 
-  // update the optionsRef when the options change
+  // update the settingsRef when the options change
   useEffect(() => {
-    optionsRef.current = {...DEFAULT_OPTIONS, ...options}
+    const newSettings = {...DEFAULT_OPTIONS, ...options, scaleClone: scale}
+    newSettings.maxY = valOrZero(
+      newSettings.contentHeight - newSettings.viewHeight,
+    )
+    newSettings.maxX = valOrZero(
+      newSettings.contentWidth - newSettings.viewWidth,
+    )
+    settingsRef.current = newSettings
   }, [options])
+
+  useEffect(() => {
+    settingsRef.current.scaleClone = scale
+  }, [scale])
 
   // clamp the scrollY value to the min/max
   const clamp = (v, axis) => {
-    return Math.min(
-      Math.max(v, optionsRef.current[`min${axis}`]),
-      optionsRef.current[`max${axis}`],
+    const viewDimension =
+      settingsRef.current[axis === 'Y' ? 'viewHeight' : 'viewWidth']
+    const contentDimension =
+      settingsRef.current[axis === 'Y' ? 'contentHeight' : 'contentWidth']
+    const scaleRef = settingsRef.current.scaleClone
+
+    const extraMinSpace = (viewDimension / 2) * Math.max(scaleRef - 1, 0)
+
+    const retVal = Math.min(
+      Math.max(v, 0 - extraMinSpace),
+      contentDimension * scaleRef - viewDimension - extraMinSpace,
     )
+
+    console.log(v, scaleRef, extraMinSpace, retVal)
+
+    return retVal
   }
 
   const clampY = v => clamp(v, 'Y')

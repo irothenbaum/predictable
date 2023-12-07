@@ -99,7 +99,7 @@
   background-color: $shadeColor;
   border-radius: layout.$borderRadiusLarge;
   z-index: 2;
-  transform: translateY($depth / 2);
+  transform: translateY(calc($depth / 2));
   @include shadow($depth);
 
   #{$child} {
@@ -152,8 +152,8 @@
     color: $textColor;
 
     @include layout.medium-and-below {
-      height: calc(100% - #{$depth / 2});
-      width: calc(100% - #{$depth / 2});
+      height: calc(100% - #{calc($depth / 2)});
+      width: calc(100% - #{calc($depth / 2)});
     }
 
     @include layout.small-and-below {

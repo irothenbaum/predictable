@@ -1,7 +1,7 @@
 {
   "gameBoard": {
-    "width": 8,
-    "height": 16
+    "width": 30,
+    "height": 30
   },
   "pieces": [
     {
