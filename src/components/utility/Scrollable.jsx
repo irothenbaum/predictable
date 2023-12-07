@@ -13,8 +13,6 @@ function Scrollable(props) {
     zoomKey: ' ',
   })
 
-  console.log(scrollX, scrollY, scale)
-
   let transforms = []
   if (props.viewHeight) {
     transforms.push(`translateY(${scrollY}px)`)
@@ -28,16 +26,12 @@ function Scrollable(props) {
   return (
     <React.Fragment>
       <MiniMap
-        content={{
-          height: props.height * scale,
-          width: props.width * scale,
-        }}
-        window={{
-          height: props.viewHeight,
-          width: props.viewWidth,
-          offsetLeft: -scrollX,
-          offsetTop: -scrollY,
-        }}
+        contentHeight={props.height * scale}
+        contentWidth={props.width * scale}
+        windowHeight={props.viewHeight}
+        windowWidth={props.viewWidth}
+        offsetLeft={-scrollX}
+        offsetTop={-scrollY}
       />
       <div
         style={{

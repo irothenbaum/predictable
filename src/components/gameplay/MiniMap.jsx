@@ -19,18 +19,13 @@ function MiniMap(props) {
       () => setShowingMiniMap(false),
       MINI_MAP_TIMER_DURATION,
     )
-  }, [props.content, props.window])
+  }, [props.offsetLeft, props.offsetTop])
 
-  const width = Math.min(100, (props.window.width / props.content.width) * 100)
-  const height = Math.min(
-    100,
-    (props.window.height / props.content.height) * 100,
-  )
+  const width = Math.min(100, (props.windowWidth / props.contentWidth) * 100)
+  const height = Math.min(100, (props.windowHeight / props.contentHeight) * 100)
 
-  console.log(props.content, props.window)
-
-  const left = (props.window.offsetLeft / props.content.width) * 100
-  const top = (props.window.offsetTop / props.content.height) * 100
+  const left = (props.offsetLeft / props.contentWidth) * 100
+  const top = (props.offsetTop / props.contentHeight) * 100
 
   return (
     <div
@@ -40,7 +35,7 @@ function MiniMap(props) {
       <div
         className="mini-map-content"
         style={{
-          paddingTop: `${(props.content.height / props.content.width) * 100}%`,
+          paddingTop: `${(props.contentHeight / props.contentWidth) * 100}%`,
         }}
       />
       <div
@@ -57,16 +52,12 @@ function MiniMap(props) {
 }
 
 MiniMap.propTypes = {
-  content: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number,
-  }),
-  window: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number,
-    offsetLeft: PropTypes.number,
-    offsetTop: PropTypes.number,
-  }),
+  contentHeight: PropTypes.number,
+  contentWidth: PropTypes.number,
+  windowHeight: PropTypes.number,
+  windowWidth: PropTypes.number,
+  offsetLeft: PropTypes.number,
+  offsetTop: PropTypes.number,
 }
 
 export default MiniMap

@@ -6,4 +6,6 @@
   border-radius: 50%;
   background: radial-gradient(circle at 50% 20%, all.$playerColor, all.$playerColorDark);
   box-shadow: 0 0.25em 0.5em all.$shadow;
+
+  z-index: 1000;
 }
