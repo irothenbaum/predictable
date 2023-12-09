@@ -6,7 +6,7 @@ import {constructClassString, convertRemToPixels} from '../../lib/utilities'
 import {squareSizeRemScale} from '../../lib/constants'
 
 const MINI_MAP_TIMER = 'mini-map-timer'
-const MINI_MAP_TIMER_DURATION = 2000
+const MINI_MAP_TIMER_DURATION = 3000
 
 function MiniMap(props) {
   const [showingMiniMap, setShowingMiniMap] = useState(false)
@@ -44,10 +44,18 @@ function MiniMap(props) {
   // if, accounting for zoom, we can completely contain the world, then we don't need to offset the window at all
   const windowOffsetLeft = windowGreaterThanContentWidth
     ? 0
-    : (props.offsetLeft / props.contentWidth) * 100
+    : ((props.offsetLeft + (props.windowWidth / 2) * (props.scale - 1)) /
+        (props.contentWidth * props.scale)) *
+      100
+
   const windowOffsetTop = windowGreaterThanContentHeight
     ? 0
-    : (props.offsetTop / props.contentHeight) * 100
+    : ((props.offsetTop + (props.windowHeight / 2) * (props.scale - 1)) /
+        (props.contentHeight * props.scale)) *
+      100
+
+  // NOTE: I also don't FULLY understand why those ^^^ work, but they use similar logic as useScroll clamp function so if we change
+  // one we must change this
 
   // last we scale the content so that the largest dimension is 2 * squareSizeRemScale
   const maxContentDimension = convertRemToPixels(2 * squareSizeRemScale)
@@ -61,18 +69,10 @@ function MiniMap(props) {
     ? maxContentDimension / widthToHeightRatio
     : maxContentDimension
 
-  console.log(
-    props,
-    windowOffsetLeft,
-    windowOffsetTop,
-    windowHeightPercentage,
-    windowWidthPercentage,
-  )
-
   return (
     <div
       className={constructClassString('mini-map-container', {
-        showing: showingMiniMap || true,
+        showing: showingMiniMap,
       })}
       style={{
         width: `${mapWidth}px`,
