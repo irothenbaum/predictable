@@ -14,11 +14,13 @@ function Scrollable(props) {
   })
 
   let transforms = []
+
+  // NOTE: we make these negative because we need to transform UP when we scroll DOWN
   if (props.viewHeight) {
-    transforms.push(`translateY(${scrollY}px)`)
+    transforms.push(`translateY(${-scrollY}px)`)
   }
   if (props.viewWidth) {
-    transforms.push(`translateX(${scrollX}px)`)
+    transforms.push(`translateX(${-scrollX}px)`)
   }
 
   transforms.push(`scale(${scale})`)
@@ -26,12 +28,13 @@ function Scrollable(props) {
   return (
     <React.Fragment>
       <MiniMap
-        contentHeight={props.height * scale}
-        contentWidth={props.width * scale}
+        contentHeight={props.height}
+        contentWidth={props.width}
         windowHeight={props.viewHeight}
         windowWidth={props.viewWidth}
-        offsetLeft={-scrollX}
-        offsetTop={-scrollY}
+        offsetLeft={scrollX}
+        offsetTop={scrollY}
+        scale={scale}
       />
       <div
         style={{

@@ -77,11 +77,11 @@ function useScroll(options) {
 
     const effectiveContentSize = contentDimension * scaleRef
 
-    // I don't full understand why these equations work, but they seemingly do.
     if (effectiveContentSize <= viewDimension) {
       return ((contentDimension - viewDimension) / 2) * scaleRef
     }
 
+    // I don't full understand why these equations work, but they seemingly do.
     const extraMinSpace = (viewDimension / 2) * (scaleRef - 1)
 
     return Math.min(
@@ -171,8 +171,8 @@ function useScroll(options) {
       setScale(Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, scale + s)))
     },
 
-    scrollY: -scrollY, // we make it negative so that minus = down
-    scrollX: -scrollX, // we make it negative so that minus = down
+    scrollY: scrollY,
+    scrollX: scrollX,
     scale: scale,
   }
 }

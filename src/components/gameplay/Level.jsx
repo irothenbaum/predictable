@@ -47,9 +47,6 @@ function LevelInner(props) {
     <div className="level">
       <div
         className="world-container"
-        style={{
-          width: `${gameBoard.width * squareSizeRemScale}rem`,
-        }}
         ref={r => {
           if (r) {
             if (r.clientHeight > 0) {

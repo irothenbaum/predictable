@@ -14,8 +14,8 @@
   }
 
   .mini-map-content {
-    width: calc(2 * #{all.$squareSize});
-    height: 0;
+    height: 100%;
+    width: 100%;
     border: 1px solid all.$black;
     border-radius: 4px;
     background-color: all.$redColorDark;
@@ -26,5 +26,6 @@
     position: absolute;
     border: 2px solid all.$redColor;
     border-radius: 4px;
+    transition: all all.$transition;
   }
 }
