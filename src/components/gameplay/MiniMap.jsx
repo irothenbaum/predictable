@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import PropTypes from 'prop-types'
 import './MiniMap.scss'
 import useDoOnceTimer from '../../hooks/useDoOnceTimer'
@@ -8,9 +8,20 @@ import {squareSizeRemScale} from '../../lib/constants'
 const MINI_MAP_TIMER = 'mini-map-timer'
 const MINI_MAP_TIMER_DURATION = 3000
 
+/**
+ * @typedef {Object} MiniMapClickEvent
+ * @property {number} x
+ * @property {number} y
+ * @property {number} ratioX
+ * @property {number} ratioY
+ * @property {number} absoluteX
+ * @property {number} absoluteY
+ */
+
 function MiniMap(props) {
   const [showingMiniMap, setShowingMiniMap] = useState(false)
   const {setTimer} = useDoOnceTimer()
+  const containerRef = useRef(null)
 
   useEffect(() => {
     setShowingMiniMap(true)
@@ -20,7 +31,7 @@ function MiniMap(props) {
       () => setShowingMiniMap(false),
       MINI_MAP_TIMER_DURATION,
     )
-  }, [props.offsetLeft, props.offsetTop])
+  }, [props.offsetLeft, props.offsetTop, props.scale])
 
   // the view accounting for zoom scale
   const effectiveWindowHeight = props.windowHeight / props.scale
@@ -69,6 +80,38 @@ function MiniMap(props) {
     ? maxContentDimension / widthToHeightRatio
     : maxContentDimension
 
+  const handleClick = e => {
+    if (!showingMiniMap || typeof props.onClick !== 'function') {
+      return
+    }
+
+    setTimer(
+      MINI_MAP_TIMER,
+      () => setShowingMiniMap(false),
+      MINI_MAP_TIMER_DURATION,
+    )
+
+    const windowWidth = (windowWidthPercentage / 100) * mapWidth
+    const windowHeight = (windowHeightPercentage / 100) * mapHeight
+
+    // TODO: this doesn't work right when zoomed in
+    // NOTE: we subtract the windowWidth/Height because the click is relative to the top left corner of the window
+    const xPos = e.nativeEvent.offsetX - windowWidth / 2
+    const yPos = e.nativeEvent.offsetY - windowHeight / 2
+
+    const ratioX = xPos / mapWidth
+    const ratioY = yPos / mapHeight
+
+    props.onClick({
+      x: xPos,
+      y: yPos,
+      ratioX: ratioX,
+      ratioY: ratioY,
+      absoluteX: ratioX * props.contentWidth,
+      absoluteY: ratioY * props.contentHeight,
+    })
+  }
+
   return (
     <div
       className={constructClassString('mini-map-container', {
@@ -77,7 +120,9 @@ function MiniMap(props) {
       style={{
         width: `${mapWidth}px`,
         height: `${mapHeight}px`,
-      }}>
+      }}
+      ref={containerRef}
+      onClick={e => handleClick(e)}>
       <div
         className="mini-map-window"
         style={{
@@ -99,6 +144,7 @@ MiniMap.propTypes = {
   windowWidth: PropTypes.number,
   offsetLeft: PropTypes.number,
   offsetTop: PropTypes.number,
+  onClick: PropTypes.func,
 }
 
 export default MiniMap

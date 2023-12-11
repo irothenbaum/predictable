@@ -33,6 +33,16 @@ function MovesInput(props) {
 
   return (
     <div className="moves-input-container">
+      <div className="moves-queue">
+        {moves.map((move, index) => (
+          <IconWithShadow
+            icon={getArrowIconFromVelocity(move)}
+            key={index}
+            active={revealingMoveIndex === index}
+          />
+        ))}
+      </div>
+
       <div className="moves-input-buttons">
         <IconWithShadow icon={RESET} onClick={popMove} />
 
@@ -47,16 +57,6 @@ function MovesInput(props) {
         })}
 
         <IconWithShadow icon={PLAY} onClick={() => playMoves()} />
-      </div>
-
-      <div className="moves-queue">
-        {moves.map((move, index) => (
-          <IconWithShadow
-            icon={getArrowIconFromVelocity(move)}
-            key={index}
-            active={revealingMoveIndex === index}
-          />
-        ))}
       </div>
     </div>
   )

@@ -1,10 +1,11 @@
-import React, {useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import useScroll from '../../hooks/useScroll'
 import PropTypes from 'prop-types'
 import MiniMap from '../gameplay/MiniMap'
 
 function Scrollable(props) {
-  const {scrollY, scrollX, scale} = useScroll({
+  const [containerRef, setContainerRef] = useState(null)
+  const {scrollY, scrollX, scale, scrollTo} = useScroll(containerRef, {
     contentWidth: props.width,
     viewWidth: props.viewWidth,
     contentHeight: props.height,
@@ -25,8 +26,18 @@ function Scrollable(props) {
 
   transforms.push(`scale(${scale})`)
 
+  /**
+   * @param {MiniMapClickEvent} clickE
+   */
+  const handleClickMiniMap = clickE => {
+    scrollTo(clickE.absoluteY, clickE.absoluteX)
+  }
+
   return (
-    <React.Fragment>
+    <div
+      style={{height: '100%', width: '100%'}}
+      ref={r => setContainerRef(r)}
+      className="scrollable-wrapper">
       <MiniMap
         contentHeight={props.height}
         contentWidth={props.width}
@@ -35,6 +46,7 @@ function Scrollable(props) {
         offsetLeft={scrollX}
         offsetTop={scrollY}
         scale={scale}
+        onClick={handleClickMiniMap}
       />
       <div
         style={{
@@ -45,7 +57,7 @@ function Scrollable(props) {
         }}>
         {props.children}
       </div>
-    </React.Fragment>
+    </div>
   )
 }
 

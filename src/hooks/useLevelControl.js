@@ -6,10 +6,10 @@ import {isSameSquare} from '../lib/utilities'
 import {PieceType} from '../lib/constants'
 
 const MOVE_TIMER = 'timer'
-const MOVE_DELAY = 1000
+const MOVE_DELAY = 500
 
 const OPPONENT_MOVE_TIMER = 'opponent-timer'
-const OPPONENT_MOVE_DELAY = 500 // this should match World.scss -> $pieceMoveSpeed
+const OPPONENT_MOVE_DELAY = 300 // this should match World.scss -> $pieceMoveSpeed
 
 const OPPONENT_MOVE_VELOCITY_TIMER = 'opponent-velocity-timer-'
 

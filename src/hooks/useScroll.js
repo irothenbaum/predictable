@@ -12,7 +12,10 @@ import {useEffect, useRef, useState} from 'react'
 
 /**
  * @typedef {UseScrollOptions} ScrollSettings
- * @property {number} scaleClone
+ * @property {number} zoomScale
+ * @property {number} minZoom
+ * @property {number} maxZoom
+ *
  */
 
 /**
@@ -27,22 +30,21 @@ import {useEffect, useRef, useState} from 'react'
  */
 
 const DEFAULT_OPTIONS = {
-  scaleClone: 1,
+  zoomScale: 1.1,
+  minZoom: 0.25,
+  maxZoom: 2,
 }
 
 function valOrZero(val) {
   return val || 0
 }
 
-const MAX_ZOOM = 4
-const MIN_ZOOM = 0.05
-const ZOOM_SCALE = 1.1
-
 /**
+ * @param {HTMLElement} ref
  * @param {UseScrollOptions?} options
  * @return {UseScrollReturnValue}
  */
-function useScroll(options) {
+function useScroll(ref, options) {
   const [scrollY, setScrollY] = useState(0)
   const [scrollX, setScrollX] = useState(0)
   const [scale, setScale] = useState(1)
@@ -50,10 +52,12 @@ function useScroll(options) {
   const isZoomRef = useRef(false)
   /** @type {{current: ScrollSettings}} */
   const settingsRef = useRef(options)
+  const scaleCloneRef = useRef(scale)
+  const lastTouchRef = useRef([])
 
   // update the settingsRef when the options change
   useEffect(() => {
-    const newSettings = {...DEFAULT_OPTIONS, ...options, scaleClone: scale}
+    const newSettings = {...DEFAULT_OPTIONS, ...options}
     newSettings.maxY = valOrZero(
       newSettings.contentHeight - newSettings.viewHeight,
     )
@@ -64,7 +68,7 @@ function useScroll(options) {
   }, [options])
 
   useEffect(() => {
-    settingsRef.current.scaleClone = scale
+    scaleCloneRef.current = scale
   }, [scale])
 
   // clamp the scrollY value to the min/max
@@ -73,20 +77,19 @@ function useScroll(options) {
       settingsRef.current[axis === 'Y' ? 'viewHeight' : 'viewWidth']
     const contentDimension =
       settingsRef.current[axis === 'Y' ? 'contentHeight' : 'contentWidth']
-    const scaleRef = settingsRef.current.scaleClone
 
-    const effectiveContentSize = contentDimension * scaleRef
+    const effectiveContentSize = contentDimension * scaleCloneRef.current
 
     if (effectiveContentSize <= viewDimension) {
-      return ((contentDimension - viewDimension) / 2) * scaleRef
+      return ((contentDimension - viewDimension) / 2) * scaleCloneRef.current
     }
 
     // I don't full understand why these equations work, but they seemingly do.
-    const extraMinSpace = (viewDimension / 2) * (scaleRef - 1)
+    const extraMinSpace = (viewDimension / 2) * (scaleCloneRef.current - 1)
 
     return Math.min(
       Math.max(v, 0 - extraMinSpace),
-      contentDimension * scaleRef - viewDimension - extraMinSpace,
+      contentDimension * scaleCloneRef.current - viewDimension - extraMinSpace,
     )
   }
 
@@ -95,10 +98,25 @@ function useScroll(options) {
 
   // bind/unbind a scroll listener on mount
   useEffect(() => {
+    if (!ref) {
+      return
+    }
+
+    /**
+     * @param {{deltaX: number, deltaY: number}} e
+     */
     const scrollHandler = e => {
       if (isZoomRef.current) {
-        const zoomChange = e.deltaY > 0 ? 1 / ZOOM_SCALE : ZOOM_SCALE
-        setScale(s => Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, s * zoomChange)))
+        const zoomChange =
+          e.deltaY > 0
+            ? 1 / settingsRef.current.zoomScale
+            : settingsRef.current.zoomScale
+        setScale(s =>
+          Math.max(
+            settingsRef.current.minZoom,
+            Math.min(settingsRef.current.maxZoom, s * zoomChange),
+          ),
+        )
       } else if (isShiftRef.current) {
         setScrollX(s => clampX(s + e.deltaY))
       } else {
@@ -124,16 +142,52 @@ function useScroll(options) {
       }
     }
 
-    window.addEventListener('wheel', scrollHandler)
+    const touchMoveHandler = e => {
+      // TODO: Would like this to momentum scroll more +  some positioning bug currently
+      const thisPos = {
+        x: e.touches[0].clientX - settingsRef.current.viewWidth / 2,
+        y: e.touches[0].clientY - settingsRef.current.viewHeight / 2,
+      }
+      console.log(thisPos)
+      lastTouchRef.current.push(thisPos)
+
+      if (lastTouchRef.current.length > 3) {
+        lastTouchRef.current.shift()
+      }
+
+      setScrollY(clampY(thisPos.y))
+      setScrollX(clampX(thisPos.x))
+    }
+
+    const touchEndHandler = e => {
+      const momentum = lastTouchRef.current.reduce((acc, curr, i, arr) => {
+        if (i === 0) {
+          return {...curr}
+        }
+        const prev = arr[i - 1]
+        return {
+          x: acc.x + curr.x - prev.x,
+          y: acc.y + curr.y - prev.y,
+        }
+      })
+
+      scrollHandler({deltaX: momentum.x, deltaY: momentum.y})
+    }
+
+    ref.addEventListener('wheel', scrollHandler)
+    // ref.addEventListener('touchmove', touchMoveHandler)
+    // ref.addEventListener('touchend', touchEndHandler)
     window.addEventListener('keydown', keyDownHandler)
     window.addEventListener('keyup', keyUpHandler)
 
     return () => {
-      window.removeEventListener('wheel', scrollHandler)
+      ref.removeEventListener('wheel', scrollHandler)
+      // ref.removeEventListener('touchmove', touchMoveHandler)
+      // ref.removeEventListener('touchend', touchEndHandler)
       window.removeEventListener('keydown', keyDownHandler)
       window.removeEventListener('keyup', keyUpHandler)
     }
-  }, [])
+  }, [ref])
 
   return {
     /**
@@ -150,7 +204,12 @@ function useScroll(options) {
      * @param {number} s
      */
     zoomTo(s) {
-      setScale(Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, s)))
+      setScale(
+        Math.max(
+          settingsRef.current.minZoom,
+          Math.min(settingsRef.current.maxZoom, s),
+        ),
+      )
     },
 
     /**
@@ -168,7 +227,12 @@ function useScroll(options) {
      * @param {number} s
      */
     zoomRelative(s) {
-      setScale(Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, scale + s)))
+      setScale(
+        Math.max(
+          settingsRef.current.minZoom,
+          Math.min(settingsRef.current.maxZoom, scale + s),
+        ),
+      )
     },
 
     scrollY: scrollY,
