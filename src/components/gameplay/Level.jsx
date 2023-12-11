@@ -2,8 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import './Level.scss'
 import LevelContext, {HydratedLevel} from '../../contexts/LevelContext.js'
 import World from '../environment/World.jsx'
-import {PieceType, squareSizeRemScale} from '../../lib/constants'
-import useLevelControl from '../../hooks/useLevelControl'
+import {PieceType} from '../../lib/constants'
 import PropTypes from 'prop-types'
 import {instantiateLevelPieces, LevelData} from '../../levels'
 import Scrollable from '../utility/Scrollable'
@@ -15,7 +14,7 @@ import Platform from '../environment/Platform'
 import MovesInput from './MovesInput'
 import MoveShadow from '../environment/MoveShadow'
 
-const typeToComponentMap = {
+const PieceTypeToComponent = {
   [PieceType.Player]: Player,
   [PieceType.Hazard]: Hazard,
   [PieceType.Obstacle]: Obstacle,
@@ -27,7 +26,7 @@ const typeToComponentMap = {
  * @param {Piece} piece
  */
 function renderPiece(piece) {
-  const Component = typeToComponentMap[piece.type]
+  const Component = PieceTypeToComponent[piece.type]
 
   if (Component) {
     return <Component piece={piece} />
@@ -37,12 +36,11 @@ function renderPiece(piece) {
   }
 }
 
-function LevelInner(props) {
+export function LevelInner(props) {
   const [worldHeight, setWorldHeight] = useState(0)
   const [worldWidth, setWorldWidth] = useState(0)
   const [containerHeight, setContainerHeight] = useState(0)
   const [containerWidth, setContainerWidth] = useState(0)
-  const {pieces, gameBoard} = useContext(LevelContext)
   return (
     <div className="level">
       <div
@@ -64,13 +62,15 @@ function LevelInner(props) {
           viewWidth={containerWidth}>
           <World
             renderPiece={renderPiece}
-            pieces={pieces}
-            dimensionX={gameBoard.width}
-            dimensionY={gameBoard.height}
+            pieces={props.pieces}
+            dimensionX={props.gameBoard.width}
+            dimensionY={props.gameBoard.height}
             onRenderWorld={board => {
               setWorldWidth(board.width)
               setWorldHeight(board.height)
             }}
+            onClickSquare={props.onClickSquare}
+            onHoverSquare={props.onHoverSquare}
           />
         </Scrollable>
       </div>
@@ -78,7 +78,12 @@ function LevelInner(props) {
   )
 }
 
-LevelInner.propTypes = {}
+LevelInner.propTypes = {
+  pieces: PropTypes.array,
+  gameBoard: PropTypes.object,
+  onClickSquare: PropTypes.func,
+  onHoverSquare: PropTypes.func,
+}
 
 // --------------------------------------------------------------------------------
 
@@ -118,7 +123,7 @@ function Level(props) {
           setMoves(newMoves)
         },
       }}>
-      <LevelInner />
+      <LevelInner gameBoard={gameBoard} pieces={pieces} />
       <MovesInput onWin={props.onWin} onLose={props.onLose} />
     </LevelContext.Provider>
   )

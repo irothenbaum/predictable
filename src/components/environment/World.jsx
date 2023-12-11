@@ -1,10 +1,11 @@
-import React, {useEffect} from 'react'
+import React, {memo, useCallback, useEffect, useRef} from 'react'
 import './World.scss'
 import PropTypes from 'prop-types'
 import {
   constructClassString,
   convertRemToPixels,
   getCoordinateKey,
+  isSameSquare,
 } from '../../lib/utilities'
 import {squareSizeRemScale} from '../../lib/constants'
 
@@ -30,18 +31,30 @@ Square.propTypes = {
 // --------------------------------------------------------------------------------
 
 function World(props) {
-  // by dividing width by number of pieces we determine the percentage width/height of each square to the board
-  const relativeWidthRatio = Math.round(10000 / props.dimensionX) / 100
-  const relativeHeightRatio = Math.round(10000 / props.dimensionY) / 100
-  const relativeWidthPercentage = `${relativeWidthRatio}%`
-  const relativeHeightPercentage = `${relativeHeightRatio}%`
-
   useEffect(() => {
     props.onRenderWorld({
       height: convertRemToPixels(props.dimensionY * squareSizeRemScale),
       width: convertRemToPixels(props.dimensionX * squareSizeRemScale),
     })
   }, [props.dimensionX, props.dimensionY])
+
+  const handleClickSquare = useCallback(
+    square => {
+      if (typeof props.onClickSquare === 'function') {
+        props.onClickSquare(square)
+      }
+    },
+    [props.onClickSquare],
+  )
+
+  const handleHoverSquare = useCallback(
+    square => {
+      if (typeof props.onHoverSquare === 'function') {
+        props.onHoverSquare(square)
+      }
+    },
+    [props.onHoverSquare],
+  )
 
   if (!props.dimensionX || !props.dimensionY) {
     return null
@@ -81,7 +94,7 @@ function World(props) {
             <div
               className={constructClassString('world-piece-container', {
                 _warped: piece.position._warped,
-                [`velocity-${Math.abs(piece.velocity.columnChange)}`]:
+                [`velocity-${Math.abs(piece.velocity?.columnChange || 0)}`]:
                   piece.velocity,
               })}
               key={piece.id}
@@ -94,6 +107,11 @@ function World(props) {
           )
         })}
       </div>
+
+      <WorldEventListener
+        onClickSquare={handleClickSquare}
+        onHoverSquare={handleHoverSquare}
+      />
     </div>
   )
 }
@@ -114,7 +132,6 @@ World.propTypes = {
   ),
   onRenderWorld: PropTypes.func,
   onClickSquare: PropTypes.func,
-  onPlacePiece: PropTypes.func,
   onHoverSquare: PropTypes.func,
 }
 
@@ -124,3 +141,60 @@ World.defaultProps = {
 }
 
 export default World
+
+// --------------------------------------------------------------------------------
+
+const WorldEventListener = memo(props => {
+  const boardRef = useRef(null)
+  const lastHoveredSquare = useRef(null)
+
+  const handlePress = e => {
+    const thisSquare = getSquarePosition(e)
+    if (typeof props.onClickSquare === 'function') {
+      props.onClickSquare(thisSquare)
+    }
+  }
+
+  const handleMove = e => {
+    const thisSquare = getSquarePosition(e)
+    if (
+      !lastHoveredSquare.current ||
+      !isSameSquare(lastHoveredSquare.current, thisSquare)
+    ) {
+      lastHoveredSquare.current = thisSquare
+      if (typeof props.onHoverSquare === 'function') {
+        props.onHoverSquare(lastHoveredSquare.current)
+      }
+    }
+  }
+
+  return (
+    <div
+      className="world-event-listener"
+      onClick={handlePress}
+      onMouseMove={handleMove}
+      ref={boardRef}
+    />
+  )
+})
+
+WorldEventListener.propTypes = {
+  onClickSquare: PropTypes.func,
+  onHoverSquare: PropTypes.func,
+}
+
+/**
+ * @param {*} e
+ * @return {Coordinate}
+ */
+function getSquarePosition(e) {
+  const squareSize = convertRemToPixels(squareSizeRemScale)
+  const pos = {
+    x: e.nativeEvent.offsetX,
+    y: e.nativeEvent.offsetY,
+  }
+  return {
+    row: Math.floor(pos.y / squareSize),
+    column: Math.floor(pos.x / squareSize),
+  }
+}

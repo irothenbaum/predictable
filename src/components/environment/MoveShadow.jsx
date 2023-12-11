@@ -5,6 +5,10 @@ import {getArrowIconFromVelocity} from '../utilities'
 import {PiecePropType} from '../../lib/constants'
 
 function MoveShadow(props) {
+  if (!props.piece.velocity) {
+    return null
+  }
+
   return (
     <Icon
       className="move-shadow"

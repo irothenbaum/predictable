@@ -3,7 +3,7 @@ import {createPortal} from 'react-dom'
 import './Modal.scss'
 import Icon, {CLOSE} from './Icon'
 import PropTypes from 'prop-types'
-import {constructClassString} from '../../utilities'
+import {constructClassString} from '../../lib/utilities'
 
 function Modal(props) {
   return createPortal(

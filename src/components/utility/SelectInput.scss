@@ -1,0 +1,55 @@
+@use '../../styles/all';
+
+.select-input {
+  width: 100%;
+  position: relative;
+
+  &.open {
+    .select-input-options {
+      display: block;
+    }
+  }
+
+  .select-input-options {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-height: 300px;
+    min-height: 100px;
+    min-width: 100%;
+    border-radius: all.$borderRadiusMedium;
+    border: 1px solid all.$lightGrey;
+    overflow-y: auto;
+    @include all.shadow();
+    z-index: 10;
+    background-color: all.$white;
+
+    .option {
+      display: block;
+      width: 100%;
+      padding: all.$spaceSmall;
+      background-color: all.$white;
+      cursor: pointer;
+      transition: background-color all.$transition;
+
+      &:hover {
+        background-color: all.$offWhite;
+      }
+    }
+  }
+
+  .select-input-value {
+    @include all.input-box();
+    @include all.ellipsis();
+    cursor: pointer;
+    position: relative;
+    padding-right: all.$spaceLarge;
+
+    .dropdown-icon {
+      position: absolute;
+      right: all.$spaceSmall;
+
+    }
+  }
+}

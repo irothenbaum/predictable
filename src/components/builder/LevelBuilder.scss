@@ -1,0 +1,46 @@
+@use "../../styles/all";
+
+$panelWidth: 300px;
+
+.level-builder {
+  height: 100%;
+  width: calc(100% - $panelWidth);
+  margin-right: $panelWidth;
+
+  .level-wrapper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+
+
+    background-color: all.$darkGrey;
+    padding: all.$spaceMedium;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: $panelWidth;
+    height: 100%;
+    z-index: 10;
+
+    p {
+      margin-bottom: all.$spaceExtraSmall;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      margin-bottom: all.$spaceMedium;
+    }
+  }
+
+  .generated-level-code {
+    height: 6rem;
+    width: 10rem;
+  }
+}

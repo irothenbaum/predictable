@@ -10,7 +10,7 @@ import {
  * @param {Velocity} velocity
  */
 export function getArrowIconFromVelocity(velocity) {
-  if (velocity.rowChange !== 0 && velocity.columnChange !== 0) {
+  if (!velocity || (velocity.rowChange !== 0 && velocity.columnChange !== 0)) {
     console.warn('Invalid velocity for arrow icon')
     return null
   }

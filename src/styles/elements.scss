@@ -83,6 +83,7 @@
 }
 
 @mixin input-box() {
+  color: colors.$copyColor;
   line-height: 1.5em;
   width: 100%;
   border-radius: layout.$borderRadiusMedium;

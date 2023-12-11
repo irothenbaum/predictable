@@ -5,16 +5,17 @@ $pieceMoveSpeed: 0.3s;
 .world {
   position: relative;
 
-  .world-click-listener, .world-pieces-container {
+  .world-event-listener, .world-pieces-container {
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
     width: 100%;
     z-index: 10;
+    overflow: hidden;
   }
 
-  .world-click-listener {
+  .world-event-listener {
     cursor: pointer;
     z-index: 100;
   }

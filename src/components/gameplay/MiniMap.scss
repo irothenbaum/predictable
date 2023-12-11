@@ -1,7 +1,7 @@
 @use '../../styles/all';
 
 .mini-map-container {
-  position: fixed;
+  position: absolute;
   top: all.$spaceMedium;
   right: all.$spaceMedium;
   z-index: 100;

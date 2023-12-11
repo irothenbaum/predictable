@@ -4,6 +4,7 @@ import GameContext from '../contexts/GameContext.js'
 import Level from './gameplay/Level'
 import PropTypes from 'prop-types'
 import {LEVEL_TUTORIAL} from '../levels'
+import LevelBuilder from './builder/LevelBuilder'
 
 function PredictableGame(props) {
   const handleLose = () => console.log('LOSE')
@@ -12,6 +13,7 @@ function PredictableGame(props) {
   return (
     <GameContext.Provider value={{}}>
       <Level level={LEVEL_TUTORIAL} onWin={handleWin} onLose={handleLose} />
+      {/*<LevelBuilder />*/}
     </GameContext.Provider>
   )
 }

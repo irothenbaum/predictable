@@ -28,12 +28,21 @@ export const PiecePropType = {
     position: PropTypes.shape({
       row: PropTypes.number,
       column: PropTypes.number,
-    }).isRequired,
+    }),
     velocity: PropTypes.shape({
       rowChange: PropTypes.number,
       columnChange: PropTypes.number,
     }),
   }).isRequired,
+}
+
+export const InputProps = {
+  onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  className: PropTypes.string,
 }
 
 // this should match the rem scale in constants.scss
