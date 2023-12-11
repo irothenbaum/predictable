@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import './Level.scss'
 import LevelContext, {HydratedLevel} from '../../contexts/LevelContext.js'
 import World from '../environment/World.jsx'
-import {PieceType} from '../../lib/constants'
+import {PieceType, squareSizeRemScale} from '../../lib/constants'
 import PropTypes from 'prop-types'
 import {instantiateLevelPieces, LevelData} from '../../levels'
 import Scrollable from '../utility/Scrollable'
@@ -13,6 +13,7 @@ import Obstacle from '../environment/Obstacle'
 import Platform from '../environment/Platform'
 import MovesInput from './MovesInput'
 import MoveShadow from '../environment/MoveShadow'
+import {convertRemToPixels} from '../../lib/utilities'
 
 const PieceTypeToComponent = {
   [PieceType.Player]: Player,
@@ -41,6 +42,19 @@ export function LevelInner(props) {
   const [worldWidth, setWorldWidth] = useState(0)
   const [containerHeight, setContainerHeight] = useState(0)
   const [containerWidth, setContainerWidth] = useState(0)
+  const [scrollPos, setScrollPos] = useState(undefined)
+
+  // when the starting position changes, we need to scroll to it (converting rows/columns to x/y
+  useEffect(() => {
+    if (props.startingPosition) {
+      const squareSizePx = convertRemToPixels(squareSizeRemScale)
+      setScrollPos({
+        y: props.startingPosition.row * squareSizePx - containerHeight / 2,
+        x: props.startingPosition.column * squareSizePx - containerWidth / 2,
+      })
+    }
+  }, [props.startingPosition])
+
   return (
     <div className="level">
       <div
@@ -56,6 +70,7 @@ export function LevelInner(props) {
           }
         }}>
         <Scrollable
+          scrollPos={scrollPos}
           height={worldHeight}
           width={worldWidth}
           viewHeight={containerHeight}
@@ -79,6 +94,10 @@ export function LevelInner(props) {
 }
 
 LevelInner.propTypes = {
+  startingPosition: PropTypes.shape({
+    row: PropTypes.number,
+    column: PropTypes.number,
+  }),
   pieces: PropTypes.array,
   gameBoard: PropTypes.object,
   onClickSquare: PropTypes.func,
@@ -102,6 +121,8 @@ function Level(props) {
     setGameBoard(LevelData[props.level].gameBoard)
   }, [props.level])
 
+  const playerPiece = pieces.find(p => p.isPlayer)
+
   return (
     <LevelContext.Provider
       value={{
@@ -109,7 +130,7 @@ function Level(props) {
         moves,
         gameBoard,
         setPieces,
-        playerPiece: pieces.find(p => p.isPlayer),
+        playerPiece,
 
         queueMove: move => {
           setMoves([...moves, move])
@@ -123,7 +144,11 @@ function Level(props) {
           setMoves(newMoves)
         },
       }}>
-      <LevelInner gameBoard={gameBoard} pieces={pieces} />
+      <LevelInner
+        gameBoard={gameBoard}
+        pieces={pieces}
+        startingPosition={playerPiece?.position}
+      />
       <MovesInput onWin={props.onWin} onLose={props.onLose} />
     </LevelContext.Provider>
   )

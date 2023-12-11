@@ -112,6 +112,9 @@
     z-index: 1;
   }
 
+  margin-left: layout.$spaceExtraSmall;
+  margin-right: layout.$spaceExtraSmall;
+
   &.left-end, &.middle {
     &, #{$child} {
       border-bottom-right-radius: 0;
@@ -127,10 +130,15 @@
   }
 
   &.left-end {
-    margin-left: 0.4em;
+    margin-right: 0;
   }
   &.right-end {
-    margin-right: 0.4em;
+    margin-left: 0;
+  }
+
+  &.middle {
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 

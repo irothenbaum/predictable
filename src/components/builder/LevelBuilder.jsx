@@ -1,8 +1,7 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import './LevelBuilder.scss'
-import PropTypes from 'prop-types'
 import NumberInput from '../utility/NumberInput'
-import Button from '../utility/Button'
+import Button, {VARIANT_SECONDARY} from '../utility/Button'
 import {LevelInner} from '../gameplay/Level'
 import SelectInput from '../utility/SelectInput'
 import {PieceType} from '../../lib/constants'
@@ -10,7 +9,6 @@ import Player from '../environment/Player'
 import Hazard from '../environment/Hazard'
 import Obstacle from '../environment/Obstacle'
 import Platform from '../environment/Platform'
-import MoveShadow from '../environment/MoveShadow'
 import {isSameSquare} from '../../lib/utilities'
 import {v4 as uuid} from 'uuid'
 import Modal from '../utility/Modal'
@@ -28,7 +26,17 @@ function LevelBuilder(props) {
   const [pieces, setPieces] = useState([])
   const [creatingVelocity, setCreatingVelocity] = useState(0)
   const [creatingPieceType, setCreatingPieceType] = useState(PieceType.Obstacle)
-  const [showModal, setShowModal] = useState(false)
+  const [showBuildModal, setShowBuildModal] = useState(false)
+  const [showLoadModal, setShowLoadModal] = useState(false)
+  const [loadText, setLoadText] = useState('')
+  const [startingPosition, setStartingPosition] = useState({row: 0, column: 0})
+
+  useEffect(() => {
+    const playerPiece = pieces.find(p => p.type === PieceType.Player)
+    setStartingPosition(
+      playerPiece ? playerPiece.position : {row: 0, column: 0},
+    )
+  }, [width, height])
 
   const handleClickSquare = s => {
     const without = pieces.filter(
@@ -49,10 +57,27 @@ function LevelBuilder(props) {
     }
   }
 
+  const handleLoadLevel = () => {
+    /** @type {LevelDefinition} level  */
+    const level = JSON.parse(loadText)
+    setWidth(level.gameBoard.width)
+    setHeight(level.gameBoard.height)
+    setPieces(
+      level.pieces.map(p => ({
+        id: uuid(),
+        type: p.type,
+        position: {row: p.row, column: p.column},
+        velocity: {rowChange: p.rowChange, columnChange: p.columnChange},
+      })),
+    )
+    setShowLoadModal(false)
+  }
+
   return (
     <div className="level-builder">
       <div className="level-wrapper">
         <LevelInner
+          startingPosition={startingPosition}
           gameBoard={{width, height}}
           pieces={pieces}
           onClickSquare={handleClickSquare}
@@ -86,21 +111,43 @@ function LevelBuilder(props) {
           onChange={setCreatingPieceType}
         />
         <div style={{height: '100%'}} />
-        <Button className="build-cta" onClick={() => setShowModal(true)}>
-          Build
+        <Button onClick={() => setShowBuildModal(true)}>Build</Button>
+        <Button
+          variant={VARIANT_SECONDARY}
+          onClick={() => setShowLoadModal(true)}>
+          Load
         </Button>
       </div>
 
-      <Modal onClose={() => setShowModal(false)} isOpen={showModal}>
+      <Modal onClose={() => setShowBuildModal(false)} isOpen={showBuildModal}>
         <h3>Level Code</h3>
         <textarea
           style={{
             marginTop: '1rem',
             height: '10rem',
             width: '20rem',
-          }}>
-          {createLevelJSON(width, height, pieces)}
+          }}
+          value={JSON.stringify(
+            showBuildModal ? createLevelJSON(width, height, pieces) : '',
+          )}
+          onChange={() => {}}></textarea>
+      </Modal>
+
+      <Modal onClose={() => setShowLoadModal(false)} isOpen={showLoadModal}>
+        <h3>Level Code</h3>
+        <textarea
+          style={{
+            marginTop: '1rem',
+            height: '10rem',
+            width: '20rem',
+          }}
+          value={loadText}
+          onChange={e => setLoadText(e.target.value)}>
+          Enter level JSON here
         </textarea>
+        <Button onClick={handleLoadLevel} variant={VARIANT_SECONDARY}>
+          Load level
+        </Button>
       </Modal>
     </div>
   )
@@ -112,10 +159,10 @@ export default LevelBuilder
  * @param {number} width
  * @param {number} height
  * @param {Array<AbstractPiece>} pieces
- * @return {string}
+ * @return {LevelDefinition}
  */
 function createLevelJSON(width, height, pieces) {
-  return JSON.stringify({
+  return {
     gameBoard: {
       width,
       height,
@@ -127,5 +174,5 @@ function createLevelJSON(width, height, pieces) {
       rowChange: p.velocity.rowChange,
       columnChange: p.velocity.columnChange,
     })),
-  })
+  }
 }

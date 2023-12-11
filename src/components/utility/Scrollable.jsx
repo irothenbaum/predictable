@@ -5,7 +5,7 @@ import MiniMap from '../gameplay/MiniMap'
 
 function Scrollable(props) {
   const [containerRef, setContainerRef] = useState(null)
-  const {scrollY, scrollX, scale, scrollTo} = useScroll(containerRef, {
+  const {scrollY, scrollX, scale, scrollTo, zoomTo} = useScroll(containerRef, {
     contentWidth: props.width,
     viewWidth: props.viewWidth,
     contentHeight: props.height,
@@ -13,6 +13,14 @@ function Scrollable(props) {
     horizontalScrollKey: 'Shift',
     zoomKey: ' ',
   })
+
+  // whenever our scrollPos changes, we also zoom back out to 1
+  useEffect(() => {
+    if (props.scrollPos) {
+      scrollTo(props.scrollPos.y, props.scrollPos.x)
+      zoomTo(1)
+    }
+  }, [props.scrollPos])
 
   let transforms = []
 
@@ -62,6 +70,10 @@ function Scrollable(props) {
 }
 
 Scrollable.propTypes = {
+  scrollPos: PropTypes.shape({
+    x: PropTypes.number,
+    y: PropTypes.number,
+  }),
   viewHeight: PropTypes.number,
   viewWidth: PropTypes.number,
   height: PropTypes.number,

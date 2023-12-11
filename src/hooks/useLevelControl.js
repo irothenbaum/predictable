@@ -283,14 +283,13 @@ function checkForHazardCollision(pieces, playerPiece) {
  * @return {Coordinate & {_warped?:boolean}}
  */
 function applyVelocityToCoordinate(coord, velocity, gameBoard) {
-  // column warps around the side
+  // both columns and rows can wrap around the board
   const nextColumn =
     (gameBoard.width + coord.column + velocity.columnChange) % gameBoard.width
 
-  // row does not wrap around the sides
   const nextRow = Math.max(
     0,
-    Math.min(gameBoard.height, coord.row + velocity.rowChange),
+    (gameBoard.height + coord.row + velocity.rowChange) % gameBoard.height,
   )
 
   return {
@@ -300,7 +299,8 @@ function applyVelocityToCoordinate(coord, velocity, gameBoard) {
     // we know it warped if the difference in columns is greater than the velocity
     // (this is only true if velocity < board width, which is almost certainly always true)
     _warped:
-      Math.abs(nextColumn - coord.column) > Math.abs(velocity.columnChange),
+      Math.abs(nextColumn - coord.column) > Math.abs(velocity.columnChange) ||
+      Math.abs(nextRow - coord.row) > Math.abs(velocity.rowChange),
   }
 }
 
