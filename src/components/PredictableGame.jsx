@@ -7,8 +7,8 @@ import {LEVEL_TUTORIAL} from '../levels'
 import LevelBuilder from './builder/LevelBuilder'
 
 function PredictableGame(props) {
-  const handleLose = () => console.log('LOSE')
-  const handleWin = () => console.log('WIN')
+  const handleLose = () => window.alert('LOST')
+  const handleWin = () => window.alert('WON')
 
   return (
     <GameContext.Provider value={{}}>

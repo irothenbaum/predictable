@@ -96,6 +96,40 @@
   }
 }
 
+@mixin neon($color: colors.$primaryColor, $glowColor: colors.$primaryColorLight, $glowSize: 0.2em) {
+  background-color: $color;
+  border: 0.2em solid $glowColor;
+  box-shadow: 0 0 $glowSize $glowColor;
+  border-radius: layout.$borderRadiusLarge;
+  z-index: 2;
+  margin-left: layout.$spaceExtraSmall;
+  margin-right: layout.$spaceExtraSmall;
+
+  &.left-end, &.middle {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-right: none;
+  }
+
+  &.right-end, &.middle {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-left: none;
+  }
+
+  &.left-end {
+    margin-right: 0;
+  }
+  &.right-end {
+    margin-left: 0;
+  }
+
+  &.middle {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 @mixin depth($child, $mainColor: colors.$offWhite, $shadeColor: colors.$lightGrey, $depth: 0.8em) {
   background-color: $shadeColor;
   border-radius: layout.$borderRadiusLarge;

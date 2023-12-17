@@ -21,6 +21,7 @@
  * This is used in the level.json files as a shorthand for piece + positions
  * @typedef {Coordinate & Velocity} PieceDefinition
  * @property {PieceType} type
+ * @property {Variant?} variant
  */
 
 // -----------------------------------------------------------------

@@ -7,11 +7,10 @@
   align-items: center;
   justify-content: center;
 
-  .magnitude {
+  .magnitude, .icon-container {
     font-size: all.$fontSize3;
     color: all.$white;
     margin: 0 all.$spaceExtraSmall;
-    text-shadow: 0 0.1em 0 all.$shadow;
     position: relative;
     transform: translateY(-0.1em);
   }

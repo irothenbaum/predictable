@@ -3,5 +3,6 @@
 .obstacle {
   height: calc(#{all.$squareSize} * 0.6);
   width: 100%;
-  @include all.depth('.obstacle-inner', all.$obstacleColor, all.$obstacleColorDark);
+  @include all.neon(all.$obstacleColorDark, all.$obstacleColor);
+  box-shadow: none;
 }

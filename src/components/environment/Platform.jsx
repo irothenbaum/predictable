@@ -7,9 +7,7 @@ import {PiecePropType} from '../../lib/constants'
 function Platform(props) {
   return (
     <div className={constructClassString('platform', props.piece.variant)}>
-      <div className="platform-inner">
-        <VelocityIndicator velocity={props.piece.velocity} />
-      </div>
+      <VelocityIndicator velocity={props.piece.velocity} />
     </div>
   )
 }

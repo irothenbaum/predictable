@@ -4,11 +4,12 @@ import NumberInput from '../utility/NumberInput'
 import Button, {VARIANT_SECONDARY} from '../utility/Button'
 import {LevelInner} from '../gameplay/Level'
 import SelectInput from '../utility/SelectInput'
-import {PieceType} from '../../lib/constants'
+import {PieceType, Variant} from '../../lib/constants'
 import Player from '../environment/Player'
 import Hazard from '../environment/Hazard'
 import Obstacle from '../environment/Obstacle'
 import Platform from '../environment/Platform'
+import Goal from '../environment/Goal'
 import {isSameSquare} from '../../lib/utilities'
 import {v4 as uuid} from 'uuid'
 import Modal from '../utility/Modal'
@@ -18,6 +19,14 @@ const PieceTypeToComponent = {
   [PieceType.Hazard]: Hazard,
   [PieceType.Obstacle]: Obstacle,
   [PieceType.Platform]: Platform,
+  [PieceType.Goal]: Goal,
+}
+
+const VariantLabels = {
+  '': 'None',
+  [Variant.Middle]: 'Middle',
+  [Variant.LeftEnd]: 'Left',
+  [Variant.RightEnd]: 'Right',
 }
 
 function LevelBuilder(props) {
@@ -25,6 +34,7 @@ function LevelBuilder(props) {
   const [height, setHeight] = useState(8)
   const [pieces, setPieces] = useState([])
   const [creatingVelocity, setCreatingVelocity] = useState(0)
+  const [creatingVariant, setCreatingVariant] = useState('')
   const [creatingPieceType, setCreatingPieceType] = useState(PieceType.Obstacle)
   const [showBuildModal, setShowBuildModal] = useState(false)
   const [showLoadModal, setShowLoadModal] = useState(false)
@@ -50,6 +60,7 @@ function LevelBuilder(props) {
           type: creatingPieceType,
           position: s,
           velocity: {columnChange: creatingVelocity, rowChange: 0},
+          variant: creatingVariant ? creatingVariant : undefined,
         },
       ])
     } else {
@@ -94,6 +105,15 @@ function LevelBuilder(props) {
           <NumberInput
             value={creatingVelocity}
             onChange={setCreatingVelocity}
+          />
+        </div>
+        <p>Variant</p>
+        <div className="row">
+          <SelectInput
+            options={Object.keys(VariantLabels)}
+            value={creatingVariant}
+            renderOption={l => <span>{VariantLabels[l]}</span>}
+            onChange={setCreatingVariant}
           />
         </div>
         <p>Piece</p>
@@ -173,6 +193,7 @@ function createLevelJSON(width, height, pieces) {
       column: p.position.column,
       rowChange: p.velocity.rowChange,
       columnChange: p.velocity.columnChange,
+      variant: p.variant || undefined,
     })),
   }
 }

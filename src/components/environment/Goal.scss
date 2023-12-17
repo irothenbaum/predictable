@@ -1,0 +1,7 @@
+@use '../../styles/all';
+
+.goal {
+  height: #{all.$squareSizeRemScale - 1}rem;
+  width: #{all.$squareSizeRemScale - 1}rem;
+  @include all.neon(all.$goalColor, all.$goalColorLight);
+}

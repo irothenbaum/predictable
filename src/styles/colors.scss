@@ -9,12 +9,12 @@ $offWhite: #f5f0e4;
 $white: #fffcf3;
 
 $shadowExtraSoft: rgba($black, 0.10);
-$shadowSoft: rgba($black, 0.25);
+$shadowSoft: rgba($black, 15);
 $shadow: rgba($black, 0.50);
 $shadowHard: rgba($black, 0.80);
 
 $sunbeamExtraSoft: rgba($white, 0.10);
-$sunbeamSoft: rgba($white, 0.25);
+$sunbeamSoft: rgba($white, 15);
 $sunbeam: rgba($white, 0.50);
 $sunbeamHard: rgba($white, 0.80);
 
@@ -50,20 +50,19 @@ $ctaColorTertiaryDark: $greenColorDark;
 
 
 // World colors
-$worldColor: #41802e;
-$worldColorDark: #654d32;
+$worldColor: $black;
 
-$playerColor: #f5569e;
-$playerColorDark: #88003b;
+$goalColor: rgba(108, 255, 115, 0.2);
+$goalColorLight: #6cff73;
 
-$hazardColor: #ffa600;
-$hazardColorDark: #b47600;
+$playerColor: rgba(250, 25, 127, 0.2);
+$playerColorLight: #ff6ca7;
 
-$waterColor: #00e6ff;
-$waterColorDark: #00a3b2;
+$hazardColor: rgba(255, 186, 54, 0.2);
+$hazardColorLight: #ffc867;
 
-$platformColor: #2e67be;
-$platformColorDark: #1a3d6e;
+$platformColor: rgba(46, 103, 190, 0.2);
+$platformColorLight: #5da1ff;
 
-$obstacleColor: #564e4d;
-$obstacleColorDark: #3d3938;
+$obstacleColor: #423c3b;
+$obstacleColorDark: $obstacleColor;

@@ -6,7 +6,7 @@ import {isSameSquare} from '../lib/utilities'
 import {PieceType} from '../lib/constants'
 
 const MOVE_TIMER = 'timer'
-const MOVE_DELAY = 500
+const MOVE_DELAY = 1000
 
 const OPPONENT_MOVE_TIMER = 'opponent-timer'
 const OPPONENT_MOVE_DELAY = 300 // this should match World.scss -> $pieceMoveSpeed
@@ -102,6 +102,10 @@ function useLevelControl(options) {
 
       // check if the player is on a platform
       playerOnPlatform = piecesOnThatSquare.find(p => p.isPlatform)
+      if (!playerOnPlatform) {
+        // if the player is not on a platform, we clear their velocity
+        delete playerPiece.velocity
+      }
 
       // remove any move-shadow that was on the square before
       piecesAfterPlayerMove = piecesAfterPlayerMove.filter(
@@ -146,7 +150,7 @@ function useLevelControl(options) {
 
         // next we need to apply velocities, but we need to do it one step at a time
         const velocityBuckets = piecesAfterFilter.reduce((agr, p) => {
-          if (p.velocity && !p.isMoveShadow) {
+          if (p.velocity && !p.isMoveShadow && !p.isPlayer) {
             // we group pieces by their velocity magnitude from 0 to n - 1
             // i.e., pieces with velocity 1 are in index 0, pieces with velocity 2 is in index 1, 3 is in index 2, etc
             const magnitude = getHorizontalVelocityMagnitude(p.velocity) - 1
@@ -183,21 +187,26 @@ function useLevelControl(options) {
 
               // if the player was on this platform, we apply that platform's velocity to the player
               if (playerOnPlatform && p.id === playerOnPlatform.id) {
+                const normalizedVelocity = normalizeVelocity(p.velocity)
                 const playerNextCoord = applyVelocityToCoordinate(
                   playerPiece.position,
-                  p.velocity,
+                  normalizedVelocity,
                   gameBoard,
                 )
                 // can only move the player if it wasn't a warped move
                 if (!playerNextCoord._warped) {
                   playerPiece.position = playerNextCoord
+
+                  // we temporarily set the player's velocity so the animation timing works correctly in World.jsx
+                  playerPiece.velocity = p.velocity
                 }
               }
             }
           })
 
           // we check if there any collisions after the world pieces move
-          if (checkForHazardCollision(piecesInThisBucket, playerPiece)) {
+          // NOTE: we need to check all pieces in case the player was on a platform that moved into an obstacle, knocked them off into a hazard
+          if (checkForHazardCollision(pieces, playerPiece)) {
             handleLose()
             return
           }
@@ -232,7 +241,7 @@ function useLevelControl(options) {
           stepPieces(piecesInThisBucket, i, i)
         }
       },
-      OPPONENT_MOVE_DELAY,
+      MOVE_DELAY / 2,
     )
   }, [revealingMoveIndex])
 
@@ -270,10 +279,14 @@ function useLevelControl(options) {
  * @returns {Hazard|null}
  */
 function checkForHazardCollision(pieces, playerPiece) {
-  const hazards = pieces.filter(
-    p => p.isHazard && isSameSquare(p.position, playerPiece.position),
+  const piecesOnPlayerSquare = pieces.filter(p =>
+    isSameSquare(p.position, playerPiece.position),
   )
-  return hazards.length > 0 ? hazards[0] : null
+  // if the player is on a platform they are safe
+  if (piecesOnPlayerSquare.some(p => p.isPlatform)) {
+    return null
+  }
+  return piecesOnPlayerSquare.find(p => p.isHazard) || null
 }
 
 /**

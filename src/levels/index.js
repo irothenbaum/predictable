@@ -50,8 +50,12 @@ function pieceDefinitionToPiece(p, coordsToPieceMap) {
   const leftCoords = getCoordinateKey({row: p.row, column: p.column - 1})
   const rightCoords = getCoordinateKey({row: p.row, column: p.column + 1})
 
-  const hasLeftPiece = !!coordsToPieceMap[leftCoords]
-  const hasRightPiece = !!coordsToPieceMap[rightCoords]
+  const hasLeftPiece =
+    Array.isArray(coordsToPieceMap[leftCoords]) &&
+    !!coordsToPieceMap[leftCoords].find(p2 => p2.type === p.type)
+  const hasRightPiece =
+    Array.isArray(coordsToPieceMap[rightCoords]) &&
+    !!coordsToPieceMap[rightCoords].find(p2 => p2.type === p.type)
 
   return {
     id: uuid(),
@@ -71,12 +75,13 @@ function pieceDefinitionToPiece(p, coordsToPieceMap) {
     isCoin: p.type === PieceType.Coin,
     isGoal: p.type === PieceType.Goal,
     variant:
-      hasLeftPiece && hasRightPiece
+      p.variant ||
+      (hasLeftPiece && hasRightPiece
         ? Variant.Middle
         : hasLeftPiece
         ? Variant.RightEnd
         : hasRightPiece
         ? Variant.LeftEnd
-        : null,
+        : null),
   }
 }

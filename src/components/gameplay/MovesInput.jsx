@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect} from 'react'
 import './MovesInput.scss'
 import PropTypes from 'prop-types'
 import useLevelControl from '../../hooks/useLevelControl'
@@ -30,6 +30,40 @@ function MovesInput(props) {
     onWin: props.onWin,
     onLose: props.onLose,
   })
+
+  useEffect(() => {
+    const handleKeyDown = e => {
+      console.log(e.key)
+      switch (e.key) {
+        case 'ArrowLeft':
+          queueMove(MovementOptions[0])
+          break
+        case 'ArrowUp':
+          queueMove(MovementOptions[1])
+          break
+        case ' ':
+          queueMove(MovementOptions[2])
+          break
+        case 'ArrowDown':
+          queueMove(MovementOptions[3])
+          break
+        case 'ArrowRight':
+          queueMove(MovementOptions[4])
+          break
+        case 'Enter':
+          playMoves()
+          break
+        case 'r':
+          popMove()
+          break
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
 
   return (
     <div className="moves-input-container">

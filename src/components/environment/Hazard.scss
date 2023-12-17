@@ -3,7 +3,7 @@
 .hazard {
   height: calc(#{all.$squareSize} * 0.6);
   width: 100%;
-  @include all.depth('.hazard-inner', all.$hazardColor, all.$hazardColorDark);
+  @include all.neon(all.$hazardColor, all.$hazardColorLight);
 
   .icon-with-shadow {
     font-size: all.$fontSize3;

@@ -14,6 +14,7 @@ import Platform from '../environment/Platform'
 import MovesInput from './MovesInput'
 import MoveShadow from '../environment/MoveShadow'
 import {convertRemToPixels} from '../../lib/utilities'
+import Goal from '../environment/Goal'
 
 const PieceTypeToComponent = {
   [PieceType.Player]: Player,
@@ -21,6 +22,7 @@ const PieceTypeToComponent = {
   [PieceType.Obstacle]: Obstacle,
   [PieceType.Platform]: Platform,
   [PieceType.MoveShadow]: MoveShadow,
+  [PieceType.Goal]: Goal,
 }
 
 /**
@@ -133,15 +135,17 @@ function Level(props) {
         playerPiece,
 
         queueMove: move => {
-          setMoves([...moves, move])
+          setMoves(m => [...m, move])
         },
         clearMoves: () => {
           setMoves([])
         },
         popMove: () => {
-          const newMoves = [...moves]
-          newMoves.pop()
-          setMoves(newMoves)
+          setMoves(m => {
+            const newMoves = [...m]
+            newMoves.pop()
+            return newMoves
+          })
         },
       }}>
       <LevelInner

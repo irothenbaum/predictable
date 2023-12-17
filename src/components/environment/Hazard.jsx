@@ -7,9 +7,7 @@ import {PiecePropType} from '../../lib/constants'
 function Hazard(props) {
   return (
     <div className={constructClassString('hazard', props.piece.variant)}>
-      <div className="hazard-inner">
-        <VelocityIndicator velocity={props.piece.velocity} />
-      </div>
+      <VelocityIndicator velocity={props.piece.velocity} />
     </div>
   )
 }
