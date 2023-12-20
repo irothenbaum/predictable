@@ -1,18 +1,11 @@
 @use "../../styles/all";
 
 .modal-container {
-  position: fixed;
-  top: 0;
-  left: 0;
+  @include all.fixed-overlay();
   z-index: 1000;
-  height: 100%;
-  width: 100%;
   opacity: 0;
   transform: scale(0);
   transition: opacity all.$transition;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
   &.open {
     opacity: 1;

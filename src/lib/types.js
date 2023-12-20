@@ -1,5 +1,6 @@
 /**
- * @typedef {Object} SessionContextData
+ * @typedef {Object} SettingsContextData
+ * @property {boolean} hasReadRules
  */
 
 /**
@@ -22,6 +23,22 @@
  * @typedef {Coordinate & Velocity} PieceDefinition
  * @property {PieceType} type
  * @property {Variant?} variant
+ */
+
+/**
+ * @typedef {Object} CamapignContextData
+ * @property {number} score
+ * @property {Object<string, Solution>} solutions
+ * @property {string?} lastCompletedLevelKey
+ * @property {number?} lastCompletedLevelNum
+ */
+
+/**
+ * @typedef {Object} Solution
+ * @property {string?} levelKey
+ * @property {Array<Velocity>} moves
+ * @property {number} score
+ * @property {Date|string} solvedAt
  */
 
 // -----------------------------------------------------------------

@@ -14,7 +14,7 @@ const OPPONENT_MOVE_DELAY = 300 // this should match World.scss -> $pieceMoveSpe
 const OPPONENT_MOVE_VELOCITY_TIMER = 'opponent-velocity-timer-'
 
 /**
- * @param {{onWin: function, onLose: function}} options
+ * @param {{onWin: function(Solution), onLose: function(Solution)}} options
  * @return {{playMoves: function, isShowingMoves: boolean, revealingMoveIndex: number|null}}
  */
 function useLevelControl(options) {
@@ -24,17 +24,26 @@ function useLevelControl(options) {
   const [isShowingMoves, setIsShowingMoves] = useState(false)
   const [revealingMoveIndex, setRevealingMoveIndex] = useState(null)
   const {setTimer, cancelAllTimers} = useDoOnceTimer()
+  const [scoreSum, setScoreSum] = useState(0)
 
   const handleWin = () => {
     cancelAllTimers()
     setIsShowingMoves(false)
-    options.onWin()
+    options.onWin({
+      moves,
+      score: scoreSum,
+      solvedAt: new Date(),
+    })
   }
 
   const handleLose = () => {
     cancelAllTimers()
     setIsShowingMoves(false)
-    options.onLose()
+    options.onLose({
+      moves,
+      score: scoreSum,
+      solvedAt: new Date(),
+    })
   }
 
   // this use effect steps us through the move reveals to see if the player wins/loses
@@ -96,7 +105,7 @@ function useLevelControl(options) {
       // if we found a coin, we remove it from our pieces list
       const foundCoin = piecesOnThatSquare.find(p => p.isCoin && !p.isCollected)
       if (foundCoin) {
-        // TODO: apply the coin's value to the score
+        setScoreSum(s => s + foundCoin.value)
         foundCoin.isCollected = true
       }
 
@@ -250,6 +259,7 @@ function useLevelControl(options) {
       return
     }
 
+    setScoreSum(0)
     setIsShowingMoves(true)
 
     const progressMove = () => {

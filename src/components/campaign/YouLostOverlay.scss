@@ -1,0 +1,12 @@
+@use '../../styles/all';
+
+.you-lost-overlay {
+  @include all.fixed-overlay();
+  background-color: all.$shadow;
+
+  h1 {
+    font-size: 3rem;
+    color: all.$redColor;
+    text-align: center;
+  }
+}

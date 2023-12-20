@@ -1,21 +1,27 @@
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import './PredictableGame.scss'
-import GameContext from '../contexts/GameContext.js'
 import Level from './gameplay/Level'
 import PropTypes from 'prop-types'
-import {LEVEL_TUTORIAL} from '../levels'
+import {LevelsOrder} from '../levels'
 import LevelBuilder from './builder/LevelBuilder'
+import Campaign from './campaign/Campaign'
+import SettingsContext from '../contexts/SettingsContext'
+
+const STATUS_PLAYING = 'playing'
+const STATUS_WON = 'won'
+const STATUS_LOST = 'lost'
+const STATUS_GALLERY = 'gallery'
 
 function PredictableGame(props) {
-  const handleLose = () => window.alert('LOST')
-  const handleWin = () => window.alert('WON')
-
   return (
-    <GameContext.Provider value={{}}>
-      <Level level={LEVEL_TUTORIAL} onWin={handleWin} onLose={handleLose} />
-      {/*<LevelBuilder />*/}
-    </GameContext.Provider>
+    <SettingsContext.Provider value={{}}>
+      <Campaign />
+    </SettingsContext.Provider>
   )
+}
+
+PredictableGame.propTypes = {
+  onSave: PropTypes.func,
 }
 
 export default PredictableGame

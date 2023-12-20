@@ -7,6 +7,6 @@ function Player(props) {
   return <div className="player"></div>
 }
 
-Player.propTypes = PiecePropType
+Player.propTypes = {}
 
 export default Player

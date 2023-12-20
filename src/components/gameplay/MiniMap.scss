@@ -18,13 +18,13 @@
     width: 100%;
     border: 1px solid all.$black;
     border-radius: 4px;
-    background-color: all.$redColorDark;
+    background-color: all.$redColor;
     opacity: 0.5;
   }
 
   .mini-map-window {
     position: absolute;
-    border: 2px solid all.$redColor;
+    border: 2px solid all.$redColorLight;
     border-radius: 4px;
     transition: all all.$transition;
   }

@@ -3,41 +3,40 @@
 $shiftAmount: 3px;
 
 .button-container {
-  box-shadow: 0 0 0 0 rgba(0,0,0,0);
   cursor: pointer;
+  font-size: all.$fontSize4;
+  border: none;
+  padding: all.$spaceSmall all.$spaceMedium;
+  transition: all all.$transition;
+  color: all.$copyColorInverse;
 
-  button {
-    cursor: pointer;
-    font-size: all.$fontSize4;
-    border: none;
-    padding: all.$spaceSmall all.$spaceMedium;
+  @include all.neon(all.$primaryColorShadow, all.$primaryColorLight);
+  margin: 0;
+  &:hover {
+    @include all.pulse-border(all.$primaryColorLight)
   }
-
-  @include all.medium-and-up {
-    &:hover {
-      transform: translate($shiftAmount, $shiftAmount);
-    }
-  }
-
-  &, button {
-    transition: all all.$transition;
-  }
-
-  @include all.button('button', all.$ctaColor, all.$ctaColorDark, all.$white);
 
   &.secondary {
-    background-color: all.$ctaColorSecondaryDark;
-
-    button {
-      background-color: all.$ctaColorSecondary;
+    @include all.neon(all.$greenColorShadow, all.$greenColorLight);
+    margin: 0;
+    &:hover {
+      @include all.pulse-border(all.$greenColorLight)
     }
   }
 
   &.tertiary {
-    background-color: all.$ctaColorTertiaryDark;
+    @include all.neon(all.$secondaryColorShadow, all.$secondaryColorLight);
+    margin: 0;
+    &:hover {
+      @include all.pulse-border(all.$secondaryColorLight)
+    }
+  }
 
-    button {
-      background-color: all.$ctaColorTertiary;
+  &.destructive {
+    @include all.neon(all.$redColor, all.$redColorLight);
+    margin: 0;
+    &:hover {
+      @include all.pulse-border(all.$redColorLight)
     }
   }
 
@@ -51,7 +50,7 @@ $shiftAmount: 3px;
     }
 
     &:hover {
-      transform: none !important;
+      animation: none !important;
     }
   }
 }

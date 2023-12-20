@@ -1,7 +1,8 @@
 /* Basic utility colors */
 
 $black: #2c2a2d;
-$nearBlack: #49454b;
+$nearBlack: #333034;
+$veryDarkGrey: #4e494f;
 $darkGrey: #7d7a7f;
 $grey: #a6a1a9;
 $lightGrey: #d9d0d2;
@@ -12,6 +13,7 @@ $shadowExtraSoft: rgba($black, 0.10);
 $shadowSoft: rgba($black, 15);
 $shadow: rgba($black, 0.50);
 $shadowHard: rgba($black, 0.80);
+$shadowExtraHard: rgba($black, 0.90);
 
 $sunbeamExtraSoft: rgba($white, 0.10);
 $sunbeamSoft: rgba($white, 15);
@@ -19,50 +21,46 @@ $sunbeam: rgba($white, 0.50);
 $sunbeamHard: rgba($white, 0.80);
 
 
-$primaryColor: #00e6ff;
-$primaryColorDark: #009eaf;
-$primaryColorLight: #91f2ff;
+$alphaAmount: 0.2;
+$primaryColor: #2191ce;
+$primaryColorLight: #93d9ff;
+$primaryColorShadow: rgba($primaryColor, $alphaAmount);
 
-$secondaryColor: #ffa600;
-$secondaryColorDark: #b47600;
-$secondaryColorLight: #ffc35e;
+$secondaryColor: #d79217;
+$secondaryColorLight: #ffd994;
+$secondaryColorShadow: rgba($secondaryColor, $alphaAmount);
 
-$greenColor: #00ff3c;
-$greenColorDark: #00a928;
-$greenColorLight: #8effa7;
+$greenColor: #23b62a;
+$greenColorLight: #97ff9c;
+$greenColorShadow: rgba($greenColor, $alphaAmount);
 
 $redColor: #ff0062;
-$redColorDark: #b20048;
-$redColorLight: #ff6299;
+$redColorLight: #fc87b6;
+$redColorShadow: rgba($redColor, $alphaAmount);
 
 $copyColor: $black;
+$copyColorInverse: $white;
 $copyColorSoft: $shadowHard;
+$copyColorSoftInverse: $sunbeamHard;
 $copyColorExtraSoft: $shadow;
-
-$ctaColor: $primaryColor;
-$ctaColorDark: $primaryColorDark;
-
-$ctaColorSecondary: $secondaryColor;
-$ctaColorSecondaryDark: $secondaryColorDark;
-
-$ctaColorTertiary: $greenColor;
-$ctaColorTertiaryDark: $greenColorDark;
+$copyColorExtraSoftInverse: $sunbeam;
 
 
 // World colors
+$alphaAmount: -0.8;
 $worldColor: $black;
 
-$goalColor: rgba(108, 255, 115, 0.2);
-$goalColorLight: #6cff73;
+$goalColor: $greenColorShadow;
+$goalColorLight: $greenColorLight;
 
-$playerColor: rgba(250, 25, 127, 0.2);
-$playerColorLight: #ff6ca7;
+$playerColor: $redColorShadow;
+$playerColorLight: $redColorLight;
 
-$hazardColor: rgba(255, 186, 54, 0.2);
-$hazardColorLight: #ffc867;
+$hazardColor: $secondaryColorShadow;
+$hazardColorLight: $secondaryColorLight;
 
-$platformColor: rgba(46, 103, 190, 0.2);
-$platformColorLight: #5da1ff;
+$platformColor: $primaryColorShadow;
+$platformColorLight: $primaryColorLight;
 
 $obstacleColor: #423c3b;
 $obstacleColorDark: $obstacleColor;

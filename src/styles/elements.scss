@@ -3,6 +3,20 @@
 @use './colors.scss';
 @use './typography.scss';
 
+@mixin overlay-pseudo-element {
+  box-sizing: content-box;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border-style: solid;
+  border-radius: inherit;
+  z-index: -1;
+}
+
 @mixin hover-cta {
   cursor: pointer;
   opacity: 0.5;
@@ -57,17 +71,16 @@
   )
 }
 
-@mixin overlay-fill($bg: colors.$sunbeamHard) {
-  position: absolute;
+@mixin fixed-overlay() {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: $bg;
-  border-radius: layout.$borderRadiusMedium;
-  z-index: 10;
-  opacity: 0;
-  transition: opacity constants.$transition;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
 }
 
 @mixin square-icon($width: 42px) {
@@ -96,11 +109,106 @@
   }
 }
 
-@mixin neon($color: colors.$primaryColor, $glowColor: colors.$primaryColorLight, $glowSize: 0.2em) {
+
+@mixin generate-ripple-effect($name, $size: 1em, $borderSizeOverride: none) {
+  $borderSizeOverride: if($borderSizeOverride == none, $size, $borderSizeOverride);
+  @keyframes #{$name} {
+    0% {
+      width: 100%;
+      height: 100%;
+      left: -$borderSizeOverride;
+      top: -$borderSizeOverride;
+      margin: $borderSizeOverride;
+      border-width: 0;
+    }
+
+    10% {
+      width: 100%;
+      height: 100%;
+      left: -$borderSizeOverride;
+      top: -$borderSizeOverride;
+      border-width: $borderSizeOverride;
+      margin: 0;
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0;
+      width: calc(100% + 4 * $size);
+      height: calc(100% + 4 * $size);;
+      left: -2 * $size;
+      top: -2 * $size;
+      border-width: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}
+
+@mixin ripple($color: colors.$primaryColor, $size: 0.6em) {
+  position: relative;
+  @include generate-ripple-effect(ripple-one-effect, $size);
+  @include generate-ripple-effect(ripple-two-effect, 2 * $size, 4px);
+
+  &:before, &:after {
+    @include overlay-pseudo-element();
+    border-color: $color;
+  }
+
+  $animationDuration: 1.5s;
+
+  &:before {
+    animation: ripple-one-effect $animationDuration infinite;
+  }
+
+  &:after {
+    animation: ripple-two-effect $animationDuration infinite;
+  }
+}
+
+@mixin pulse-border($color: colors.$primaryColor, $size: 0.6em) {
+  @keyframes pulse {
+    0% {
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      border-width: 0;
+    }
+
+    50% {
+      width: 100%;
+      height: 100%;
+      left: -$size;
+      top: -$size;
+      border-width: $size;
+      opacity: 1;
+    }
+
+    100% {
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      border-width: 0;
+    }
+  }
+
+  $animationDuration: 1.5s;
+
+  position: relative;
+  &:before {
+    @include overlay-pseudo-element();
+    border-color: $color;
+    animation: pulse $animationDuration infinite;
+  }
+}
+
+@mixin neon($color: colors.$primaryColor, $glowColor: colors.$primaryColorLight) {
   background-color: $color;
-  border: 0.2em solid $glowColor;
-  box-shadow: 0 0 $glowSize $glowColor;
-  border-radius: layout.$borderRadiusLarge;
+  border: 0.1em solid $glowColor;
+  border-radius: layout.$borderRadiusSmall;
   z-index: 2;
   margin-left: layout.$spaceExtraSmall;
   margin-right: layout.$spaceExtraSmall;
@@ -127,81 +235,5 @@
   &.middle {
     margin-left: 0;
     margin-right: 0;
-  }
-}
-
-@mixin depth($child, $mainColor: colors.$offWhite, $shadeColor: colors.$lightGrey, $depth: 0.8em) {
-  background-color: $shadeColor;
-  border-radius: layout.$borderRadiusLarge;
-  z-index: 2;
-  transform: translateY(calc($depth / 2));
-  @include shadow($depth);
-
-  #{$child} {
-    background-color: $mainColor;
-    border-radius: layout.$borderRadiusLarge;
-    width: 100%;
-    height: 100%;
-    transform: translateY(-$depth);
-    z-index: 1;
-  }
-
-  margin-left: layout.$spaceExtraSmall;
-  margin-right: layout.$spaceExtraSmall;
-
-  &.left-end, &.middle {
-    &, #{$child} {
-      border-bottom-right-radius: 0;
-      border-top-right-radius: 0;
-    }
-  }
-
-  &.right-end, &.middle {
-    &, #{$child} {
-      border-bottom-left-radius: 0;
-      border-top-left-radius: 0;
-    }
-  }
-
-  &.left-end {
-    margin-right: 0;
-  }
-  &.right-end {
-    margin-left: 0;
-  }
-
-  &.middle {
-    margin-left: 0;
-    margin-right: 0;
-  }
-}
-
-@mixin button($child, $mainColor: colors.$offWhite, $shadeColor: colors.$lightGrey, $textColor: colors.$black, $depth: 15px) {
-  border-radius: 8px;
-  background-color: $shadeColor;
-  @include shadow(3px, colors.$shadowSoft);
-  padding: 2px;
-
-  #{$child} {
-    height: calc(100% - $depth);
-    width: calc(100% - $depth);
-    display: flex;
-    border-radius: 4px;
-    align-items: center;
-    justify-content: center;
-    font-size: typography.$fontSize3;
-
-    background-color: $mainColor;
-    color: $textColor;
-
-    @include layout.medium-and-below {
-      height: calc(100% - #{calc($depth / 2)});
-      width: calc(100% - #{calc($depth / 2)});
-    }
-
-    @include layout.small-and-below {
-      height: 100%;
-      width: 100%;
-    }
   }
 }

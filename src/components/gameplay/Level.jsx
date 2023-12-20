@@ -1,10 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import './Level.scss'
 import LevelContext, {HydratedLevel} from '../../contexts/LevelContext.js'
 import World from '../environment/World.jsx'
 import {PieceType, squareSizeRemScale} from '../../lib/constants'
 import PropTypes from 'prop-types'
-import {instantiateLevelPieces, LevelData} from '../../levels'
 import Scrollable from '../utility/Scrollable'
 
 import Player from '../environment/Player'
@@ -114,14 +113,14 @@ function Level(props) {
   const [gameBoard, setGameBoard] = useState(HydratedLevel.gameBoard)
 
   useEffect(() => {
-    if (!props.level || !LevelData[props.level]) {
+    if (!props.levelDefinition) {
       return
     }
 
     setMoves([])
-    setPieces(instantiateLevelPieces(props.level))
-    setGameBoard(LevelData[props.level].gameBoard)
-  }, [props.level])
+    setPieces(props.levelDefinition.pieces)
+    setGameBoard(props.levelDefinition.gameBoard)
+  }, [props.levelDefinition])
 
   const playerPiece = pieces.find(p => p.isPlayer)
 
@@ -153,15 +152,22 @@ function Level(props) {
         pieces={pieces}
         startingPosition={playerPiece?.position}
       />
-      <MovesInput onWin={props.onWin} onLose={props.onLose} />
+      {!props.disableInput && (
+        <MovesInput onWin={props.onWin} onLose={props.onLose} />
+      )}
+      )
     </LevelContext.Provider>
   )
 }
 
 Level.propTypes = {
-  level: PropTypes.string.isRequired,
+  levelDefinition: PropTypes.shape({
+    pieces: PropTypes.arrayOf(PropTypes.object),
+    gameBoard: PropTypes.object,
+  }).isRequired,
   onWin: PropTypes.func.isRequired,
   onLose: PropTypes.func.isRequired,
+  disableInput: PropTypes.bool,
 }
 
 export default Level

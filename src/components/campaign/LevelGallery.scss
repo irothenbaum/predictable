@@ -1,0 +1,61 @@
+@use '../../styles/all';
+
+.level-gallery {
+  width: 100%;
+  height: 100%;
+
+  .level-gallery-world {
+    width: 100%;
+    position: relative;
+
+    .level-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 33.33vh;
+    }
+
+    .level-node {
+      border-radius: 50%;
+      height: 5rem;
+      width: 5rem;
+      margin: 0 !important;
+
+      &.completed {
+        @include all.neon(all.$platformColor, all.$primaryColorLight);
+
+        &.hovered {
+          @include all.pulse-border(all.$primaryColorLight);
+        }
+        &.selected {
+          @include all.ripple(all.$primaryColorLight);
+        }
+      }
+
+      &.available {
+        @include all.neon(all.$goalColor, all.$goalColorLight);
+
+        &.hovered {
+          @include all.pulse-border(all.$goalColorLight);
+        }
+        &.selected {
+          @include all.ripple(all.$goalColorLight);
+        }
+      }
+
+      &.locked {
+        @include all.neon(all.$nearBlack, all.$veryDarkGrey);
+        box-shadow: none;
+      }
+    }
+  }
+
+  .player-container {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    bottom: 0;
+    transition: bottom all.$transition;
+  }
+}
