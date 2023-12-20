@@ -112,6 +112,7 @@
  * If the player lands on this, the level is complete
  * @typedef {Piece} Goal
  * @property {boolean} isGoal
+ * @property {boolean} isCollected
  */
 
 /**

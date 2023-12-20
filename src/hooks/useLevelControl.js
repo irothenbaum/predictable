@@ -58,6 +58,7 @@ function useLevelControl(options) {
     if (revealingMoveIndex === moves.length) {
       const goalPiece = pieces.find(p => p.isGoal)
       if (goalPiece && isSameSquare(playerPiece.position, goalPiece.position)) {
+        goalPiece.isCollected = true
         handleWin()
       } else {
         handleLose()

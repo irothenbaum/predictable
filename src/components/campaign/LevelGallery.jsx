@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, {useCallback, useContext, useEffect, useState} from 'react'
 import './LevelGallery.scss'
 import Player from '../environment/Player'
 import Scrollable from '../utility/Scrollable'
@@ -22,17 +16,41 @@ const WorldHeight = RowHeight * (LevelsOrder.length + 2)
 const SELECT_TIMER = 'select-timer'
 const SELECT_DELAY = 1000
 
+const AUTO_ADVANCE_TIMER = 'auto-advance-timer'
+const AUTO_ADVANCE_DELAY = 2000
+
 function LevelGallery(props) {
   const {solutions, lastCompletedLevelNum} = useContext(CampaignContext)
   const [hoveredLevelNum, setHoveredLevelNum] = useState(lastCompletedLevelNum)
   const [containerHeight, setContainerHeight] = useState(0)
   const [containerWidth, setContainerWidth] = useState(0)
-  const scrollPos = useRef({x: 0, y: WorldHeight - window.innerHeight})
+  const [scrollPos, setScrollPos] = useState({
+    x: 0,
+    y: WorldHeight - window.innerHeight,
+  })
   const {isTimerSet, setTimer} = useDoOnceTimer()
 
   useEffect(() => {
     setHoveredLevelNum(lastCompletedLevelNum)
+
+    if (lastCompletedLevelNum < LevelsOrder.length - 1) {
+      setTimer(
+        AUTO_ADVANCE_TIMER,
+        () => {
+          setHoveredLevelNum(hoveredLevelNum + 1)
+        },
+        AUTO_ADVANCE_DELAY,
+      )
+    }
   }, [lastCompletedLevelNum])
+
+  useEffect(() => {
+    // keep our player piece centered in the gallery
+    setScrollPos({
+      x: 0,
+      y: WorldHeight - hoveredLevelNum * RowHeight - window.innerHeight,
+    })
+  }, [hoveredLevelNum])
 
   const keyHandler = useCallback(
     key => {
@@ -80,7 +98,8 @@ function LevelGallery(props) {
       }}>
       <Scrollable
         hideMiniMap={true}
-        scrollPos={scrollPos.current}
+        transitionDuration={`0.5s`}
+        scrollPos={scrollPos}
         height={WorldHeight}
         width={window.innerWidth}
         viewHeight={containerHeight}
@@ -130,7 +149,9 @@ function LevelNode(props) {
         completed: props.isCompleted,
         hovered: props.isHovered,
         selected: props.isActive,
-      })}></div>
+      })}>
+      <div></div>
+    </div>
   )
 }
 

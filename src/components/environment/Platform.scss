@@ -1,7 +1,7 @@
 @use "../../styles/all";
 
 .platform {
-  height: calc(#{all.$squareSize} * 0.6);
+  height: calc(#{all.$squareSize} * 0.8);
   width: 100%;
   @include all.neon(all.$platformColor, all.$platformColorLight);
 }

@@ -10,7 +10,9 @@ function useKeyListener(callback) {
   useEffect(() => {
     const handleKeyDown = e => {
       if (typeof callbackRef.current === 'function') {
-        callbackRef.current(e.key)
+        if (callbackRef.current(e.key)) {
+          e.preventDefault()
+        }
       }
     }
     window.addEventListener('keydown', handleKeyDown)

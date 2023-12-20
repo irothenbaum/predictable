@@ -1,9 +1,17 @@
 @use "../../styles/all";
 
 .player {
-  height: #{all.$squareSizeRemScale - 1}rem;
-  width: #{all.$squareSizeRemScale - 1}rem;
+  height: 0;
+  width: 0;
+  opacity: 0;
   @include all.neon(all.$playerColor, all.$playerColorLight);
   border-radius: 50%;
   z-index: 1000;
+  transition: all all.$transition;
+
+  &.ready {
+    opacity: 1;
+    height: #{all.$squareSizeRemScale - 1}rem;
+    width: #{all.$squareSizeRemScale - 1}rem;
+  }
 }

@@ -4,4 +4,12 @@
   height: #{all.$squareSizeRemScale - 1}rem;
   width: #{all.$squareSizeRemScale - 1}rem;
   @include all.neon(all.$goalColor, all.$goalColorLight);
+
+  &:not(.collected) {
+    @include all.pulse-border(all.$goalColorLight, 0.3em);
+  }
+
+  &.collected {
+    @include all.ripple(all.$goalColorLight, 0.2em);
+  }
 }

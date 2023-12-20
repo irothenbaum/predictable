@@ -5,15 +5,17 @@ $shiftAmount: 3px;
 .button-container {
   cursor: pointer;
   font-size: all.$fontSize4;
-  border: none;
-  padding: all.$spaceSmall all.$spaceMedium;
   transition: all all.$transition;
   color: all.$copyColorInverse;
+
+  & > div {
+    padding: all.$spaceSmall all.$spaceMedium;
+  }
 
   @include all.neon(all.$primaryColorShadow, all.$primaryColorLight);
   margin: 0;
   &:hover {
-    @include all.pulse-border(all.$primaryColorLight)
+    @include all.pulse-border(all.$primaryColorLight);
   }
 
   &.secondary {

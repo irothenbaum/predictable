@@ -24,19 +24,23 @@ $sunbeamHard: rgba($white, 0.80);
 $alphaAmount: 0.2;
 $primaryColor: #2191ce;
 $primaryColorLight: #93d9ff;
-$primaryColorShadow: rgba($primaryColor, $alphaAmount);
+//$primaryColorShadow: rgba($primaryColor, $alphaAmount);
+$primaryColorShadow: #2a3f4d;
 
 $secondaryColor: #d79217;
 $secondaryColorLight: #ffd994;
-$secondaryColorShadow: rgba($secondaryColor, $alphaAmount);
+//$secondaryColorShadow: rgba($secondaryColor, $alphaAmount);
+$secondaryColorShadow: #4e3f29;
 
 $greenColor: #23b62a;
 $greenColorLight: #97ff9c;
-$greenColorShadow: rgba($greenColor, $alphaAmount);
+//$greenColorShadow: rgba($greenColor, $alphaAmount);
+$greenColorShadow: #2a462c;
 
 $redColor: #ff0062;
 $redColorLight: #fc87b6;
-$redColorShadow: rgba($redColor, $alphaAmount);
+//$redColorShadow: rgba($redColor, $alphaAmount);
+$redColorShadow: #492b36;
 
 $copyColor: $black;
 $copyColorInverse: $white;

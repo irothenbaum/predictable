@@ -68,7 +68,9 @@ function Scrollable(props) {
         style={{
           transition: 'transform 0.2s ease-out',
           transform: transforms.join(' '),
-          transitionDuration: hasRendered ? '0.2s' : '0s',
+          transitionDuration: hasRendered
+            ? props.transitionDuration || '0.2s'
+            : '0s',
           visibility: hasRendered ? 'visible' : 'hidden',
           height: '100%',
           width: '100%',
@@ -89,6 +91,7 @@ Scrollable.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   hideMiniMap: PropTypes.bool,
+  transitionDuration: PropTypes.string,
 }
 
 export default Scrollable

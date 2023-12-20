@@ -2,18 +2,16 @@
 @use './layout.scss';
 @use './colors.scss';
 @use './typography.scss';
+@use './functions.scss';
 
 @mixin overlay-pseudo-element {
-  box-sizing: content-box;
   content: '';
+  box-sizing: content-box;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: transparent;
-  border-style: solid;
-  border-radius: inherit;
   z-index: -1;
 }
 
@@ -37,12 +35,12 @@
 
 @mixin link-text() {
   text-decoration: underline;
-  color: colors.$secondaryColorDark;
+  color: colors.$secondaryColor;
   cursor: pointer;
   transition: color constants.$transition;
 
   &:hover {
-    color: colors.$secondaryColor;
+    color: colors.$secondaryColorLight;
   }
 }
 
@@ -54,21 +52,6 @@
 
 @mixin shadow($amount: 1em, $color: colors.$shadow) {
   box-shadow: 0 0 $amount 0 $color;
-}
-
-@mixin candy-cane-background($deg: 135deg, $tintColor: colors.$shadowExtraSoft) {
-  background-image: linear-gradient(135deg,
-          transparent 0, transparent 10%,
-          $tintColor 10%, $tintColor 20%,
-          transparent 20%, transparent 30%,
-          $tintColor 30%, $tintColor 40%,
-          transparent 40%, transparent 50%,
-          $tintColor 50%, $tintColor 60%,
-          transparent 60%, transparent 70%,
-          $tintColor 70%, $tintColor 80%,
-          transparent 80%, transparent 90%,
-          $tintColor 90%, $tintColor 100%,
-  )
 }
 
 @mixin fixed-overlay() {
@@ -109,7 +92,6 @@
   }
 }
 
-
 @mixin generate-ripple-effect($name, $size: 1em, $borderSizeOverride: none) {
   $borderSizeOverride: if($borderSizeOverride == none, $size, $borderSizeOverride);
   @keyframes #{$name} {
@@ -146,62 +128,68 @@
   }
 }
 
-@mixin ripple($color: colors.$primaryColor, $size: 0.6em) {
+@mixin ripple($color: colors.$primaryColor, $size: 0.5em) {
   position: relative;
-  @include generate-ripple-effect(ripple-one-effect, $size);
-  @include generate-ripple-effect(ripple-two-effect, 2 * $size, 4px);
+  $rippleOneName: ripple-one-#{functions.str-replace('' + $size, '.', '-')};
+  $rippleTwoName: ripple-two-#{functions.str-replace('' + $size, '.', '-')};
+  @include generate-ripple-effect($rippleOneName, $size);
+  @include generate-ripple-effect($rippleTwoName, 2 * $size, 4px);
 
   &:before, &:after {
     @include overlay-pseudo-element();
     border-color: $color;
+    border-style: solid;
   }
 
   $animationDuration: 1.5s;
 
   &:before {
-    animation: ripple-one-effect $animationDuration infinite;
+    animation: $rippleOneName $animationDuration infinite;
   }
 
   &:after {
-    animation: ripple-two-effect $animationDuration infinite;
+    animation: $rippleTwoName $animationDuration infinite;
   }
 }
 
-@mixin pulse-border($color: colors.$primaryColor, $size: 0.6em) {
-  @keyframes pulse {
+@mixin pulse-border($color: colors.$primaryColor, $size: 0.5em) {
+  $animationName: pulse-#{functions.str-replace('' + $size, '.', '-')};
+  @keyframes #{$animationName} {
     0% {
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      border-width: 0;
-    }
-
-    50% {
-      width: 100%;
-      height: 100%;
       left: -$size;
       top: -$size;
-      border-width: $size;
-      opacity: 1;
+      width: calc(100% + 2 * $size);
+      height: calc(100% + 2 * $size);
+      border-radius: inherit;
     }
 
     100% {
-      width: 100%;
-      height: 100%;
       left: 0;
       top: 0;
+      width: 100%;
+      height: 100%;
       border-width: 0;
+      border-radius: 0;
     }
   }
 
-  $animationDuration: 1.5s;
-
+  $animationDuration: 0.7s;
   position: relative;
+
+  & > div {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+    border-radius: inherit;
+    background-color: inherit;
+  }
+
   &:before {
     @include overlay-pseudo-element();
-    border-color: $color;
-    animation: pulse $animationDuration infinite;
+    background-color: $color;
+    animation: $animationName $animationDuration infinite alternate-reverse ease-in-out;
+    z-index: -1;
   }
 }
 

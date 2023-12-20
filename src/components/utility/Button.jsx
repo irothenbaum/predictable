@@ -18,7 +18,7 @@ function Button(props) {
         disabled: !!props.disabled,
       })}
       onClick={() => (props.disabled ? undefined : props.onClick())}>
-      {props.children}
+      <div>{props.children}</div>
     </button>
   )
 }

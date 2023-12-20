@@ -155,7 +155,6 @@ function Level(props) {
       {!props.disableInput && (
         <MovesInput onWin={props.onWin} onLose={props.onLose} />
       )}
-      )
     </LevelContext.Provider>
   )
 }

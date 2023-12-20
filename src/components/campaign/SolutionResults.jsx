@@ -1,7 +1,11 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import './SolutionResults.scss'
 import PropTypes from 'prop-types'
 import Button, {VARIANT_SECONDARY} from '../utility/Button'
+import useReadyTimer from '../../hooks/useReadyTimer'
+import {constructClassString} from '../../lib/utilities'
+
+const APPEAR_DELAY = 1000
 
 /**
  * @param {{solution: Solution}} props
@@ -9,12 +13,13 @@ import Button, {VARIANT_SECONDARY} from '../utility/Button'
  * @constructor
  */
 function SolutionResults({solution, onContinue}) {
+  const {isReady} = useReadyTimer(APPEAR_DELAY)
   if (!solution) {
     return null
   }
 
   return (
-    <div className="solution-results">
+    <div className={constructClassString('solution-results', {ready: isReady})}>
       <div className="container">
         <h3>Score: {solution.score}</h3>
 
