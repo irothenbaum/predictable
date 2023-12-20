@@ -31,8 +31,10 @@ function LevelGallery(props) {
   const {isTimerSet, setTimer} = useDoOnceTimer()
 
   useEffect(() => {
+    // start us off on the last completed level
     setHoveredLevelNum(lastCompletedLevelNum)
 
+    // if another level is available, we auto advance to it after a delay
     if (lastCompletedLevelNum < LevelsOrder.length - 1) {
       setTimer(
         AUTO_ADVANCE_TIMER,
@@ -44,14 +46,16 @@ function LevelGallery(props) {
     }
   }, [lastCompletedLevelNum])
 
+  // keep our player piece centered in the gallery
   useEffect(() => {
-    // keep our player piece centered in the gallery
     setScrollPos({
       x: 0,
       y: WorldHeight - hoveredLevelNum * RowHeight - window.innerHeight,
     })
   }, [hoveredLevelNum])
 
+  // --------------------------------------------------------
+  // handle keyboard input
   const keyHandler = useCallback(
     key => {
       switch (key) {
@@ -80,6 +84,7 @@ function LevelGallery(props) {
     [hoveredLevelNum, lastCompletedLevelNum],
   )
   useKeyListener(keyHandler)
+  // --------------------------------------------------------
 
   const hasSelected = isTimerSet(SELECT_TIMER)
 

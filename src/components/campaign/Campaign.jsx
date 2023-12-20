@@ -19,7 +19,7 @@ const STATUS_GALLERY = 'gallery'
 function Campaign(props) {
   const [solutions, setSolutions] = useState(HydratedCampaign.solutions)
   const [lastCompletedLevelNum, setLastCompletedLevelNum] = useState(
-    HydratedCampaign.lastCompletedLevelNum,
+    HydratedCampaign.lastCompletedLevelNum || -1,
   )
   const [score, setScore] = useState(HydratedCampaign.score)
   const [gameStatus, setGameStatus] = useState(STATUS_GALLERY)
@@ -29,6 +29,7 @@ function Campaign(props) {
    * @param {number|string} nextLevelNum
    */
   const handleSelectLevel = nextLevelNum => {
+    // normalize our argument into both string and number
     let nextLevelKey
     if (typeof nextLevelNum === 'string') {
       nextLevelKey = nextLevelNum
@@ -37,6 +38,7 @@ function Campaign(props) {
       nextLevelKey = LevelsOrder[nextLevelNum]
     }
 
+    // if the input could not be normalized to a valid level, throw an error
     if (
       typeof nextLevelNum !== 'number' ||
       nextLevelNum < 0 ||
@@ -45,6 +47,7 @@ function Campaign(props) {
       throw new Error(`Invalid level "${nextLevelNum}"`)
     }
 
+    // enter play status and build the world based off the level definition
     setGameStatus(STATUS_PLAYING)
     const nextLevelDef = LevelData[nextLevelKey]
     setLevelDefinition({
@@ -65,27 +68,43 @@ function Campaign(props) {
    * @param {Solution} solution
    */
   const handleWin = solution => {
+    // mark what level this solution is for
     solution.levelKey = levelDefinition.levelKey
+    // update our UI to indicate we've won
     setGameStatus(STATUS_WON)
     if (typeof props.onSave === 'function') {
       props.onSave(solution)
     }
 
-    const nextScore = score + solution.score
-    setScore(nextScore)
-    const nextSolutions = {
-      ...solutions,
-      solution,
-      [solution.levelKey]: solution,
+    let nextScore = score
+    let nextSolutions = solutions
+    const previousSolve = solutions[solution.levelKey]
+    // if this is our first solution for this level, or if it's better than previous scores
+    if (!previousSolve || previousSolve.score < solution.score) {
+      // update our solution history with this solution
+      nextSolutions = {
+        ...solutions,
+        solution,
+        [solution.levelKey]: solution,
+      }
+      setSolutions(nextSolutions)
+
+      // update our total score with this solution's score (taking care to subtract the previous score if it exists)
+      nextScore = score - (previousSolve?.score || 0) + solution.score
+      setScore(nextScore)
     }
-    setSolutions(nextSolutions)
+
+    // determine which level number this is
     const thisLevelNum = LevelsOrder.indexOf(levelDefinition.levelKey)
+
+    // mark that we just completed this level by update the last completed level number
     const nextLastCompletedLevelNum = Math.max(
       lastCompletedLevelNum,
       thisLevelNum,
     )
     setLastCompletedLevelNum(nextLastCompletedLevelNum)
 
+    // last we save this win to our persistent storage
     flushCampaign({
       score: nextScore,
       solutions: nextSolutions,
