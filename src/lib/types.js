@@ -40,6 +40,13 @@
  */
 
 /**
+ * @typedef {Object} LevelGroupSolution
+ * @property {string} levelKey
+ * @property {Array<Solution>} solutions
+ * @property {number} score
+ */
+
+/**
  * @typedef {Object} Solution
  * @property {string?} levelKey
  * @property {Array<Velocity>} moves

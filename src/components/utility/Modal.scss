@@ -12,6 +12,12 @@
     transform: scale(1);
   }
 
+  &.has-click {
+    .modal-overlay {
+      cursor: pointer;
+    }
+  }
+
   .modal-overlay {
     position: absolute;
     top: 0;
@@ -20,7 +26,6 @@
     height: 100%;
     width: 100%;
     background-color: all.$shadow;
-    cursor: pointer;
   }
 
   $border: 3px;

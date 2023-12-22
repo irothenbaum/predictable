@@ -5,6 +5,7 @@ import Button, {VARIANT_SECONDARY} from '../utility/Button'
 import useReadyTimer from '../../hooks/useReadyTimer'
 import {constructClassString} from '../../lib/utilities'
 import Modal from '../utility/Modal'
+import {LevelGroupSolutionShape} from '../../lib/constants'
 
 const APPEAR_DELAY = 1000
 
@@ -31,17 +32,7 @@ function LevelGroupResults({solution, onContinue}) {
 }
 
 LevelGroupResults.propTypes = {
-  solutions: PropTypes.arrayOf(
-    PropTypes.shape({
-      moves: PropTypes.arrayOf(
-        PropTypes.shape({
-          row: PropTypes.number,
-          column: PropTypes.number,
-        }),
-      ).isRequired,
-      score: PropTypes.number,
-    }),
-  ).isRequired,
+  solution: LevelGroupSolutionShape.isRequired,
   onContinue: PropTypes.func,
 }
 

@@ -51,5 +51,21 @@ export const InputProps = {
   className: PropTypes.string,
 }
 
+export const LevelSolutionShape = PropTypes.shape({
+  moves: PropTypes.arrayOf(
+    PropTypes.shape({
+      row: PropTypes.number,
+      column: PropTypes.number,
+    }),
+  ).isRequired,
+  score: PropTypes.number,
+})
+
+export const LevelGroupSolutionShape = PropTypes.shape({
+  levelKey: PropTypes.string,
+  score: PropTypes.number,
+  solutions: PropTypes.arrayOf(LevelSolutionShape),
+})
+
 // this should match the rem scale in constants.scss
 export const squareSizeRemScale = 5

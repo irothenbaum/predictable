@@ -10,15 +10,22 @@ function Modal(props) {
     <div
       className={constructClassString('modal-container', {
         open: props.isOpen,
+        ['has-click']: typeof props.onClose === 'function',
       })}>
       <div className="modal-overlay" onClick={props.onClose} />
-      <div className={constructClassString('modal-content', props.className)}>
+      <div className="modal-content">
         {typeof props.onClose === 'function' && (
           <span className="close-icon" onClick={props.onClose}>
             close <Icon icon={CLOSE} />
           </span>
         )}
-        <div className="modal-content-inner">{props.children}</div>
+        <div
+          className={constructClassString(
+            'modal-content-inner',
+            props.className,
+          )}>
+          {props.children}
+        </div>
       </div>
     </div>,
     document.body,

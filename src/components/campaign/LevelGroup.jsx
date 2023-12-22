@@ -9,7 +9,7 @@ const WIN_TIMER = 'win-timer'
 
 function LevelGroup(props) {
   const {setTimer} = useDoOnceTimer()
-  /** @type {Solution[]} */
+  /** @type {Array<Solution>} */
   const [solutions, setSolutions] = useState([])
   const [showLost, setShowLost] = useState(false)
   /** @type {LevelDefinition} */

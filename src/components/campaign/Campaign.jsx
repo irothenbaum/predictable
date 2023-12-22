@@ -67,37 +67,40 @@ function Campaign(props) {
   }
 
   /**
-   * @param {Array<Solution>} solution
+   * @param {Array<Solution>} s
    */
-  const handleWin = solution => {
+  const handleWin = s => {
+    const levelGroupSolution = {
+      levelKey: levelDefinition.levelKey,
+      score: s.reduce((sum, s) => sum + s.score, 0),
+      solutions: s,
+    }
     // mark what level this solution is for
-    solution.levelKey = levelDefinition.levelKey
     // update our UI to indicate we've won
     setGameStatus(STATUS_WON)
     if (typeof props.onSave === 'function') {
-      props.onSave(solution)
+      props.onSave(levelGroupSolution)
     }
 
     let nextScore = score
     let nextSolutions = solutions
-    const previousSolve = solutions[solution.levelKey]
+    const previousSolve = solutions[levelGroupSolution.levelKey]
     // if this is our first solution for this level, or if it's better than previous scores
-    if (!previousSolve || previousSolve.score < solution.score) {
+    if (!previousSolve || previousSolve.score < levelGroupSolution.score) {
       // update our solution history with this solution
       nextSolutions = {
         ...solutions,
-        solution,
-        [solution.levelKey]: solution,
+        [levelGroupSolution.levelKey]: levelGroupSolution,
       }
       setSolutions(nextSolutions)
 
       // update our total score with this solution's score (taking care to subtract the previous score if it exists)
-      nextScore = score - (previousSolve?.score || 0) + solution.score
+      nextScore = score - (previousSolve?.score || 0) + levelGroupSolution.score
       setScore(nextScore)
     }
 
     // determine which level number this is
-    const thisLevelNum = LevelsOrder.indexOf(levelDefinition.levelKey)
+    const thisLevelNum = LevelsOrder.indexOf(levelGroupSolution.levelKey)
 
     // mark that we just completed this level by update the last completed level number
     const nextLastCompletedLevelNum = Math.max(
@@ -129,7 +132,7 @@ function Campaign(props) {
         <React.Fragment>
           {gameStatus === STATUS_WON ? (
             <LevelGroupResults
-              solutions={solutions[levelDefinition.levelKey]}
+              solution={solutions[levelDefinition.levelKey]}
               onContinue={() => setGameStatus(STATUS_GALLERY)}
             />
           ) : null}

@@ -1,7 +1,10 @@
 @use '../../styles/all';
 
 .level-group-results {
+  display: flex;
+    flex-direction: column;
+
   button {
-    float: right;
+    align-self: flex-end;
   }
 }
