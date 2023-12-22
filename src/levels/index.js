@@ -47,7 +47,7 @@ export const LEVEL_19 = 'level-19'
 export const LEVEL_20 = 'level-20'
 
 /**
- * @type {Object<string, LevelDefinition>}
+ * @type {Object<string, LevelGroupDefinition>}
  */
 export const LevelData = {
   [LEVEL_TUTORIAL]: LevelTutorial,

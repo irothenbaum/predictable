@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import './LevelBuilder.scss'
 import NumberInput from '../utility/NumberInput'
-import Button, {VARIANT_SECONDARY} from '../utility/Button'
-import {LevelInner} from '../gameplay/Level'
+import Button from '../utility/Button'
+import Level, {LevelInner} from '../gameplay/Level'
 import SelectInput from '../utility/SelectInput'
-import {PieceType, Variant} from '../../lib/constants'
+import {LevelDefinitionShape, PieceType, Variant} from '../../lib/constants'
 import Player from '../environment/Player'
 import Hazard from '../environment/Hazard'
 import Obstacle from '../environment/Obstacle'
@@ -13,6 +13,7 @@ import Goal from '../environment/Goal'
 import {isSameSquare} from '../../lib/utilities'
 import {v4 as uuid} from 'uuid'
 import Modal from '../utility/Modal'
+import PropTypes from 'prop-types'
 
 const PieceTypeToComponent = {
   [PieceType.Player]: Player,
@@ -36,10 +37,29 @@ function LevelBuilder(props) {
   const [creatingVelocity, setCreatingVelocity] = useState(0)
   const [creatingVariant, setCreatingVariant] = useState('')
   const [creatingPieceType, setCreatingPieceType] = useState(PieceType.Obstacle)
-  const [showBuildModal, setShowBuildModal] = useState(false)
-  const [showLoadModal, setShowLoadModal] = useState(false)
-  const [loadText, setLoadText] = useState('')
   const [startingPosition, setStartingPosition] = useState({row: 0, column: 0})
+
+  useEffect(() => {
+    const level = props.levelDefinition
+
+    if (level) {
+      setWidth(level.gameBoard.width)
+      setHeight(level.gameBoard.height)
+      setPieces(
+        level.pieces.map(p => ({
+          id: uuid(),
+          type: p.type,
+          position: {row: p.row, column: p.column},
+          velocity: {rowChange: p.rowChange, columnChange: p.columnChange},
+          variant: p.variant,
+        })),
+      )
+    } else {
+      setWidth(6)
+      setHeight(6)
+      setPieces([])
+    }
+  }, [props.levelDefinition])
 
   useEffect(() => {
     const playerPiece = pieces.find(p => p.type === PieceType.Player)
@@ -66,22 +86,6 @@ function LevelBuilder(props) {
     } else {
       setPieces(without)
     }
-  }
-
-  const handleLoadLevel = () => {
-    /** @type {LevelDefinition} level  */
-    const level = JSON.parse(loadText)
-    setWidth(level.gameBoard.width)
-    setHeight(level.gameBoard.height)
-    setPieces(
-      level.pieces.map(p => ({
-        id: uuid(),
-        type: p.type,
-        position: {row: p.row, column: p.column},
-        velocity: {rowChange: p.rowChange, columnChange: p.columnChange},
-      })),
-    )
-    setShowLoadModal(false)
   }
 
   return (
@@ -131,46 +135,18 @@ function LevelBuilder(props) {
           onChange={setCreatingPieceType}
         />
         <div style={{height: '100%'}} />
-        <Button onClick={() => setShowBuildModal(true)}>Build</Button>
         <Button
-          variant={VARIANT_SECONDARY}
-          onClick={() => setShowLoadModal(true)}>
-          Load
+          onClick={() => props.onSave(createLevelJSON(width, height, pieces))}>
+          Save
         </Button>
       </div>
-
-      <Modal onClose={() => setShowBuildModal(false)} isOpen={showBuildModal}>
-        <h3>Level Code</h3>
-        <textarea
-          style={{
-            marginTop: '1rem',
-            height: '10rem',
-            width: '20rem',
-          }}
-          value={JSON.stringify(
-            showBuildModal ? createLevelJSON(width, height, pieces) : '',
-          )}
-          onChange={() => {}}></textarea>
-      </Modal>
-
-      <Modal onClose={() => setShowLoadModal(false)} isOpen={showLoadModal}>
-        <h3>Level Code</h3>
-        <textarea
-          style={{
-            marginTop: '1rem',
-            height: '10rem',
-            width: '20rem',
-          }}
-          value={loadText}
-          onChange={e => setLoadText(e.target.value)}>
-          Enter level JSON here
-        </textarea>
-        <Button onClick={handleLoadLevel} variant={VARIANT_SECONDARY}>
-          Load level
-        </Button>
-      </Modal>
     </div>
   )
+}
+
+LevelBuilder.propTypes = {
+  levelDefinition: LevelDefinitionShape,
+  onSave: PropTypes.func,
 }
 
 export default LevelBuilder

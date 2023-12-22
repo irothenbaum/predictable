@@ -27,10 +27,18 @@ const MovementOptions = [
 function MovesInput(props) {
   const {moves, queueMove, popMove} = useContext(LevelContext)
   // call playMoves to submit the moves
-  const {playMoves, isShowingMoves, revealingMoveIndex} = useLevelControl({
-    onWin: props.onWin,
-    onLose: props.onLose,
-  })
+  const {playMoves, reset, isShowingMoves, revealingMoveIndex} =
+    useLevelControl({
+      onWin: props.onWin,
+      onLose: props.onLose,
+    })
+
+  // if we ever reset our moves, we also want to reset the level control
+  useEffect(() => {
+    if (!moves || moves.length === 0) {
+      reset()
+    }
+  }, [moves])
 
   const keyHandler = useCallback(key => {
     switch (key) {

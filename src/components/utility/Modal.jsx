@@ -8,16 +8,17 @@ import {constructClassString} from '../../lib/utilities'
 function Modal(props) {
   return createPortal(
     <div
-      className={constructClassString('modal-container', props.className, {
+      className={constructClassString('modal-container', {
         open: props.isOpen,
       })}>
       <div className="modal-overlay" onClick={props.onClose} />
-      <div className="modal-content">
-        <span className="close-icon" onClick={props.onClose}>
-          close <Icon icon={CLOSE} />
-        </span>
-        {/* Only render children if we're open */}
-        {props.isOpen && props.children}
+      <div className={constructClassString('modal-content', props.className)}>
+        {typeof props.onClose === 'function' && (
+          <span className="close-icon" onClick={props.onClose}>
+            close <Icon icon={CLOSE} />
+          </span>
+        )}
+        <div className="modal-content-inner">{props.children}</div>
       </div>
     </div>,
     document.body,
@@ -26,7 +27,6 @@ function Modal(props) {
 
 Modal.propTypes = {
   isOpen: PropTypes.bool,
-  onClose: PropTypes.func.isRequired,
   children: PropTypes.any.isRequired,
   className: PropTypes.string,
 }

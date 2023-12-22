@@ -281,6 +281,12 @@ function useLevelControl(options) {
     playMoves,
     isShowingMoves,
     revealingMoveIndex,
+    reset: () => {
+      cancelAllTimers()
+      setIsShowingMoves(false)
+      setRevealingMoveIndex(null)
+      setScoreSum(0)
+    },
   }
 }
 

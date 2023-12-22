@@ -23,25 +23,34 @@
     cursor: pointer;
   }
 
+  $border: 3px;
   .modal-content {
+    width: 100%;
+    max-width: all.$screenMediumMin;
+    border-radius: all.$borderRadiusMedium + $border;
+    padding: $border;
+    color: all.$white;
+    background: linear-gradient(to right, all.$primaryColorLight, all.$goalColorLight);
     position: relative;
     z-index: 11;
-    padding: all.$spaceMedium;
-    border-radius: all.$borderRadiusLarge;
-    background-color: all.$white;
-    @include all.shadow();
 
-    @include all.medium-and-up {
-      max-width: 80%;
+    .modal-content-inner {
+      border-radius: all.$borderRadiusMedium;
+      padding: all.$spaceMedium;
+      position: relative;
+      z-index: 12;
+      background: all.$shadowExtraHard;
+      width: 100%;
+      height: 100%;
     }
 
     .close-icon {
       @include all.hover-cta();
-      font-size: all.$fontSize5;
       position: absolute;
+      font-size: all.$fontSize5;
       top: -1 * all.$spaceLarge;
-      padding: all.$spaceSmall;
       right: 0;
+      padding: all.$spaceSmall;
       color: all.$white;
     }
   }

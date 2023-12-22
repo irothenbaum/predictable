@@ -13,6 +13,12 @@
  */
 
 /**
+ * @typedef {Object} LevelGroupDefinition
+ * @property {string} levelKey
+ * @property {Array<LevelDefinition>} subLevels
+ */
+
+/**
  * @typedef {Object} LevelDefinition
  * @property {Board} gameBoard
  * @property {Array<PieceDefinition>} pieces
@@ -28,7 +34,7 @@
 /**
  * @typedef {Object} CamapignContextData
  * @property {number} score
- * @property {Object<string, Solution>} solutions
+ * @property {Object<string, Array<Solution>>} solutions
  * @property {string?} lastCompletedLevelKey
  * @property {number?} lastCompletedLevelNum
  */

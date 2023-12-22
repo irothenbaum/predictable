@@ -24,6 +24,7 @@ export const Variant = {
 
 export const PiecePropType = {
   piece: PropTypes.shape({
+    id: PropTypes.string,
     type: PropTypes.string.isRequired,
     position: PropTypes.shape({
       row: PropTypes.number,
@@ -33,8 +34,13 @@ export const PiecePropType = {
       rowChange: PropTypes.number,
       columnChange: PropTypes.number,
     }),
-  }).isRequired,
+  }),
 }
+
+export const LevelDefinitionShape = PropTypes.shape({
+  pieces: PropTypes.arrayOf(PiecePropType.piece),
+  gameBoard: PropTypes.object,
+})
 
 export const InputProps = {
   onChange: PropTypes.func.isRequired,

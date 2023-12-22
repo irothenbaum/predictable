@@ -7,7 +7,7 @@ import {
   getCoordinateKey,
   isSameSquare,
 } from '../../lib/utilities'
-import {squareSizeRemScale} from '../../lib/constants'
+import {PiecePropType, squareSizeRemScale} from '../../lib/constants'
 
 // --------------------------------------------------------------------------------
 
@@ -120,16 +120,7 @@ World.propTypes = {
   renderPiece: PropTypes.func.isRequired,
   dimensionX: PropTypes.number,
   dimensionY: PropTypes.number,
-  pieces: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      position: PropTypes.shape({
-        row: PropTypes.number.isRequired,
-        column: PropTypes.number.isRequired,
-      }).isRequired,
-    }),
-  ),
+  pieces: PropTypes.arrayOf(PiecePropType.piece),
   onRenderWorld: PropTypes.func,
   onClickSquare: PropTypes.func,
   onHoverSquare: PropTypes.func,

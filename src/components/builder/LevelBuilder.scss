@@ -3,9 +3,10 @@
 $panelWidth: 300px;
 
 .level-builder {
+  position: relative;
   height: 100%;
-  width: calc(100% - $panelWidth);
-  margin-right: $panelWidth;
+  width: 100%;
+  padding-right: $panelWidth;
 
   .level-wrapper {
     position: relative;

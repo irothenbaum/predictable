@@ -27,8 +27,6 @@ $pieceMoveSpeed: 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-
     transition: top $pieceMoveSpeed linear, left $pieceMoveSpeed linear;
 
     &._warped {

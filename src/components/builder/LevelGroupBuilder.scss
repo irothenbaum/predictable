@@ -1,0 +1,31 @@
+@use '../../styles/all';
+
+$headerHeight: 60px;
+.level-group-builder {
+  height: 100%;
+  width: 100%;
+
+  .top-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: all.$spaceSmall;
+    height: $headerHeight;
+
+    .level-selector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: all.$white;
+      font-size: all.$fontSize3;
+
+      .icon-container {
+        margin: 0 all.$spaceLarge;
+      }
+    }
+  }
+
+  .level-builder {
+    height: calc(100% - $headerHeight);
+  }
+}

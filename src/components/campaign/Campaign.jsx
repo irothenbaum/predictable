@@ -8,12 +8,11 @@ import Level from '../gameplay/Level'
 import PropTypes from 'prop-types'
 import {instantiateLevelPieces, LevelData, LevelsOrder} from '../../levels'
 import LevelGallery from './LevelGallery'
-import SolutionResults from './SolutionResults'
-import YouLostOverlay from './YouLostOverlay'
+import LevelGroup from './LevelGroup'
+import LevelGroupResults from './LevelGroupResults'
 
 const STATUS_PLAYING = 'playing'
 const STATUS_WON = 'won'
-const STATUS_LOST = 'lost'
 const STATUS_GALLERY = 'gallery'
 
 function Campaign(props) {
@@ -50,22 +49,25 @@ function Campaign(props) {
     // enter play status and build the world based off the level definition
     setGameStatus(STATUS_PLAYING)
     const nextLevelDef = LevelData[nextLevelKey]
-    setLevelDefinition({
-      levelKey: nextLevelKey,
-      gameBoard: nextLevelDef.gameBoard,
-      pieces: instantiateLevelPieces(nextLevelDef.pieces),
-    })
+    if (nextLevelDef.subLevels) {
+      setLevelDefinition({
+        levelKey: nextLevelKey,
+        subLevels: nextLevelDef.subLevels.map(def => ({
+          gameBoard: def.gameBoard,
+          pieces: instantiateLevelPieces(def.pieces),
+        })),
+      })
+    } else {
+      setLevelDefinition({
+        levelKey: nextLevelKey,
+        gameBoard: nextLevelDef.gameBoard,
+        pieces: instantiateLevelPieces(nextLevelDef.pieces),
+      })
+    }
   }
 
   /**
-   * @param {Solution} solution
-   */
-  const handleLose = solution => {
-    setGameStatus(STATUS_LOST)
-  }
-
-  /**
-   * @param {Solution} solution
+   * @param {Array<Solution>} solution
    */
   const handleWin = solution => {
     // mark what level this solution is for
@@ -126,21 +128,12 @@ function Campaign(props) {
       ) : (
         <React.Fragment>
           {gameStatus === STATUS_WON ? (
-            <SolutionResults
-              solution={solutions[levelDefinition.levelKey]}
+            <LevelGroupResults
+              solutions={solutions[levelDefinition.levelKey]}
               onContinue={() => setGameStatus(STATUS_GALLERY)}
             />
-          ) : gameStatus === STATUS_LOST ? (
-            <YouLostOverlay
-              onContinue={() => handleSelectLevel(levelDefinition.levelKey)}
-            />
           ) : null}
-          <Level
-            levelDefinition={levelDefinition}
-            onWin={handleWin}
-            onLose={handleLose}
-            disableInput={gameStatus !== STATUS_PLAYING}
-          />
+          <LevelGroup levels={levelDefinition.subLevels} onWin={handleWin} />
         </React.Fragment>
       )}
     </CampaignContext.Provider>

@@ -2,7 +2,11 @@ import React, {useEffect, useState} from 'react'
 import './Level.scss'
 import LevelContext, {HydratedLevel} from '../../contexts/LevelContext.js'
 import World from '../environment/World.jsx'
-import {PieceType, squareSizeRemScale} from '../../lib/constants'
+import {
+  LevelDefinitionShape,
+  PieceType,
+  squareSizeRemScale,
+} from '../../lib/constants'
 import PropTypes from 'prop-types'
 import Scrollable from '../utility/Scrollable'
 
@@ -99,10 +103,13 @@ LevelInner.propTypes = {
     row: PropTypes.number,
     column: PropTypes.number,
   }),
-  pieces: PropTypes.array,
-  gameBoard: PropTypes.object,
-  onClickSquare: PropTypes.func,
-  onHoverSquare: PropTypes.func,
+  gameBoard: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
+  pieces: World.propTypes.pieces,
+  onClickSquare: World.propTypes.onClickSquare,
+  onHoverSquare: World.propTypes.onHoverSquare,
 }
 
 // --------------------------------------------------------------------------------
@@ -160,10 +167,7 @@ function Level(props) {
 }
 
 Level.propTypes = {
-  levelDefinition: PropTypes.shape({
-    pieces: PropTypes.arrayOf(PropTypes.object),
-    gameBoard: PropTypes.object,
-  }).isRequired,
+  levelDefinition: LevelDefinitionShape.isRequired,
   onWin: PropTypes.func.isRequired,
   onLose: PropTypes.func.isRequired,
   disableInput: PropTypes.bool,

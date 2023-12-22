@@ -10,6 +10,6 @@
   }
 
   &.collected {
-    @include all.ripple(all.$goalColorLight, 0.2em);
+    @include all.ripple(all.$goalColorLight, 0.4em);
   }
 }
