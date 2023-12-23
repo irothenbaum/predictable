@@ -7,10 +7,9 @@
     cursor: pointer;
     position: absolute;
     text-align: center;
-    display: flex;
     overflow: visible;
-    align-items: center;
     z-index: 2;
+    @include all.flex-row(flex-start);
 
     .tooltip-label {
       cursor: pointer;

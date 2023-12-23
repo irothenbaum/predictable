@@ -115,3 +115,11 @@ export function convertRemToPixels(rem) {
     rem * parseFloat(window.getComputedStyle(document.documentElement).fontSize)
   )
 }
+
+/**
+ * @param {*} obj
+ * @returns {*}
+ */
+export function clone(obj) {
+  return JSON.parse(JSON.stringify(obj))
+}

@@ -21,7 +21,7 @@ function LevelGroupResults({solution, onContinue}) {
   }
 
   return (
-    <Modal isOpen={isReady} className={'level-group-results'}>
+    <Modal isOpen={isReady}>
       <h3>Score: {solution.score}</h3>
 
       <Button variant={VARIANT_SECONDARY} onClick={onContinue}>

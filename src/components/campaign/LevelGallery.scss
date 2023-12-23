@@ -9,9 +9,7 @@
     position: relative;
 
     .level-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include all.flex-row();
       width: 100%;
       height: 33.33vh;
     }
@@ -21,6 +19,10 @@
       height: 5rem;
       width: 5rem;
       margin: 0 !important;
+
+      &, &:after, &:before {
+        transition: all all.$transition;
+      }
 
       &.completed {
         @include all.neon(all.$platformColor, all.$primaryColorLight);

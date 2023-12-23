@@ -3,8 +3,7 @@ import './MovesInput.scss'
 import PropTypes from 'prop-types'
 import useLevelControl from '../../hooks/useLevelControl'
 import LevelContext from '../../contexts/LevelContext'
-import IconWithShadow from '../utility/IconWithShadow'
-import {
+import Icon, {
   ARROW_LEFT,
   ARROW_RIGHT,
   ARROW_UP,
@@ -15,6 +14,7 @@ import {
 } from '../utility/Icon'
 import {getArrowIconFromVelocity} from '../utilities'
 import useKeyListener from '../../hooks/useKeyListener'
+import {constructClassString} from '../../lib/utilities'
 
 const MovementOptions = [
   {rowChange: 0, columnChange: -1},
@@ -71,20 +71,23 @@ function MovesInput(props) {
     <div className="moves-input-container">
       <div className="moves-queue">
         {moves.map((move, index) => (
-          <IconWithShadow
+          <Icon
             icon={getArrowIconFromVelocity(move)}
             key={index}
-            active={revealingMoveIndex === index}
+            className={constructClassString({
+              past: index < revealingMoveIndex,
+              active: revealingMoveIndex === index,
+            })}
           />
         ))}
       </div>
 
       <div className="moves-input-buttons">
-        <IconWithShadow icon={RESET} onClick={popMove} />
+        <Icon icon={RESET} onClick={popMove} className="undo-button" />
 
         {MovementOptions.map((m, i) => {
           return (
-            <IconWithShadow
+            <Icon
               key={i}
               icon={getArrowIconFromVelocity(m)}
               onClick={() => queueMove(m)}
@@ -92,7 +95,7 @@ function MovesInput(props) {
           )
         })}
 
-        <IconWithShadow icon={PLAY} onClick={() => playMoves()} />
+        <Icon icon={PLAY} onClick={() => playMoves()} className="play-button" />
       </div>
     </div>
   )

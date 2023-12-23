@@ -6,16 +6,13 @@ $headerHeight: 60px;
   width: 100%;
 
   .top-header {
-    display: flex;
-    align-items: center;
+    @include all.flex-row();
     justify-content: space-between;
     padding: all.$spaceSmall;
     height: $headerHeight;
 
     .level-selector {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include all.flex-row();
       color: all.$white;
       font-size: all.$fontSize3;
 

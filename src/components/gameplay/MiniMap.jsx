@@ -4,6 +4,7 @@ import './MiniMap.scss'
 import useDoOnceTimer from '../../hooks/useDoOnceTimer'
 import {constructClassString, convertRemToPixels} from '../../lib/utilities'
 import {squareSizeRemScale} from '../../lib/constants'
+import useReadyTimer from '../../hooks/useReadyTimer'
 
 const MINI_MAP_TIMER = 'mini-map-timer'
 const MINI_MAP_TIMER_DURATION = 3000
@@ -19,12 +20,16 @@ const MINI_MAP_TIMER_DURATION = 3000
  */
 
 function MiniMap(props) {
+  // don't show mini map in first half second
+  const {isReady} = useReadyTimer(500)
   const [showingMiniMap, setShowingMiniMap] = useState(false)
   const {setTimer} = useDoOnceTimer()
   const containerRef = useRef(null)
 
   useEffect(() => {
-    setShowingMiniMap(true)
+    if (isReady) {
+      setShowingMiniMap(true)
+    }
 
     setTimer(
       MINI_MAP_TIMER,

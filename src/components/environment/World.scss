@@ -24,9 +24,7 @@ $pieceMoveSpeed: 0.3s;
     height: all.$squareSize;
     width: all.$squareSize;
     position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include all.flex-row();
     transition: top $pieceMoveSpeed linear, left $pieceMoveSpeed linear;
 
     &._warped {
@@ -50,8 +48,7 @@ $pieceMoveSpeed: 0.3s;
 
   .world-row {
     width: 100%;
-    display: flex;
-    flex-direction: row;
+    @include all.flex-row();
     justify-content: space-evenly;
 
     &:last-child {

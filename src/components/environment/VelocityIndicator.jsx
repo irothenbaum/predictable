@@ -2,7 +2,6 @@ import React from 'react'
 import './VelocityIndicator.scss'
 import Icon, {CHEVRON_LEFT, CHEVRON_RIGHT} from '../utility/Icon'
 import PropTypes from 'prop-types'
-import IconWithShadow from '../utility/IconWithShadow'
 
 function VelocityIndicator(props) {
   if (!props.velocity || props.velocity.columnChange === 0) {

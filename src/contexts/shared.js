@@ -1,20 +1,11 @@
 import {createContext} from 'react'
 
 /**
- * A function to write to storage. This is called whenever a settings change is made
- * @param {*} obj
+ * @param {*} defaultState
  * @param {string} cacheKey
+ * @returns {*}
  */
-function flush(cacheKey, obj) {
-  localStorage[cacheKey] = JSON.stringify(obj)
-}
-
-/**
- * @param {*} initialState
- * @param {string} cacheKey
- * @returns {[React.Context, *, (object: *) => void]}
- */
-export function contextFactory(initialState, cacheKey) {
+function loadOrDefault(defaultState, cacheKey) {
   // hydrate from our stored value
   const storedValue = localStorage[cacheKey]
 
@@ -23,9 +14,26 @@ export function contextFactory(initialState, cacheKey) {
       ? JSON.parse(storedValue)
       : null
 
-  const hydratedSettings = storedObject
-    ? {...initialState, ...storedObject}
-    : initialState
+  return storedObject ? {...defaultState, ...storedObject} : defaultState
+}
+
+/**
+ * A function to write to storage. This is called whenever a settings change is made
+ * @param {*} obj
+ * @param {string} cacheKey
+ */
+function flush(cacheKey, obj) {
+  const existing = loadOrDefault({}, cacheKey)
+  localStorage[cacheKey] = JSON.stringify({...existing, ...obj})
+}
+
+/**
+ * @param {*} initialState
+ * @param {string} cacheKey
+ * @returns {[React.Context, *, (object: *) => void]}
+ */
+export function contextFactory(initialState, cacheKey) {
+  const hydratedSettings = loadOrDefault(initialState, cacheKey)
 
   const context = createContext({})
 

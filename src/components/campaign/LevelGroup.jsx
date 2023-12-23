@@ -3,6 +3,7 @@ import Level from '../gameplay/Level'
 import YouLostOverlay from './YouLostOverlay'
 import PropTypes from 'prop-types'
 import useDoOnceTimer from '../../hooks/useDoOnceTimer'
+import {clone} from '../../lib/utilities'
 
 const WIN_DELAY = 1000
 const WIN_TIMER = 'win-timer'
@@ -23,7 +24,8 @@ function LevelGroup(props) {
     if (solutions.length === props.levels.length) {
       props.onWin(solutions)
     } else {
-      setLevelDefinition(props.levels[solutions.length])
+      const nextDef = clone(props.levels[solutions.length])
+      setLevelDefinition(nextDef)
     }
   }, [solutions])
 
@@ -35,20 +37,35 @@ function LevelGroup(props) {
     setShowLost(true)
   }
 
-  return showLost ? (
-    <YouLostOverlay onPlayAgain={() => setShowLost(false)} />
-  ) : levelDefinition ? (
-    <Level
-      levelDefinition={levelDefinition}
-      onWin={handleWin}
-      onLose={handleLose}
-    />
-  ) : null
+  const handlePlayAgain = () => {
+    // reset our level
+    setShowLost(false)
+    setLevelDefinition(clone(props.levels[solutions.length]))
+  }
+
+  return (
+    <React.Fragment>
+      {showLost ? (
+        <YouLostOverlay
+          onPlayAgain={handlePlayAgain}
+          onReturn={props.onReturn}
+        />
+      ) : null}
+      {levelDefinition ? (
+        <Level
+          levelDefinition={levelDefinition}
+          onWin={handleWin}
+          onLose={handleLose}
+        />
+      ) : null}
+    </React.Fragment>
+  )
 }
 
 LevelGroup.propTypes = {
   levels: PropTypes.arrayOf(Level.propTypes.levelDefinition),
   onWin: Level.propTypes.onWin, // one argument, Array<Solution>
+  onReturn: PropTypes.func,
 }
 
 export default LevelGroup

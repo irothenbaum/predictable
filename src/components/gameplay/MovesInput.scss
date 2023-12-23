@@ -7,24 +7,58 @@
   width: 100%;
 
   .moves-input-buttons {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include all.flex-row();
     width: 100%;
     font-size: all.$fontSize1;
 
-    .icon-with-shadow {
+    .icon-container {
+      color: all.$white;
       padding: all.$spaceSmall;
       margin: all.$spaceSmall;
+
+      &.play-button {
+        color: all.$greenColorLight;
+      }
+
+      &.undo-button {
+        color: all.$redColorLight;
+      }
     }
+
   }
 
+  $collapsedHeight: 30px;
+  $expandedHeight: 50px;
   .moves-queue {
+    @include all.flex-row();
     font-size: all.$fontSize3;
-    .icon-with-shadow {
-      display: inline-block;
-      color: all.$primaryColor;
-      padding: all.$spaceExtraSmall;
+    height: $expandedHeight;
+
+    .icon-container {
+      @include all.flex-row();
+      color: all.$grey;
+      height: $collapsedHeight;
+      width: $collapsedHeight;
+      margin: 0;
+      transition: all all.$transitionSpeed;
+      border-style: solid;
+      border-width: 1px;
+      border-color: transparent;
+      border-radius: 0;
+
+      &.past {
+        color: all.$veryDarkGrey;
+      }
+
+      &.active {
+        height: $expandedHeight;
+        width: $expandedHeight;
+        border-radius: all.$borderRadiusSmall;
+        margin: 0 all.$spaceSmall;
+        font-size: all.$fontSize1;
+        border-color: all.$white;
+        color: all.$white;
+      }
     }
   }
 }

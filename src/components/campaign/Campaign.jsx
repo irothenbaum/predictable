@@ -10,10 +10,14 @@ import {instantiateLevelPieces, LevelData, LevelsOrder} from '../../levels'
 import LevelGallery from './LevelGallery'
 import LevelGroup from './LevelGroup'
 import LevelGroupResults from './LevelGroupResults'
+import useDoOnceTimer from '../../hooks/useDoOnceTimer'
 
 const STATUS_PLAYING = 'playing'
 const STATUS_WON = 'won'
 const STATUS_GALLERY = 'gallery'
+
+const LEVEL_TRANSITION_TIMER = 'level-transition-timer'
+const LEVEL_TRANSITION_DELAY = 1000
 
 function Campaign(props) {
   const [solutions, setSolutions] = useState(HydratedCampaign.solutions)
@@ -23,6 +27,8 @@ function Campaign(props) {
   const [score, setScore] = useState(HydratedCampaign.score)
   const [gameStatus, setGameStatus] = useState(STATUS_GALLERY)
   const [levelDefinition, setLevelDefinition] = useState(null)
+  const [previousLevel, setPreviousLevel] = useState(null)
+  const {setTimer} = useDoOnceTimer()
 
   /**
    * @param {number|string} nextLevelNum
@@ -41,7 +47,8 @@ function Campaign(props) {
     if (
       typeof nextLevelNum !== 'number' ||
       nextLevelNum < 0 ||
-      nextLevelNum >= LevelsOrder.length
+      nextLevelNum >= LevelsOrder.length ||
+      !nextLevelKey
     ) {
       throw new Error(`Invalid level "${nextLevelNum}"`)
     }
@@ -118,6 +125,18 @@ function Campaign(props) {
     })
   }
 
+  // this is a little incorrect in that if they don't click "continue" then we will have saved their score and solution, but not marked the level change
+  // I'm basically hoping they will always click the button
+  const handleShowNextLevel = () => {
+    setGameStatus(STATUS_GALLERY)
+    setPreviousLevel(lastCompletedLevelNum - 1)
+    setTimer(
+      LEVEL_TRANSITION_TIMER,
+      () => setPreviousLevel(null),
+      LEVEL_TRANSITION_DELAY,
+    )
+  }
+
   return (
     <CampaignContext.Provider
       value={{
@@ -127,16 +146,23 @@ function Campaign(props) {
         lastCompletedLevelKey: LevelsOrder[lastCompletedLevelNum],
       }}>
       {gameStatus === STATUS_GALLERY ? (
-        <LevelGallery onSelectLevel={handleSelectLevel} />
+        <LevelGallery
+          onSelectLevel={handleSelectLevel}
+          transitionFromLevelNum={previousLevel}
+        />
       ) : (
         <React.Fragment>
           {gameStatus === STATUS_WON ? (
             <LevelGroupResults
               solution={solutions[levelDefinition.levelKey]}
-              onContinue={() => setGameStatus(STATUS_GALLERY)}
+              onContinue={handleShowNextLevel}
             />
           ) : null}
-          <LevelGroup levels={levelDefinition.subLevels} onWin={handleWin} />
+          <LevelGroup
+            onReturn={() => setGameStatus(STATUS_GALLERY)}
+            levels={levelDefinition.subLevels}
+            onWin={handleWin}
+          />
         </React.Fragment>
       )}
     </CampaignContext.Provider>

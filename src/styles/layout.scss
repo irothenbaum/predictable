@@ -51,7 +51,7 @@ $borderRadiusSmall: 4px;
   }
 }
 
-@mixin flex-row($breakPoint: $screenMediumMax) {
+@mixin flex-row($breakPoint: $screenSmallMax) {
   display: flex;
   justify-content: center;
   align-items: center;

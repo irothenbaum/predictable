@@ -87,6 +87,10 @@ function LevelGallery(props) {
   // --------------------------------------------------------
 
   const hasSelected = isTimerSet(SELECT_TIMER)
+  const effectiveLastCompletedNum =
+    typeof props.transitionFromLevelNum === 'number'
+      ? props.transitionFromLevelNum
+      : lastCompletedLevelNum
 
   return (
     <div
@@ -110,20 +114,20 @@ function LevelGallery(props) {
         viewHeight={containerHeight}
         viewWidth={containerWidth}>
         <div className="level-gallery-world">
-          <div className="level-row">TOP SPACER</div>
+          <div className="level-row"></div>
           {LevelsOrder.map((levelKey, index) => {
             return (
               <div className="level-row" key={levelKey}>
                 <LevelNode
                   isHovered={index === hoveredLevelNum && !hasSelected}
                   isActive={index === hoveredLevelNum && hasSelected}
-                  isLocked={index > lastCompletedLevelNum + 1}
-                  isCompleted={index <= lastCompletedLevelNum}
+                  isLocked={index > effectiveLastCompletedNum + 1}
+                  isCompleted={index <= effectiveLastCompletedNum}
                 />
               </div>
             )
           }).reverse()}
-          <div className="level-row">BOTTOM SPACER</div>
+          <div className="level-row"></div>
           <div
             className="player-container level-row"
             style={{
@@ -139,6 +143,7 @@ function LevelGallery(props) {
 
 LevelGallery.propTypes = {
   onSelectLevel: PropTypes.func,
+  transitionFromLevelNum: PropTypes.number,
 }
 
 export default LevelGallery

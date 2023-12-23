@@ -33,8 +33,7 @@ $panelWidth: 300px;
     }
 
     .row {
-      display: flex;
-      align-items: center;
+      @include all.flex-row();
       justify-content: space-evenly;
       margin-bottom: all.$spaceMedium;
     }
