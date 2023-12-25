@@ -27,6 +27,7 @@ function Campaign(props) {
   const [score, setScore] = useState(HydratedCampaign.score)
   const [gameStatus, setGameStatus] = useState(STATUS_GALLERY)
   const [levelDefinition, setLevelDefinition] = useState(null)
+  // the previous level allows us to animate transition from one level to the next
   const [previousLevel, setPreviousLevel] = useState(null)
   const {setTimer} = useDoOnceTimer()
 
@@ -125,8 +126,6 @@ function Campaign(props) {
     })
   }
 
-  // this is a little incorrect in that if they don't click "continue" then we will have saved their score and solution, but not marked the level change
-  // I'm basically hoping they will always click the button
   const handleShowNextLevel = () => {
     setGameStatus(STATUS_GALLERY)
     setPreviousLevel(lastCompletedLevelNum - 1)

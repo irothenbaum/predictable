@@ -4,7 +4,8 @@
   display: flex;
   flex-direction: column;
 
-  button {
+  .button-container {
+    margin-top: all.$spaceMedium;
     align-self: flex-end;
   }
 }

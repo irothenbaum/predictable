@@ -48,7 +48,7 @@ $pieceMoveSpeed: 0.3s;
 
   .world-row {
     width: 100%;
-    @include all.flex-row();
+    @include all.flex-row(0);
     justify-content: space-evenly;
 
     &:last-child {

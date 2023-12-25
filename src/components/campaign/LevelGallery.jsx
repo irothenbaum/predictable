@@ -88,7 +88,8 @@ function LevelGallery(props) {
 
   const hasSelected = isTimerSet(SELECT_TIMER)
   const effectiveLastCompletedNum =
-    typeof props.transitionFromLevelNum === 'number'
+    typeof props.transitionFromLevelNum === 'number' &&
+    props.transitionFromLevelNum === lastCompletedLevelNum - 1
       ? props.transitionFromLevelNum
       : lastCompletedLevelNum
 
@@ -120,7 +121,7 @@ function LevelGallery(props) {
               <div className="level-row" key={levelKey}>
                 <LevelNode
                   isHovered={index === hoveredLevelNum && !hasSelected}
-                  isActive={index === hoveredLevelNum && hasSelected}
+                  isSelected={index === hoveredLevelNum && hasSelected}
                   isLocked={index > effectiveLastCompletedNum + 1}
                   isCompleted={index <= effectiveLastCompletedNum}
                 />
@@ -158,7 +159,7 @@ function LevelNode(props) {
         locked: props.isLocked,
         completed: props.isCompleted,
         hovered: props.isHovered,
-        selected: props.isActive,
+        selected: props.isSelected,
       })}>
       <div></div>
     </div>
@@ -167,7 +168,7 @@ function LevelNode(props) {
 
 LevelNode.propTypes = {
   isHovered: PropTypes.bool,
-  isActive: PropTypes.bool,
+  isSelected: PropTypes.bool,
   isLocked: PropTypes.bool,
   isCompleted: PropTypes.bool,
 }

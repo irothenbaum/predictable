@@ -21,7 +21,7 @@
       margin: 0 !important;
 
       &, &:after, &:before {
-        transition: all all.$transition;
+        transition: all 0.4s ease-in;
       }
 
       &.completed {

@@ -76,6 +76,9 @@ export function LevelInner(props) {
         }}>
         <Scrollable
           scrollPos={scrollPos}
+          hideMiniMap={
+            worldWidth < window.innerWidth || worldHeight < window.innerHeight
+          }
           height={worldHeight}
           width={worldWidth}
           viewHeight={containerHeight}

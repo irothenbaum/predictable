@@ -7,7 +7,7 @@
   width: 100%;
 
   .moves-input-buttons {
-    @include all.flex-row();
+    @include all.flex-row(0);
     width: 100%;
     font-size: all.$fontSize1;
 
@@ -29,17 +29,19 @@
 
   $collapsedHeight: 30px;
   $expandedHeight: 50px;
+  $collapsedMargin: ($expandedHeight - $collapsedHeight) / 2;
+  $collapsedHorizontalMargin: calc($collapsedMargin + #{all.$spaceSmall});
   .moves-queue {
-    @include all.flex-row();
+    @include all.flex-row(0);
+    flex-wrap: wrap;
     font-size: all.$fontSize3;
-    height: $expandedHeight;
 
     .icon-container {
       @include all.flex-row();
       color: all.$grey;
       height: $collapsedHeight;
       width: $collapsedHeight;
-      margin: 0;
+      margin: $collapsedMargin $collapsedHorizontalMargin;
       transition: all all.$transitionSpeed;
       border-style: solid;
       border-width: 1px;
