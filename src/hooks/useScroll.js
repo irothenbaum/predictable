@@ -148,7 +148,6 @@ function useScroll(ref, options) {
         x: e.touches[0].clientX - settingsRef.current.viewWidth / 2,
         y: e.touches[0].clientY - settingsRef.current.viewHeight / 2,
       }
-      console.log(thisPos)
       lastTouchRef.current.push(thisPos)
 
       if (lastTouchRef.current.length > 3) {

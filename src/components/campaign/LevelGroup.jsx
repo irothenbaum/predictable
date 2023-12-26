@@ -4,6 +4,7 @@ import YouLostOverlay from './YouLostOverlay'
 import PropTypes from 'prop-types'
 import useDoOnceTimer from '../../hooks/useDoOnceTimer'
 import {clone} from '../../lib/utilities'
+import {InstructionalShape} from '../../lib/constants'
 
 const WIN_DELAY = 1000
 const WIN_TIMER = 'win-timer'
@@ -64,6 +65,7 @@ function LevelGroup(props) {
 
 LevelGroup.propTypes = {
   levels: PropTypes.arrayOf(Level.propTypes.levelDefinition),
+  instructions: PropTypes.arrayOf(InstructionalShape),
   onWin: Level.propTypes.onWin, // one argument, Array<Solution>
   onReturn: PropTypes.func,
 }

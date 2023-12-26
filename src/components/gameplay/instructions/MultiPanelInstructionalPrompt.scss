@@ -1,0 +1,47 @@
+@use "../../../styles/all";
+
+.multi-panel-instructional-prompt {
+  .panel-content {
+    transition: all all.$transition;
+  }
+
+  .controls-container {
+    @include all.flex-row();
+    margin-top: all.$spaceLarge;
+    justify-content: space-between;
+  }
+
+  .step-counter {
+    @include all.flex-row();
+    position: absolute;
+    top: all.$spaceSmall;
+    right: all.$spaceSmall;
+
+    span {
+      cursor: pointer;
+      display: block;
+      padding: all.$spaceExtraSmall;
+      @include all.hover-cta();
+
+      &:after {
+        content: "";
+        display: block;
+        width: all.$spaceSmall;
+        height: all.$spaceSmall;
+        background-color: all.$white;
+        border-radius: all.$spaceSmall / 2;
+      }
+      &.selected {
+        opacity: 1;
+      }
+    }
+
+  }
+
+  &.transitioning {
+    .panel-content {
+      transform: translateY(20%);
+      opacity: 0;
+    }
+  }
+}

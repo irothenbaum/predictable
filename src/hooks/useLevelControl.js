@@ -5,11 +5,11 @@ import LevelContext from '../contexts/LevelContext'
 import {isSameSquare} from '../lib/utilities'
 import {PieceType} from '../lib/constants'
 
-const MOVE_TIMER = 'timer'
-const MOVE_DELAY = 1000
-
 const OPPONENT_MOVE_TIMER = 'opponent-timer'
 const OPPONENT_MOVE_DELAY = 300 // this should match World.scss -> $pieceMoveSpeed
+
+const MOVE_TIMER = 'timer'
+const MOVE_DELAY = 2 * OPPONENT_MOVE_DELAY // this should be 2 x OPPONENT_MOVE_DELAY
 
 const OPPONENT_MOVE_VELOCITY_TIMER = 'opponent-velocity-timer-'
 
@@ -281,7 +281,7 @@ function useLevelControl(options) {
     playMoves,
     isShowingMoves,
     revealingMoveIndex,
-    reset: () => {
+    resetLevel: () => {
       cancelAllTimers()
       setIsShowingMoves(false)
       setRevealingMoveIndex(null)

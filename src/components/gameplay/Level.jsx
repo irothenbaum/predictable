@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import './Level.scss'
 import LevelContext, {HydratedLevel} from '../../contexts/LevelContext.js'
 import World from '../environment/World.jsx'
@@ -18,6 +18,8 @@ import MovesInput from './MovesInput'
 import MoveShadow from '../environment/MoveShadow'
 import {convertRemToPixels} from '../../lib/utilities'
 import Goal from '../environment/Goal'
+import useLevelControl from '../../hooks/useLevelControl'
+import InstructionsRenderer from './InstructionsRenderer'
 
 const PieceTypeToComponent = {
   [PieceType.Player]: Player,
@@ -121,6 +123,19 @@ function Level(props) {
   const [pieces, setPieces] = useState([])
   const [moves, setMoves] = useState([])
   const [gameBoard, setGameBoard] = useState(HydratedLevel.gameBoard)
+  // call playMoves to submit the moves
+  const {playMoves, resetLevel, isShowingMoves, revealingMoveIndex} =
+    useLevelControl({
+      onWin: props.onWin,
+      onLose: props.onLose,
+    })
+
+  // if we ever reset our moves, we also want to reset the level control
+  useEffect(() => {
+    if (!moves || moves.length === 0) {
+      resetLevel()
+    }
+  }, [moves])
 
   useEffect(() => {
     if (!props.levelDefinition) {
@@ -143,6 +158,9 @@ function Level(props) {
         setPieces,
         playerPiece,
 
+        isShowingMoves,
+        revealingMoveIndex,
+
         queueMove: move => {
           setMoves(m => [...m, move])
         },
@@ -162,9 +180,8 @@ function Level(props) {
         pieces={pieces}
         startingPosition={playerPiece?.position}
       />
-      {!props.disableInput && (
-        <MovesInput onWin={props.onWin} onLose={props.onLose} />
-      )}
+      <InstructionsRenderer instructions={props.levelDefinition.instructions} />
+      {!props.disableInput && <MovesInput onPlayMoves={playMoves} />}
     </LevelContext.Provider>
   )
 }

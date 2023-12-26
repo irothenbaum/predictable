@@ -1,3 +1,6 @@
+// -----------------------------------------------------------------
+// CONTEXT TOPOLOGIES
+
 /**
  * @typedef {Object} SettingsContextData
  * @property {boolean} hasReadRules
@@ -13,16 +16,15 @@
  */
 
 /**
- * @typedef {Object} LevelGroupDefinition
- * @property {string} levelKey
- * @property {Array<LevelDefinition>} subLevels
+ * @typedef {Object} CamapignContextData
+ * @property {number} score
+ * @property {Object<string, Array<Solution>>} solutions
+ * @property {string?} lastCompletedLevelKey
+ * @property {number?} lastCompletedLevelNum
  */
 
-/**
- * @typedef {Object} LevelDefinition
- * @property {Board} gameBoard
- * @property {Array<PieceDefinition>} pieces
- */
+// -----------------------------------------------------------------
+// LEVEL DEFINITION
 
 /**
  * This is used in the level.json files as a shorthand for piece + positions
@@ -32,26 +34,16 @@
  */
 
 /**
- * @typedef {Object} CamapignContextData
- * @property {number} score
- * @property {Object<string, Array<Solution>>} solutions
- * @property {string?} lastCompletedLevelKey
- * @property {number?} lastCompletedLevelNum
+ * @typedef {Object} LevelDefinition
+ * @property {Board} gameBoard
+ * @property {Array<PieceDefinition>} pieces
+ * @property {Array<Instructional>?} instructions
  */
 
 /**
- * @typedef {Object} LevelGroupSolution
+ * @typedef {Object} LevelGroupDefinition
  * @property {string} levelKey
- * @property {Array<Solution>} solutions
- * @property {number} score
- */
-
-/**
- * @typedef {Object} Solution
- * @property {string?} levelKey
- * @property {Array<Velocity>} moves
- * @property {number} score
- * @property {Date|string} solvedAt
+ * @property {Array<LevelDefinition>} subLevels
  */
 
 // -----------------------------------------------------------------
@@ -130,4 +122,29 @@
 
 /**
  * @typedef {Player & Hazard & Obstacle & Platform & Coin & Goal & MoveShadow} AbstractPiece
+ */
+
+// -----------------------------------------------------------------
+// UI and Meta
+/**
+ * @typedef {Object} Instructional
+ * @property {string} instructionKey
+ * @property {number?} triggerDelayMS
+ * @property {number?} triggerDelayMoveIndex
+ * @property {Position?} triggerPosition
+ */
+
+/**
+ * @typedef {Object} LevelGroupSolution
+ * @property {string} levelKey
+ * @property {Array<Solution>} solutions
+ * @property {number} score
+ */
+
+/**
+ * @typedef {Object} Solution
+ * @property {string?} levelKey
+ * @property {Array<Velocity>} moves
+ * @property {number} score
+ * @property {Date|string} solvedAt
  */

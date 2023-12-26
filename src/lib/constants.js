@@ -11,6 +11,7 @@ export const PieceType = {
   Coin: 'coin',
   Goal: 'goal',
   MoveShadow: 'move-shadow',
+  Instructional: 'instructional',
 }
 
 /**
@@ -22,24 +23,37 @@ export const Variant = {
   Middle: 'middle',
 }
 
-export const PiecePropType = {
-  piece: PropTypes.shape({
-    id: PropTypes.string,
-    type: PropTypes.string.isRequired,
-    position: PropTypes.shape({
-      row: PropTypes.number,
-      column: PropTypes.number,
-    }),
-    velocity: PropTypes.shape({
-      rowChange: PropTypes.number,
-      columnChange: PropTypes.number,
-    }),
+export const PieceShape = PropTypes.shape({
+  id: PropTypes.string,
+  type: PropTypes.string.isRequired,
+  position: PropTypes.shape({
+    row: PropTypes.number,
+    column: PropTypes.number,
   }),
+  velocity: PropTypes.shape({
+    rowChange: PropTypes.number,
+    columnChange: PropTypes.number,
+  }),
+})
+
+export const PiecePropType = {
+  piece: PieceShape,
 }
+
+export const InstructionalShape = PropTypes.shape({
+  triggerDelayMS: PropTypes.number,
+  triggerDelayMoveIndex: PropTypes.number,
+  triggerPosition: PropTypes.shape({
+    row: PropTypes.number,
+    column: PropTypes.number,
+  }),
+  instructionKey: PropTypes.string.isRequired,
+})
 
 export const LevelDefinitionShape = PropTypes.shape({
   pieces: PropTypes.arrayOf(PiecePropType.piece),
   gameBoard: PropTypes.object,
+  instructions: PropTypes.arrayOf(InstructionalShape),
 })
 
 export const InputProps = {
@@ -69,3 +83,5 @@ export const LevelGroupSolutionShape = PropTypes.shape({
 
 // this should match the rem scale in constants.scss
 export const squareSizeRemScale = 5
+
+export const INSTRUCTION_WELCOME = 'welcome'

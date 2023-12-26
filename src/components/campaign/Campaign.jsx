@@ -63,14 +63,12 @@ function Campaign(props) {
         subLevels: nextLevelDef.subLevels.map(def => ({
           gameBoard: def.gameBoard,
           pieces: instantiateLevelPieces(def.pieces),
+          instructions: def.instructions,
         })),
       })
     } else {
-      setLevelDefinition({
-        levelKey: nextLevelKey,
-        gameBoard: nextLevelDef.gameBoard,
-        pieces: instantiateLevelPieces(nextLevelDef.pieces),
-      })
+      // no longer supported single level definition
+      throw new Error('Cannot support single level definitions')
     }
   }
 

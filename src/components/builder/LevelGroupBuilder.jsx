@@ -101,7 +101,6 @@ export default LevelGroupBuilder
  * @returns {string}
  */
 function createLevelGroupJSON(levels) {
-  console.log(levels, JSON.stringify(levels))
   return JSON.stringify({
     subLevels: levels,
   })

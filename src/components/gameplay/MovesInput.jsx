@@ -25,20 +25,8 @@ const MovementOptions = [
 ]
 
 function MovesInput(props) {
-  const {moves, queueMove, popMove} = useContext(LevelContext)
-  // call playMoves to submit the moves
-  const {playMoves, reset, isShowingMoves, revealingMoveIndex} =
-    useLevelControl({
-      onWin: props.onWin,
-      onLose: props.onLose,
-    })
-
-  // if we ever reset our moves, we also want to reset the level control
-  useEffect(() => {
-    if (!moves || moves.length === 0) {
-      reset()
-    }
-  }, [moves])
+  const {moves, queueMove, popMove, revealingMoveIndex} =
+    useContext(LevelContext)
 
   const keyHandler = useCallback(key => {
     switch (key) {
@@ -58,7 +46,7 @@ function MovesInput(props) {
         queueMove(MovementOptions[4])
         break
       case 'Enter':
-        playMoves()
+        props.onPlayMoves()
         break
       case 'r':
         popMove()
@@ -95,15 +83,14 @@ function MovesInput(props) {
           )
         })}
 
-        <Icon icon={PLAY} onClick={() => playMoves()} className="play-button" />
+        <Icon icon={PLAY} onClick={props.onPlayMoves} className="play-button" />
       </div>
     </div>
   )
 }
 
 MovesInput.propTypes = {
-  onWin: PropTypes.func.isRequired,
-  onLose: PropTypes.func.isRequired,
+  onPlayMoves: PropTypes.func.isRequired,
 }
 
 export default MovesInput
