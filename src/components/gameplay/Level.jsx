@@ -123,6 +123,7 @@ function Level(props) {
   const [pieces, setPieces] = useState([])
   const [moves, setMoves] = useState([])
   const [gameBoard, setGameBoard] = useState(HydratedLevel.gameBoard)
+  const [isPaused, setIsPaused] = useState(false)
   // call playMoves to submit the moves
   const {playMoves, resetLevel, isShowingMoves, revealingMoveIndex} =
     useLevelControl({
@@ -160,6 +161,8 @@ function Level(props) {
 
         isShowingMoves,
         revealingMoveIndex,
+        isPaused: isPaused,
+        setIsPaused: setIsPaused,
 
         queueMove: move => {
           setMoves(m => [...m, move])
@@ -181,7 +184,7 @@ function Level(props) {
         startingPosition={playerPiece?.position}
       />
       <InstructionsRenderer instructions={props.levelDefinition.instructions} />
-      {!props.disableInput && <MovesInput onPlayMoves={playMoves} />}
+      {!isPaused && <MovesInput />}
     </LevelContext.Provider>
   )
 }
@@ -190,7 +193,6 @@ Level.propTypes = {
   levelDefinition: LevelDefinitionShape.isRequired,
   onWin: PropTypes.func.isRequired,
   onLose: PropTypes.func.isRequired,
-  disableInput: PropTypes.bool,
 }
 
 export default Level

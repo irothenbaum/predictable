@@ -11,6 +11,7 @@ export const DefaultLevel = {
     height: 8,
     width: 8,
   },
+  isPaused: false,
 }
 
 const [LevelContext, HydratedLevel, flushLevel] = contextFactory(

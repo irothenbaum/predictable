@@ -86,6 +86,7 @@ function MultiPanelInstructionalPrompt(props) {
         <div className="step-counter">
           {[...new Array(props.totalSteps)].map((_, i) => (
             <span
+              key={i}
               className={constructClassString({selected: step === i})}
               onClick={() => adjustStep(i - step)}
             />

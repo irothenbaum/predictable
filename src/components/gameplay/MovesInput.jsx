@@ -25,7 +25,7 @@ const MovementOptions = [
 ]
 
 function MovesInput(props) {
-  const {moves, queueMove, popMove, revealingMoveIndex} =
+  const {moves, queueMove, popMove, revealingMoveIndex, playMoves} =
     useContext(LevelContext)
 
   const keyHandler = useCallback(key => {
@@ -46,7 +46,7 @@ function MovesInput(props) {
         queueMove(MovementOptions[4])
         break
       case 'Enter':
-        props.onPlayMoves()
+        playMoves()
         break
       case 'r':
         popMove()
@@ -83,14 +83,12 @@ function MovesInput(props) {
           )
         })}
 
-        <Icon icon={PLAY} onClick={props.onPlayMoves} className="play-button" />
+        <Icon icon={PLAY} onClick={playMoves} className="play-button" />
       </div>
     </div>
   )
 }
 
-MovesInput.propTypes = {
-  onPlayMoves: PropTypes.func.isRequired,
-}
+MovesInput.propTypes = {}
 
 export default MovesInput

@@ -12,9 +12,15 @@ const InstructionMap = {
 const INSTRUCTION_TIMER = 'instruction-timer'
 
 function InstructionsRenderer(props) {
-  const {revealingMoveIndex, playerPiece} = useContext(LevelContext)
+  const {revealingMoveIndex, playerPiece, setIsPaused} =
+    useContext(LevelContext)
   const {setTimer} = useDoOnceTimer()
   const [showingInstructionKey, setShowingInstructionKey] = useState(null)
+
+  const handleChangeShowingInstructionKey = key => {
+    setShowingInstructionKey(key)
+    setIsPaused(!!key)
+  }
 
   useEffect(() => {
     // this is kind of like a use effect as instructions should only ever change on new level start
@@ -26,7 +32,7 @@ function InstructionsRenderer(props) {
         .forEach(i => {
           setTimer(
             INSTRUCTION_TIMER,
-            () => setShowingInstructionKey(i.instructionKey),
+            () => handleChangeShowingInstructionKey(i.instructionKey),
             i.triggerDelayMS,
           )
         })
@@ -45,7 +51,7 @@ function InstructionsRenderer(props) {
       )
 
       if (readyToTriggerByMove) {
-        setShowingInstructionKey(readyToTriggerByMove.instructionKey)
+        handleChangeShowingInstructionKey(readyToTriggerByMove.instructionKey)
       } else if (playerPiece) {
         // if we didn't find one, try and find one that is triggered by the player's position
         const readyToTriggerByPosition = props.instructions.find(
@@ -55,7 +61,9 @@ function InstructionsRenderer(props) {
         )
 
         if (readyToTriggerByPosition) {
-          setShowingInstructionKey(readyToTriggerByPosition.instructionKey)
+          handleChangeShowingInstructionKey(
+            readyToTriggerByPosition.instructionKey,
+          )
         }
       }
     }
@@ -64,7 +72,7 @@ function InstructionsRenderer(props) {
   const Comp = InstructionMap[showingInstructionKey]
 
   return Comp ? (
-    <Comp onComplete={() => setShowingInstructionKey(null)} />
+    <Comp onComplete={() => handleChangeShowingInstructionKey(null)} />
   ) : null
 }
 
