@@ -84,4 +84,16 @@ export const LevelGroupSolutionShape = PropTypes.shape({
 // this should match the rem scale in constants.scss
 export const squareSizeRemScale = 5
 
+// --------------------------------------------------------------------------------
+// INSTRUCTION KEYS
+
 export const INSTRUCTION_WELCOME = 'welcome'
+
+// --------------------------------------------------------------------------------
+// SCENES
+export const SCENE_CAMPAIGN = 'campaign'
+export const SCENE_MENU = 'menu'
+export const SCENE_SETTINGS = 'settings'
+export const SCENE_DAILY = 'daily-challenge'
+
+export const SCENE_INTRO = 'intro'

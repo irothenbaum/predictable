@@ -14,31 +14,47 @@ $shiftAmount: 3px;
 
   @include all.neon(all.$primaryColorShadow, all.$primaryColorLight);
   margin: 0;
-  &:hover {
+  &:hover:not(.clicked), &.focused:not(.clicked), &:focus:not(.clicked) {
     @include all.pulse-border(all.$primaryColorLight);
+  }
+
+  &.clicked {
+    @include all.ripple(all.$primaryColorLight);
   }
 
   &.secondary {
     @include all.neon(all.$greenColorShadow, all.$greenColorLight);
     margin: 0;
-    &:hover {
+    &:hover:not(.clicked), &.focused:not(.clicked), &:focus:not(.clicked) {
       @include all.pulse-border(all.$greenColorLight)
+    }
+
+    &.clicked {
+        @include all.ripple(all.$greenColorLight);
     }
   }
 
   &.tertiary {
     @include all.neon(all.$secondaryColorShadow, all.$secondaryColorLight);
     margin: 0;
-    &:hover {
+    &:hover:not(.clicked), &.focused:not(.clicked), &:focus:not(.clicked) {
       @include all.pulse-border(all.$secondaryColorLight)
+    }
+
+    &.clicked {
+        @include all.ripple(all.$secondaryColorLight);
     }
   }
 
   &.destructive {
     @include all.neon(all.$redColor, all.$redColorLight);
     margin: 0;
-    &:hover {
+    &:hover:not(.clicked), &.focused:not(.clicked), &:focus:not(.clicked) {
       @include all.pulse-border(all.$redColorLight)
+    }
+
+    &.clicked {
+      @include all.ripple(all.$redColorLight);
     }
   }
 
@@ -51,7 +67,7 @@ $shiftAmount: 3px;
       color: all.$nearBlack;
     }
 
-    &:hover {
+    &:hover:not(.clicked), &.focused:not(.clicked), &:focus:not(.clicked) {
       animation: none !important;
     }
   }

@@ -1,0 +1,12 @@
+@use "../../styles/all";
+
+.menu {
+  .controls {
+    @include all.flex-row();
+    flex-direction: column;
+
+    .button-container {
+      margin-top: all.$spaceMedium;
+    }
+  }
+}

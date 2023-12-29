@@ -3,13 +3,40 @@ import './PredictableGame.scss'
 import PropTypes from 'prop-types'
 import LevelGroupBuilder from './builder/LevelGroupBuilder'
 import Campaign from './campaign/Campaign'
-import SettingsContext from '../contexts/SettingsContext'
+import SettingsContext, {HydratedSettings} from '../contexts/SettingsContext'
+import {
+  SCENE_MENU,
+  SCENE_INTRO,
+  SCENE_SETTINGS,
+  SCENE_CAMPAIGN,
+  SCENE_DAILY,
+} from '../lib/constants'
+import Menu from './pages/Menu'
+import Intro from './pages/Intro'
+import DailyChallenge from './daily/DailyChallenge'
+
+const SceneMap = {
+  [SCENE_MENU]: Menu,
+  [SCENE_INTRO]: Intro,
+  // [SCENE_SETTINGS]: Settings,
+  [SCENE_CAMPAIGN]: Campaign,
+  [SCENE_DAILY]: DailyChallenge,
+}
 
 function PredictableGame(props) {
+  const [scene, setScene] = useState(SCENE_MENU)
+
+  const Scene = SceneMap[scene]
+
   return (
-    <SettingsContext.Provider value={{}}>
-      <Campaign />
-      {/*<LevelGroupBuilder />*/}
+    <SettingsContext.Provider
+      value={{
+        scene,
+        goToScene: setScene,
+
+        hasReadRules: HydratedSettings.hasReadRules,
+      }}>
+      {Scene && <Scene />}
     </SettingsContext.Provider>
   )
 }
