@@ -10,7 +10,6 @@ export const PieceType = {
   Platform: 'platform',
   Coin: 'coin',
   Goal: 'goal',
-  MoveShadow: 'move-shadow',
   Instructional: 'instructional',
 }
 
@@ -23,13 +22,15 @@ export const Variant = {
   Middle: 'middle',
 }
 
+export const PositionShape = PropTypes.shape({
+  row: PropTypes.number,
+  column: PropTypes.number,
+})
+
 export const PieceShape = PropTypes.shape({
   id: PropTypes.string,
   type: PropTypes.string.isRequired,
-  position: PropTypes.shape({
-    row: PropTypes.number,
-    column: PropTypes.number,
-  }),
+  position: PositionShape,
   velocity: PropTypes.shape({
     rowChange: PropTypes.number,
     columnChange: PropTypes.number,
@@ -43,10 +44,7 @@ export const PiecePropType = {
 export const InstructionalShape = PropTypes.shape({
   triggerDelayMS: PropTypes.number,
   triggerDelayMoveIndex: PropTypes.number,
-  triggerPosition: PropTypes.shape({
-    row: PropTypes.number,
-    column: PropTypes.number,
-  }),
+  triggerPosition: PositionShape,
   instructionKey: PropTypes.string.isRequired,
 })
 
@@ -66,12 +64,7 @@ export const InputProps = {
 }
 
 export const LevelSolutionShape = PropTypes.shape({
-  moves: PropTypes.arrayOf(
-    PropTypes.shape({
-      row: PropTypes.number,
-      column: PropTypes.number,
-    }),
-  ).isRequired,
+  moves: PropTypes.arrayOf(PositionShape).isRequired,
   score: PropTypes.number,
 })
 

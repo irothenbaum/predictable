@@ -5,6 +5,7 @@ import World from '../environment/World.jsx'
 import {
   LevelDefinitionShape,
   PieceType,
+  PositionShape,
   squareSizeRemScale,
 } from '../../lib/constants'
 import PropTypes from 'prop-types'
@@ -15,7 +16,6 @@ import Hazard from '../environment/Hazard'
 import Obstacle from '../environment/Obstacle'
 import Platform from '../environment/Platform'
 import MovesInput from './MovesInput'
-import MoveShadow from '../environment/MoveShadow'
 import {convertRemToPixels} from '../../lib/utilities'
 import Goal from '../environment/Goal'
 import useLevelControl from '../../hooks/useLevelControl'
@@ -26,7 +26,6 @@ const PieceTypeToComponent = {
   [PieceType.Hazard]: Hazard,
   [PieceType.Obstacle]: Obstacle,
   [PieceType.Platform]: Platform,
-  [PieceType.MoveShadow]: MoveShadow,
   [PieceType.Goal]: Goal,
 }
 
@@ -77,6 +76,7 @@ export function LevelInner(props) {
           }
         }}>
         <Scrollable
+          transitionDuration={props.transitionDuration}
           scrollPos={scrollPos}
           hideMiniMap={
             worldWidth < window.innerWidth || worldHeight < window.innerHeight
@@ -104,10 +104,7 @@ export function LevelInner(props) {
 }
 
 LevelInner.propTypes = {
-  startingPosition: PropTypes.shape({
-    row: PropTypes.number,
-    column: PropTypes.number,
-  }),
+  startingPosition: PositionShape,
   gameBoard: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
@@ -115,6 +112,7 @@ LevelInner.propTypes = {
   pieces: World.propTypes.pieces,
   onClickSquare: World.propTypes.onClickSquare,
   onHoverSquare: World.propTypes.onHoverSquare,
+  transitionDuration: PropTypes.string,
 }
 
 // --------------------------------------------------------------------------------
@@ -124,19 +122,27 @@ function Level(props) {
   const [moves, setMoves] = useState([])
   const [gameBoard, setGameBoard] = useState(HydratedLevel.gameBoard)
   const [isPaused, setIsPaused] = useState(false)
+
+  const playerPiece = pieces.find(p => p.isPlayer)
+
   // call playMoves to submit the moves
   const {playMoves, resetLevel, isShowingMoves, revealingMoveIndex} =
     useLevelControl({
       onWin: props.onWin,
       onLose: props.onLose,
       autoPlay: props.autoPlay,
+      pieces,
+      playerPiece,
+      setPieces,
+      moves,
+      gameBoard,
     })
 
   useEffect(() => {
     if (props.autoPlay) {
       playMoves()
     }
-  }, [])
+  }, [props.autoPlay])
 
   // if we ever reset our moves, we also want to reset the level control
   useEffect(() => {
@@ -154,8 +160,6 @@ function Level(props) {
     setPieces(props.levelDefinition.pieces)
     setGameBoard(props.levelDefinition.gameBoard)
   }, [props.levelDefinition])
-
-  const playerPiece = pieces.find(p => p.isPlayer)
 
   return (
     <LevelContext.Provider

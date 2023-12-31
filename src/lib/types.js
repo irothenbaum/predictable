@@ -77,12 +77,6 @@
  */
 
 /**
- * @typedef {Piece} MoveShadow
- * @property {boolean} isMoveShadow
- * @property {number} moveIndex
- */
-
-/**
  * @typedef {Piece} Player
  * @property {boolean} isPlayer
  */
@@ -121,7 +115,7 @@
  */
 
 /**
- * @typedef {Player & Hazard & Obstacle & Platform & Coin & Goal & MoveShadow} AbstractPiece
+ * @typedef {Player & Hazard & Obstacle & Platform & Coin & Goal} AbstractPiece
  */
 
 // -----------------------------------------------------------------

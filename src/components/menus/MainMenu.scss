@@ -11,8 +11,11 @@
     @include all.flex-row();
 
     .controls {
+      padding: all.$spaceExtraLarge;
+      border-radius: all.$borderRadiusLarge;
       @include all.flex-row();
       flex-direction: column;
+      background-color: all.$shadowExtraHard;
 
       .button-container {
         margin-top: all.$spaceMedium;
@@ -29,6 +32,10 @@
   .controls, .hero, button, h1 {
     opacity: 1;
     transition: opacity 2s ease-in-out;
+  }
+
+  .controls {
+    transition-delay: 2s;
   }
 
   h1 {

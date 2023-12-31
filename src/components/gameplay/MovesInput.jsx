@@ -1,17 +1,7 @@
 import React, {useCallback, useContext, useEffect} from 'react'
 import './MovesInput.scss'
-import PropTypes from 'prop-types'
-import useLevelControl from '../../hooks/useLevelControl'
 import LevelContext from '../../contexts/LevelContext'
-import Icon, {
-  ARROW_LEFT,
-  ARROW_RIGHT,
-  ARROW_UP,
-  ARROW_DOWN,
-  CIRCLE,
-  PLAY,
-  RESET,
-} from '../utility/Icon'
+import Icon, {PLAY, RESET} from '../utility/Icon'
 import {getArrowIconFromVelocity} from '../utilities'
 import useKeyListener from '../../hooks/useKeyListener'
 import {constructClassString} from '../../lib/utilities'

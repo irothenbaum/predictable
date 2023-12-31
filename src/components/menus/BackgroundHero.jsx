@@ -18,12 +18,12 @@ function BackgroundHero(props) {
     const def = {
       gameBoard: {
         width: Math.ceil(window.innerWidth / squareDim),
-        height: Math.ceil(window.innerHeight / squareDim) * 10, // can scroll up to 10x window height before we reset
+        height: Math.ceil(window.innerHeight / squareDim), // can scroll up to 3x window height before we reset
       },
       pieces: [],
     }
 
-    for (let r = 0; r < def.gameBoard.width; r++) {
+    for (let r = 0; r < def.gameBoard.height; r++) {
       const rowType = flipCoin(OBSTACLE_PROBABILITY)
         ? PieceType.Obstacle
         : flipCoin(PLATFORM_PROBABILITY)
@@ -34,8 +34,8 @@ function BackgroundHero(props) {
 
       if (rowType) {
         const v = rowType === PieceType.Obstacle ? 0 : rollDice(3)
-        for (let c = 0; c < def.gameBoard.height; c++) {
-          if (flipCoin(2)) {
+        for (let c = 0; c < def.gameBoard.width; c++) {
+          if (flipCoin(3)) {
             def.pieces.push({
               type: rowType,
               row: r,
@@ -50,12 +50,10 @@ function BackgroundHero(props) {
 
     def.pieces.push({
       type: PieceType.Player,
-      row: 0,
+      row: -10,
       column: 0,
     })
     def.pieces = instantiateLevelPieces(def.pieces)
-
-    console.log(def.pieces)
 
     setLevelDefinition(def)
     props.onReady()

@@ -1,9 +1,6 @@
 import {useState, useEffect, useContext} from 'react'
-import {v4 as uuid} from 'uuid'
 import useDoOnceTimer from './useDoOnceTimer'
-import LevelContext from '../contexts/LevelContext'
 import {isSameSquare} from '../lib/utilities'
-import {PieceType} from '../lib/constants'
 
 const OPPONENT_MOVE_TIMER = 'opponent-timer'
 const OPPONENT_MOVE_DELAY = 300 // this should match World.scss -> $pieceMoveSpeed
@@ -18,8 +15,7 @@ const OPPONENT_MOVE_VELOCITY_TIMER = 'opponent-velocity-timer-'
  * @return {{playMoves: function, isShowingMoves: boolean, revealingMoveIndex: number|null}}
  */
 function useLevelControl(options) {
-  const {pieces, playerPiece, updatePieces, setPieces, moves, gameBoard} =
-    useContext(LevelContext)
+  const {pieces, playerPiece, setPieces, moves, gameBoard} = options
 
   const [isShowingMoves, setIsShowingMoves] = useState(false)
   const [revealingMoveIndex, setRevealingMoveIndex] = useState(null)
@@ -48,7 +44,6 @@ function useLevelControl(options) {
 
   // this use effect steps us through the move reveals to see if the player wins/loses
   useEffect(() => {
-    console.log('HERE', revealingMoveIndex, playerPiece)
     if (typeof revealingMoveIndex !== 'number' || !playerPiece) {
       // do nothing, we're not actually revealing yet
       cancelAllTimers()
@@ -76,6 +71,7 @@ function useLevelControl(options) {
         nextMove = {rowChange: 0, columnChange: 0}
       } else {
         console.error('No Move to calculate')
+        cancelAllTimers()
         return
       }
     }
@@ -121,21 +117,6 @@ function useLevelControl(options) {
         // if the player is not on a platform, we clear their velocity
         delete playerPiece.velocity
       }
-
-      // remove any move-shadow that was on the square before
-      piecesAfterPlayerMove = piecesAfterPlayerMove.filter(
-        p => !(p.isMoveShadow && isSameSquare(p.position, prevCoordinate)),
-      )
-
-      // add a new move-shadow piece to the board
-      piecesAfterPlayerMove.push({
-        id: uuid(),
-        type: PieceType.MoveShadow,
-        position: {...prevCoordinate},
-        velocity: {...nextMove},
-        moveIndex: revealingMoveIndex,
-        isMoveShadow: true,
-      })
     }
 
     setPieces(piecesAfterPlayerMove)
@@ -165,7 +146,7 @@ function useLevelControl(options) {
 
         // next we need to apply velocities, but we need to do it one step at a time
         const velocityBuckets = piecesAfterFilter.reduce((agr, p) => {
-          if (p.velocity && !p.isMoveShadow && !p.isPlayer) {
+          if (p.velocity && !p.isPlayer) {
             // we group pieces by their velocity magnitude from 0 to n - 1
             // i.e., pieces with velocity 1 are in index 0, pieces with velocity 2 is in index 1, 3 is in index 2, etc
             const magnitude = getHorizontalVelocityMagnitude(p.velocity) - 1

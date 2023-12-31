@@ -87,10 +87,11 @@ function useScroll(ref, options) {
     // I don't full understand why these equations work, but they seemingly do.
     const extraMinSpace = (viewDimension / 2) * (scaleCloneRef.current - 1)
 
-    return Math.min(
+    const retVal = Math.min(
       Math.max(v, 0 - extraMinSpace),
       contentDimension * scaleCloneRef.current - viewDimension - extraMinSpace,
     )
+    return retVal
   }
 
   const clampY = v => clamp(v, 'Y')
@@ -143,7 +144,7 @@ function useScroll(ref, options) {
     }
 
     const touchMoveHandler = e => {
-      // TODO: Would like this to momentum scroll more +  some positioning bug currently
+      // TODO: Would like this to emomentum scroll more +  some positioning bug currently
       const thisPos = {
         x: e.touches[0].clientX - settingsRef.current.viewWidth / 2,
         y: e.touches[0].clientY - settingsRef.current.viewHeight / 2,
