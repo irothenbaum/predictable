@@ -41,7 +41,12 @@ function LevelGroup(props) {
   const handlePlayAgain = () => {
     // reset our level
     setShowLost(false)
-    setLevelDefinition(clone(props.levels[solutions.length]))
+    const nextLevelDef = clone(props.levels[solutions.length])
+    // remove any instructions that are schedule to display immediately
+    nextLevelDef.instructions = nextLevelDef.instructions.filter(
+      i => i.triggerDelayMS === 0,
+    )
+    setLevelDefinition(nextLevelDef)
   }
 
   return (
@@ -54,6 +59,7 @@ function LevelGroup(props) {
       ) : null}
       {levelDefinition ? (
         <Level
+          forcePaused={props.forcePaused || showLost}
           levelDefinition={levelDefinition}
           onWin={handleWin}
           onLose={handleLose}
@@ -65,9 +71,9 @@ function LevelGroup(props) {
 
 LevelGroup.propTypes = {
   levels: PropTypes.arrayOf(Level.propTypes.levelDefinition),
-  instructions: PropTypes.arrayOf(InstructionalShape),
   onWin: Level.propTypes.onWin, // one argument, Array<Solution>
   onReturn: PropTypes.func,
+  forcePaused: PropTypes.bool,
 }
 
 export default LevelGroup

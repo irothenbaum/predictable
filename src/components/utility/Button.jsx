@@ -20,6 +20,12 @@ const Button = forwardRef(function Button(props, ref) {
     if (props.disabled || isClicking) {
       return
     }
+
+    if (props.immediate) {
+      props.onClick()
+      return
+    }
+
     setIsClicking(true)
     setTimer(
       CLICK_TIMER,
@@ -54,6 +60,7 @@ Button.propTypes = {
   disabled: PropTypes.bool,
   className: PropTypes.string,
   focused: PropTypes.bool,
+  immediate: PropTypes.bool,
 }
 
 export default Button

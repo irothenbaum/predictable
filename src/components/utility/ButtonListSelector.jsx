@@ -23,9 +23,11 @@ function ButtonListSelector(props) {
 
       switch (key) {
         case 'ArrowUp':
+        case 'ArrowLeft':
           setSelectedIndex(i => clamp(i - 1))
           break
         case 'ArrowDown':
+        case 'ArrowRight':
           setSelectedIndex(i => clamp(i + 1))
           break
 

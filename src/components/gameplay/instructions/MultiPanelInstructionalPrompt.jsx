@@ -11,6 +11,7 @@ import PropTypes from 'prop-types'
 import useDoOnceTimer from '../../../hooks/useDoOnceTimer'
 import {constructClassString} from '../../../lib/utilities'
 import useKeyListener from '../../../hooks/useKeyListener'
+import ButtonListSelector from '../../utility/ButtonListSelector'
 
 const NEXT_PANEL_TIMER = 'next-panel-timer'
 const NEXT_PANEL_DELAY = 400
@@ -48,29 +49,6 @@ function MultiPanelInstructionalPrompt(props) {
     adjustStep(-1)
   }
 
-  // --------------------------------------------------------
-  // handle keyboard input
-  const keyHandler = useCallback(
-    key => {
-      switch (key) {
-        case 'ArrowRight':
-        case 'Enter':
-        case ' ':
-          handleNext()
-          break
-
-        case 'ArrowLeft':
-        case 'Backspace':
-        case 'Escape':
-          handleBack()
-          break
-      }
-    },
-    [step],
-  )
-  useKeyListener(keyHandler)
-  // --------------------------------------------------------
-
   const showBackButton = step > 0
   const showNextButton = step < props.totalSteps - 1
   const isTransitioning = isTimerSet(NEXT_PANEL_TIMER)
@@ -94,16 +72,25 @@ function MultiPanelInstructionalPrompt(props) {
         </div>
         <div className="panel-content">{props.renderStep(step)}</div>
         <div className="controls-container">
-          <Button
-            variant={showBackButton ? VARIANT_TERTIARY : VARIANT_DESTRUCTIVE}
-            onClick={handleBack}>
-            {showBackButton ? 'Back' : 'Skip'}
-          </Button>
-          <Button
-            variant={showNextButton ? VARIANT_PRIMARY : VARIANT_SECONDARY}
-            onClick={handleNext}>
-            {showNextButton ? 'Next' : 'Continue'}
-          </Button>
+          <ButtonListSelector
+            buttons={[
+              <Button
+                immediate={true}
+                variant={
+                  showBackButton ? VARIANT_TERTIARY : VARIANT_DESTRUCTIVE
+                }
+                onClick={handleBack}>
+                {showBackButton ? 'Back' : 'Skip'}
+              </Button>,
+              <Button
+                immediate={showNextButton}
+                variant={showNextButton ? VARIANT_PRIMARY : VARIANT_SECONDARY}
+                onClick={handleNext}>
+                {showNextButton ? 'Next' : 'Continue'}
+              </Button>,
+            ]}
+            default={1}
+          />
         </div>
       </div>
     </InstructionalPrompt>

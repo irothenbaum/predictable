@@ -156,6 +156,7 @@ function Campaign(props) {
             />
           ) : null}
           <LevelGroup
+            forcePaused={gameStatus === STATUS_WON}
             onReturn={() => setGameStatus(STATUS_GALLERY)}
             levels={levelDefinition.subLevels}
             onWin={handleWin}

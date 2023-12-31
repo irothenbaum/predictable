@@ -6,6 +6,7 @@ import useReadyTimer from '../../hooks/useReadyTimer'
 import {constructClassString} from '../../lib/utilities'
 import Modal from '../utility/Modal'
 import {LevelGroupSolutionShape} from '../../lib/constants'
+import ButtonListSelector from '../utility/ButtonListSelector'
 
 const APPEAR_DELAY = 1000
 
@@ -24,9 +25,14 @@ function LevelGroupResults({solution, onContinue}) {
     <Modal isOpen={isReady} className="level-group-results">
       <h3>Score: {solution.score}</h3>
 
-      <Button variant={VARIANT_SECONDARY} onClick={onContinue}>
-        Continue
-      </Button>
+      <ButtonListSelector
+        buttons={[
+          <Button variant={VARIANT_SECONDARY} onClick={onContinue}>
+            Continue
+          </Button>,
+        ]}
+        default={0}
+      />
     </Modal>
   )
 }

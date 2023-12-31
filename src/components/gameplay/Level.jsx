@@ -161,6 +161,8 @@ function Level(props) {
     setGameBoard(props.levelDefinition.gameBoard)
   }, [props.levelDefinition])
 
+  const isPausedFinal = props.forcePaused || isPaused
+
   return (
     <LevelContext.Provider
       value={{
@@ -172,7 +174,7 @@ function Level(props) {
 
         isShowingMoves,
         revealingMoveIndex,
-        isPaused: isPaused,
+        isPaused: isPausedFinal,
         setIsPaused: setIsPaused,
         playMoves: playMoves,
 
@@ -196,7 +198,7 @@ function Level(props) {
         startingPosition={playerPiece?.position}
       />
       <InstructionsRenderer instructions={props.levelDefinition.instructions} />
-      {!props.autoPlay && !isPaused && <MovesInput />}
+      {!props.autoPlay && !isPausedFinal && <MovesInput />}
     </LevelContext.Provider>
   )
 }
@@ -206,6 +208,7 @@ Level.propTypes = {
   onWin: PropTypes.func.isRequired,
   onLose: PropTypes.func.isRequired,
   autoPlay: PropTypes.bool,
+  forcePaused: PropTypes.bool,
 }
 
 export default Level
