@@ -14,7 +14,7 @@ const MOVE_DELAY = 2 * OPPONENT_MOVE_DELAY // this should be 2 x OPPONENT_MOVE_D
 const OPPONENT_MOVE_VELOCITY_TIMER = 'opponent-velocity-timer-'
 
 /**
- * @param {{onWin: function(Solution), onLose: function(Solution)}} options
+ * @param {{onWin: function(Solution), onLose: function(Solution), autoPlay:boolean}} options
  * @return {{playMoves: function, isShowingMoves: boolean, revealingMoveIndex: number|null}}
  */
 function useLevelControl(options) {
@@ -48,6 +48,7 @@ function useLevelControl(options) {
 
   // this use effect steps us through the move reveals to see if the player wins/loses
   useEffect(() => {
+    console.log('HERE', revealingMoveIndex, playerPiece)
     if (typeof revealingMoveIndex !== 'number' || !playerPiece) {
       // do nothing, we're not actually revealing yet
       cancelAllTimers()
@@ -55,7 +56,7 @@ function useLevelControl(options) {
     }
 
     // if we've revealed all moves, stop the timers and determine if we won or lost
-    if (revealingMoveIndex === moves.length) {
+    if (!options.autoPlay && revealingMoveIndex === moves.length) {
       const goalPiece = pieces.find(p => p.isGoal)
       if (goalPiece && isSameSquare(playerPiece.position, goalPiece.position)) {
         goalPiece.isCollected = true
@@ -68,11 +69,15 @@ function useLevelControl(options) {
 
     // determine where the next move square is
     /** @type {Velocity} */
-    const nextMove = moves[revealingMoveIndex]
+    let nextMove = moves[revealingMoveIndex]
 
     if (!nextMove) {
-      console.error('No Move to calculate')
-      return
+      if (options.autoPlay) {
+        nextMove = {rowChange: 0, columnChange: 0}
+      } else {
+        console.error('No Move to calculate')
+        return
+      }
     }
 
     const prevCoordinate = {...playerPiece.position}

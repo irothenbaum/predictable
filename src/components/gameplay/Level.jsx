@@ -129,7 +129,14 @@ function Level(props) {
     useLevelControl({
       onWin: props.onWin,
       onLose: props.onLose,
+      autoPlay: props.autoPlay,
     })
+
+  useEffect(() => {
+    if (props.autoPlay) {
+      playMoves()
+    }
+  }, [])
 
   // if we ever reset our moves, we also want to reset the level control
   useEffect(() => {
@@ -163,6 +170,7 @@ function Level(props) {
         revealingMoveIndex,
         isPaused: isPaused,
         setIsPaused: setIsPaused,
+        playMoves: playMoves,
 
         queueMove: move => {
           setMoves(m => [...m, move])
@@ -184,7 +192,7 @@ function Level(props) {
         startingPosition={playerPiece?.position}
       />
       <InstructionsRenderer instructions={props.levelDefinition.instructions} />
-      {!isPaused && <MovesInput />}
+      {!props.autoPlay && !isPaused && <MovesInput />}
     </LevelContext.Provider>
   )
 }
@@ -193,6 +201,7 @@ Level.propTypes = {
   levelDefinition: LevelDefinitionShape.isRequired,
   onWin: PropTypes.func.isRequired,
   onLose: PropTypes.func.isRequired,
+  autoPlay: PropTypes.bool,
 }
 
 export default Level

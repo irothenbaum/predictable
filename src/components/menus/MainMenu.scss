@@ -1,0 +1,47 @@
+@use "../../styles/all";
+
+.main-menu {
+  .controls-container {
+    position: fixed;
+    background-color: all.$shadowHard;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    @include all.flex-row();
+
+    .controls {
+      @include all.flex-row();
+      flex-direction: column;
+
+      .button-container {
+        margin-top: all.$spaceMedium;
+      }
+
+      h1 {
+        font-size: all.$fontSize1;
+        color: all.$copyColorInverse;
+        margin-bottom: all.$spaceLarge;
+      }
+    }
+  }
+
+  .controls, .hero, button, h1 {
+    opacity: 1;
+    transition: opacity 2s ease-in-out;
+  }
+
+  h1 {
+    transition-delay: 3s;
+  }
+
+  button {
+    transition-delay: 3.3s;
+  }
+
+  &.hidden {
+    .controls, .hero, button, h1 {
+      opacity: 0;
+    }
+  }
+}

@@ -11,8 +11,8 @@ import {
   SCENE_CAMPAIGN,
   SCENE_DAILY,
 } from '../lib/constants'
-import Menu from './pages/Menu'
-import Intro from './pages/Intro'
+import Menu from './menus/MainMenu'
+import Intro from './menus/Intro'
 import DailyChallenge from './daily/DailyChallenge'
 
 const SceneMap = {

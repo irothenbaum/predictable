@@ -123,3 +123,19 @@ export function convertRemToPixels(rem) {
 export function clone(obj) {
   return JSON.parse(JSON.stringify(obj))
 }
+
+/**
+ * @param {number} sides // returns [0 to sides)
+ * @returns {number}
+ */
+export function rollDice(sides) {
+  return Math.floor(Math.random() * sides)
+}
+
+/**
+ * @param {number} sides // sides === 2 would be a real coin, 3 would be 1/3 chance
+ * @returns {boolean}
+ */
+export function flipCoin(sides) {
+  return rollDice(sides) === 0
+}
