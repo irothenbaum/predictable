@@ -133,9 +133,9 @@ export function rollDice(sides) {
 }
 
 /**
- * @param {number} sides // sides === 2 would be a real coin, 3 would be 1/3 chance
+ * @param {number?} sides // sides === 2 would be a real coin, 3 would be 1/3 chance
  * @returns {boolean}
  */
-export function flipCoin(sides) {
+export function flipCoin(sides = 2) {
   return rollDice(sides) === 0
 }

@@ -46,7 +46,11 @@ function MultiPanelInstructionalPrompt(props) {
   }
 
   const handleBack = () => {
-    adjustStep(-1)
+    if (step === 0) {
+      props.onComplete()
+    } else {
+      adjustStep(-1)
+    }
   }
 
   const showBackButton = step > 0
@@ -75,7 +79,7 @@ function MultiPanelInstructionalPrompt(props) {
           <ButtonListSelector
             buttons={[
               <Button
-                immediate={true}
+                immediate={showBackButton}
                 variant={
                   showBackButton ? VARIANT_TERTIARY : VARIANT_DESTRUCTIVE
                 }

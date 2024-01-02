@@ -6,6 +6,7 @@ import {getArrowIconFromVelocity} from '../utilities'
 import useKeyListener from '../../hooks/useKeyListener'
 import {constructClassString} from '../../lib/utilities'
 
+/** @type {Array<Velocity>} */
 const MovementOptions = [
   {rowChange: 0, columnChange: -1},
   {rowChange: -1, columnChange: 0},
