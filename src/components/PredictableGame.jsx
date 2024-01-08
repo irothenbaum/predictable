@@ -10,6 +10,7 @@ import {
   SCENE_SETTINGS,
   SCENE_CAMPAIGN,
   SCENE_DAILY,
+  SCENE_BUILDER,
 } from '../lib/constants'
 import Menu from './menus/MainMenu'
 import Intro from './menus/Intro'
@@ -21,6 +22,7 @@ const SceneMap = {
   // [SCENE_SETTINGS]: Settings,
   [SCENE_CAMPAIGN]: Campaign,
   [SCENE_DAILY]: DailyChallenge,
+  [SCENE_BUILDER]: LevelGroupBuilder,
 }
 
 function PredictableGame(props) {

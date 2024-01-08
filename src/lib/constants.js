@@ -88,5 +88,6 @@ export const SCENE_CAMPAIGN = 'campaign'
 export const SCENE_MENU = 'menu'
 export const SCENE_SETTINGS = 'settings'
 export const SCENE_DAILY = 'daily-challenge'
+export const SCENE_BUILDER = 'builder'
 
 export const SCENE_INTRO = 'intro'

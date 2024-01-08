@@ -4,7 +4,7 @@ import PredictableGame from './components/PredictableGame'
 
 import {generateLevelDefinition} from './lib/generateLevelDefinition'
 
-generateLevelDefinition('test2', {width: 5, height: 5}, 1).then(res => {
+generateLevelDefinition('test12', {width: 5, height: 5}, 1).then(res => {
   console.log(res)
 })
 

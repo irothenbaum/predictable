@@ -29,7 +29,7 @@
 
   $collapsedHeight: 30px;
   $expandedHeight: 50px;
-  $collapsedMargin: ($expandedHeight - $collapsedHeight) / 2;
+  $collapsedMargin: calc(calc($expandedHeight - $collapsedHeight) / 2);
   $collapsedHorizontalMargin: calc($collapsedMargin + #{all.$spaceSmall});
   .moves-queue {
     @include all.flex-row(0);
