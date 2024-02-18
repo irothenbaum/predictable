@@ -11,20 +11,27 @@
     @include all.flex-row();
 
     .controls {
-      padding: all.$spaceExtraLarge;
+      padding: 4px;
+      background: linear-gradient(180deg, all.$greenColorLight 0%, all.$primaryColorLight 100%);
       border-radius: all.$borderRadiusLarge;
-      @include all.flex-row();
-      flex-direction: column;
-      background-color: all.$shadowExtraHard;
+      @include all.shadow(all.$spaceSmall, #000);
 
-      .button-container {
-        margin-top: all.$spaceMedium;
-      }
+      .controls-inner {
+        padding: all.$spaceExtraLarge;
+        border-radius: all.$borderRadiusMedium;
+        @include all.flex-row();
+        flex-direction: column;
+        background-color: all.$shadowExtraHard;
 
-      h1 {
-        font-size: all.$fontSize1;
-        color: all.$copyColorInverse;
-        margin-bottom: all.$spaceLarge;
+        .button-container {
+          margin-top: all.$spaceMedium;
+        }
+
+        h1 {
+          font-size: all.$fontSize1;
+          color: all.$copyColorInverse;
+          margin-bottom: all.$spaceLarge;
+        }
       }
     }
   }

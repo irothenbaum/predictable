@@ -1,5 +1,5 @@
 import MultiPanelInstructionalPrompt from './MultiPanelInstructionalPrompt'
-import PropTypes from 'prop-types'
+import {InstructionalTipProps} from '../../../lib/constants'
 
 function WelcomeTip(props) {
   const renderStep = s => {
@@ -41,8 +41,6 @@ function WelcomeTip(props) {
   )
 }
 
-WelcomeTip.propTypes = {
-  onComplete: PropTypes.func.isRequired,
-}
+WelcomeTip.propTypes = InstructionalTipProps
 
 export default WelcomeTip

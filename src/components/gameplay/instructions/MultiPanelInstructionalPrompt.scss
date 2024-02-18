@@ -2,13 +2,29 @@
 
 .multi-panel-instructional-prompt {
   .panel-content {
+    margin-top: all.$spaceSmall;
     transition: all all.$transition;
+
+    h1 {
+      font-size: all.$fontSize2;
+      margin-bottom: all.$spaceLarge;
+    }
+
+    h2 {
+      font-size: all.$fontSize3;
+      margin-bottom: all.$spaceMedium;
+    }
+
+    p {
+      margin-bottom: all.$spaceSmall;
+    }
   }
 
   .controls-container {
     @include all.flex-row();
     margin-top: all.$spaceLarge;
     justify-content: space-between;
+
   }
 
   .step-counter {

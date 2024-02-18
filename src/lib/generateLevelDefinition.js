@@ -1,4 +1,5 @@
-import {randomGenerator} from './utilities'
+import {isSameSquare, randomGenerator} from './utilities'
+import {PieceType, Variant} from './constants'
 
 /**
  * @param {string} seed
@@ -18,7 +19,7 @@ export async function generateLevelDefinition(seed, board, difficulty) {
 
   return {
     gameBoard: board,
-    pieces: [],
+    pieces: pieces,
     _path: path,
   }
 }
@@ -35,7 +36,7 @@ function generatePath(rand, board) {
 
   // we start with a series of points (one on each row) starting from the top and going to the bottom
   const primordialPath = new Array(board.height).fill(null).map((_, i) => ({
-    column: oneIn(board.width, rand),
+    column: rand.next().value % board.width,
     row: i,
   }))
 
@@ -133,42 +134,76 @@ function createPieceDefinitionsFromPath(rand, path, board) {
       a[c.row] = []
     }
 
+    // position is its position in the path
     a[c.row].push({position: i, coordinate: c})
     return a
   }, {})
 
-  const environmentPieces = Object.keys(pathGrouped).map(row => {
-    const steps = pathGrouped[row]
+  const environmentPieces = Object.keys(pathGrouped)
+    .map(row => {
+      const rowVal = parseInt(row)
+      const thisRowPieces = []
+      const steps = pathGrouped[row]
 
-    const canBeAPlatformRow = steps.every((s, i) => {
-      return i === 0 || s.position === steps[i - 1].position + 1
-    })
+      // if all the steps are in a row, we can make it a platform row
+      const canBeAPlatformRow =
+        steps.length > 1 &&
+        steps.every((s, i) => {
+          return (
+            // the first step is always valid for a platform
+            i === 0 ||
+            // every other step must be exactly 1 position away in the path and not the same square (not a stationary move)
+            (s.position === steps[i - 1].position + 1 &&
+              !isSameSquare(s.coordinate, steps[i - 1].coordinate))
+          )
+        })
 
-    let thisRowPieces = []
+      // we don't want hazards on our start or end rows
+      const canBeAHazardRow = rowVal !== 0 && rowVal !== board.height - 1
 
-    // we don't want hazards on our start or end rows
-    const canBeAHazardRow = row !== 0 && row !== board.height - 1
+      const canBeAnObstacleRow = true
 
-    const canBeAnObstacleRow = true
+      if (canBeAPlatformRow && oneIn(2, rand)) {
+        if (canBeAHazardRow && oneIn(2, rand)) {
+          // fill the row with hazards
+          thisRowPieces.push(
+            ...new Array(board.width).fill(null).map((_, i) => ({
+              type: PieceType.Hazard,
+              position: {row: rowVal, column: i},
+              variant: Variant.Middle, // if we're filling the row with hazards, they all get middle variant
+              // 0 velocity
+            })),
+          )
+        }
 
-    if (canBeAPlatformRow && oneIn(2, rand)) {
-      if (canBeAHazardRow && oneIn(2, rand)) {
-        thisRowPieces.push(
-          new Array(board.width).fill(null).map((_, i) => ({
-            type: 'hazard',
-            position: {row, column: i},
-            // 0 velocity
-          })),
-        )
+        // create a platform that will meet the play at the steps passed to it
+        const platformVelocity =
+          steps[1].coordinate.column - steps[0].coordinate.column
+        thisRowPieces.push({
+          type: PieceType.Platform,
+          // we rewind the platforms velocity to ensure it arrives at steps[0] position at the correct time
+          position: {
+            row: rowVal,
+            column:
+              // TODO: I don't think accurately accounts for the two out-of-bounds wrapper columns
+              // or maybe it does? I'm not sure, need to test
+              (steps[0].coordinate.column +
+                board.width +
+                2 -
+                platformVelocity * steps[0].position) %
+              (board.width + 2),
+          },
+          velocity: {rowChange: 0, columnChange: platformVelocity},
+        })
+      } else if (canBeAHazardRow && oneIn(2, rand)) {
+        // TODO: here we create hazards (either with velocity or not) such that they will NOT touch any of the steps
+      } else if (canBeAnObstacleRow) {
+        // TODO: here we create obstacles that will NOT touch any of the steps
       }
 
-      // TODO: here we position our platform such that it WILL meet the steps passed to it
-    } else if (canBeAHazardRow && oneIn(2, rand)) {
-      // TODO: here we create hazards (either with velocity or not) such that they will NOT touch any of the steps
-    } else if (canBeAnObstacleRow) {
-      // TODO: here we create obstacles that will NOT touch any of the steps
-    }
-  })
+      return thisRowPieces
+    })
+    .reduce((a, e) => a.concat(e), [])
 
   console.log('Pieces', environmentPieces)
 

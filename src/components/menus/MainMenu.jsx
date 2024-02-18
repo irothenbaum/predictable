@@ -18,22 +18,24 @@ function MainMenu(props) {
       </div>
       <div className="controls-container">
         <div className="controls">
-          <h1>Predictable</h1>
+          <div className="controls-inner">
+            <h1>Predictable</h1>
 
-          <ButtonListSelector
-            default={0}
-            buttons={[
-              <Button onClick={() => goToScene(SCENE_CAMPAIGN)}>
-                Campaign
-              </Button>,
-              <Button onClick={() => goToScene(SCENE_DAILY)}>
-                Daily Challenge
-              </Button>,
-              <Button onClick={() => goToScene(SCENE_SETTINGS)}>
-                Settings
-              </Button>,
-            ]}
-          />
+            <ButtonListSelector
+              default={0}
+              buttons={[
+                <Button onClick={() => goToScene(SCENE_CAMPAIGN)}>
+                  Campaign
+                </Button>,
+                <Button onClick={() => goToScene(SCENE_DAILY)}>
+                  Daily Challenge
+                </Button>,
+                <Button onClick={() => goToScene(SCENE_SETTINGS)}>
+                  Settings
+                </Button>,
+              ]}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -74,6 +74,10 @@ export const LevelGroupSolutionShape = PropTypes.shape({
   solutions: PropTypes.arrayOf(LevelSolutionShape),
 })
 
+export const InstructionalTipProps = {
+  onComplete: PropTypes.func.isRequired,
+}
+
 // this should match the rem scale in constants.scss
 export const squareSizeRemScale = 5
 
@@ -81,6 +85,7 @@ export const squareSizeRemScale = 5
 // INSTRUCTION KEYS
 
 export const INSTRUCTION_WELCOME = 'welcome'
+export const INSTRUCTION_TUTORIAL = 'tutorial'
 
 // --------------------------------------------------------------------------------
 // SCENES

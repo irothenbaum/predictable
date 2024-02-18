@@ -1,13 +1,19 @@
 import React, {useContext, useEffect, useState} from 'react'
 import LevelContext from '../../contexts/LevelContext'
 import PropTypes from 'prop-types'
-import {InstructionalShape, INSTRUCTION_WELCOME} from '../../lib/constants'
+import {
+  InstructionalShape,
+  INSTRUCTION_WELCOME,
+  INSTRUCTION_TUTORIAL,
+} from '../../lib/constants'
 import useDoOnceTimer from '../../hooks/useDoOnceTimer'
 import WelcomeTip from './instructions/WelcomeTip'
 import {isSameSquare} from '../../lib/utilities'
+import TutorialTip from './instructions/TutorialTip'
 
 const InstructionMap = {
   [INSTRUCTION_WELCOME]: WelcomeTip,
+  [INSTRUCTION_TUTORIAL]: TutorialTip,
 }
 const INSTRUCTION_TIMER = 'instruction-timer'
 

@@ -10,7 +10,6 @@ import Button, {
 import PropTypes from 'prop-types'
 import useDoOnceTimer from '../../../hooks/useDoOnceTimer'
 import {constructClassString} from '../../../lib/utilities'
-import useKeyListener from '../../../hooks/useKeyListener'
 import ButtonListSelector from '../../utility/ButtonListSelector'
 
 const NEXT_PANEL_TIMER = 'next-panel-timer'
@@ -60,9 +59,13 @@ function MultiPanelInstructionalPrompt(props) {
   return (
     <InstructionalPrompt>
       <div
-        className={constructClassString('multi-panel-instructional-prompt', {
-          transitioning: isTransitioning,
-        })}
+        className={constructClassString(
+          'multi-panel-instructional-prompt',
+          props.className,
+          {
+            transitioning: isTransitioning,
+          },
+        )}
         ref={containerRef}
         style={{height: containerHeight || 'auto'}}>
         <div className="step-counter">
