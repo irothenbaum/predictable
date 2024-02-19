@@ -1,1 +1,178 @@
-{"subLevels":[{"instructions": [{"triggerDelayMS": 1000, "instructionKey": "tutorial"}], "gameBoard":{"width":1,"height":3},"pieces":[{"type":"player","row":2,"column":0,"rowChange":0,"columnChange":0},{"type":"goal","row":0,"column":0,"rowChange":0,"columnChange":0}]},{"gameBoard":{"width":2,"height":3},"pieces":[{"type":"player","row":2,"column":0,"rowChange":0,"columnChange":0},{"type":"goal","row":0,"column":0,"rowChange":0,"columnChange":0},{"type":"obstacle","row":1,"column":0,"rowChange":0,"columnChange":0,"variant":"right-end"}]},{"gameBoard":{"width":2,"height":3},"pieces":[{"type":"hazard","row":1,"column":0,"rowChange":0,"columnChange":0,"variant":"right-end"},{"type":"goal","row":0,"column":0,"rowChange":0,"columnChange":0},{"type":"player","row":2,"column":0,"rowChange":0,"columnChange":0}]},{"gameBoard":{"width":3,"height":3},"pieces":[{"type":"player","row":2,"column":1,"rowChange":0,"columnChange":0},{"type":"hazard","row":1,"column":0,"rowChange":0,"columnChange":1},{"type":"obstacle","row":0,"column":2,"rowChange":0,"columnChange":0,"variant":"left-end"},{"type":"obstacle","row":0,"column":0,"rowChange":0,"columnChange":0,"variant":"right-end"},{"type":"goal","row":0,"column":1,"rowChange":0,"columnChange":0}]}]}
+{
+  "subLevels": [
+    {
+      "instructions": [
+        {"triggerDelayMS": 1000, "instructionKey": "HowToMoveUp"}
+      ],
+      "gameBoard": {"width": 1, "height": 3},
+      "pieces": [
+        {
+          "type": "player",
+          "row": 2,
+          "column": 0,
+          "rowChange": 0,
+          "columnChange": 0
+        },
+        {
+          "type": "goal",
+          "row": 0,
+          "column": 0,
+          "rowChange": 0,
+          "columnChange": 0
+        }
+      ]
+    },
+    {
+      "instructions": [
+        {"triggerDelayMS": 1000, "instructionKey": "AvoidingObstacles"}
+      ],
+      "gameBoard": {"width": 2, "height": 3},
+      "pieces": [
+        {
+          "type": "player",
+          "row": 2,
+          "column": 0,
+          "rowChange": 0,
+          "columnChange": 0
+        },
+        {
+          "type": "goal",
+          "row": 0,
+          "column": 0,
+          "rowChange": 0,
+          "columnChange": 0
+        },
+        {
+          "type": "obstacle",
+          "row": 1,
+          "column": 0,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "right-end"
+        }
+      ]
+    },
+    {
+      "instructions": [
+        {"triggerDelayMS": 1000, "instructionKey": "AvoidingObstaclesTwo"}
+      ],
+      "gameBoard": {"width": 3, "height": 5},
+      "pieces": [
+        {
+          "type": "player",
+          "row": 4,
+          "column": 0,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "left-end"
+        },
+        {
+          "type": "goal",
+          "row": 0,
+          "column": 2,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "left-end"
+        },
+        {
+          "type": "obstacle",
+          "row": 1,
+          "column": 1,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "left-end"
+        },
+        {
+          "type": "obstacle",
+          "row": 3,
+          "column": 1,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "right-end"
+        },
+        {
+          "type": "obstacle",
+          "row": 3,
+          "column": 0,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "middle"
+        },
+        {
+          "type": "obstacle",
+          "row": 1,
+          "column": 2,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "middle"
+        }
+      ]
+    },
+    {
+      "gameBoard": {"width": 4, "height": 5},
+      "pieces": [
+        {
+          "type": "player",
+          "row": 4,
+          "column": 0,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "middle"
+        },
+        {
+          "type": "goal",
+          "row": 4,
+          "column": 3,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "middle"
+        },
+        {
+          "type": "obstacle",
+          "row": 4,
+          "column": 1,
+          "rowChange": 0,
+          "columnChange": 0
+        },
+        {
+          "type": "obstacle",
+          "row": 3,
+          "column": 1,
+          "rowChange": 0,
+          "columnChange": 0
+        },
+        {
+          "type": "obstacle",
+          "row": 2,
+          "column": 1,
+          "rowChange": 0,
+          "columnChange": 0
+        },
+        {
+          "type": "obstacle",
+          "row": 1,
+          "column": 2,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "right-end"
+        },
+        {
+          "type": "obstacle",
+          "row": 1,
+          "column": 1,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "left-end"
+        },
+        {
+          "type": "obstacle",
+          "row": 3,
+          "column": 3,
+          "rowChange": 0,
+          "columnChange": 0,
+          "variant": "left-end"
+        }
+      ]
+    }
+  ]
+}

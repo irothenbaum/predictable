@@ -1,33 +1,35 @@
 import MultiPanelInstructionalPrompt from './MultiPanelInstructionalPrompt'
 import {InstructionalTipProps} from '../../../lib/constants'
-import Icon, {ARROW_UP, PLAY} from '../../utility/Icon'
-import './TutorialTip.scss'
+import Icon, {PLAY} from '../../utility/Icon'
 
-function TutorialTip(props) {
+function AvoidingObstacles(props) {
   const renderStep = s => {
     switch (s) {
       case 0:
         return (
           <div>
-            <p>Lesson 1</p>
-            <h1>Moving</h1>
+            <h1>Uh oh!</h1>
+            <p>There's an obstacle between you and your goal</p>
           </div>
         )
 
       case 1:
         return (
           <div>
-            <p>Click the up-arrow key twice to enqueue two upward movements.</p>
-            <div className="icon-wrapper">
-              <Icon icon={ARROW_UP} />
-            </div>
+            <p>
+              See if you can queue up the correct moves to get around the
+              obstacle
+            </p>
           </div>
         )
 
       case 2:
         return (
           <div>
-            <p>Then click play to execute your move sequence.</p>
+            <p>
+              Once you've queued up your moves, remember to hit Play to execute
+              them.
+            </p>
             <div className="icon-wrapper">
               <Icon icon={PLAY} className="green-play" />
             </div>
@@ -44,11 +46,10 @@ function TutorialTip(props) {
       onComplete={props.onComplete}
       totalSteps={3}
       renderStep={renderStep}
-      className={'tutorial-tip'}
     />
   )
 }
 
-TutorialTip.propTypes = InstructionalTipProps
+AvoidingObstacles.propTypes = InstructionalTipProps
 
-export default TutorialTip
+export default AvoidingObstacles

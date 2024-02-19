@@ -85,7 +85,9 @@ export const squareSizeRemScale = 5
 // INSTRUCTION KEYS
 
 export const INSTRUCTION_WELCOME = 'welcome'
-export const INSTRUCTION_TUTORIAL = 'tutorial'
+export const INSTRUCTION_HowToMoveUp = 'HowToMoveUp'
+export const INSTRUCTION_AvoidingObstacles = 'AvoidingObstacles'
+export const INSTRUCTION_IntroducingHazards = 'IntroducingHazards'
 
 // --------------------------------------------------------------------------------
 // SCENES

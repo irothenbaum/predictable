@@ -60,4 +60,21 @@
       opacity: 0;
     }
   }
+
+
+
+
+
+  // These are classes that appear in some of our instructions.
+  // Rather than making and reusing a custom stylesheet, I'm just appending them here
+  .icon-wrapper {
+    text-align: center;
+    margin: all.$spaceMedium;
+    font-size: all.$fontSize1;
+  }
+
+  .green-play {
+    @include all.hover-cta();
+    color: all.$greenColorLight;
+  }
 }

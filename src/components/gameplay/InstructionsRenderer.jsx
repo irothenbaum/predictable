@@ -4,16 +4,22 @@ import PropTypes from 'prop-types'
 import {
   InstructionalShape,
   INSTRUCTION_WELCOME,
-  INSTRUCTION_TUTORIAL,
+  INSTRUCTION_HowToMoveUp,
+  INSTRUCTION_AvoidingObstacles,
+  INSTRUCTION_IntroducingHazards,
 } from '../../lib/constants'
 import useDoOnceTimer from '../../hooks/useDoOnceTimer'
 import WelcomeTip from './instructions/WelcomeTip'
 import {isSameSquare} from '../../lib/utilities'
-import TutorialTip from './instructions/TutorialTip'
+import HowToMoveUp from './instructions/HowToMoveUp'
+import AvoidingObstacles from './instructions/AvoidingObstacles'
+import IntroducingHazards from './instructions/IntroducingHazards'
 
 const InstructionMap = {
   [INSTRUCTION_WELCOME]: WelcomeTip,
-  [INSTRUCTION_TUTORIAL]: TutorialTip,
+  [INSTRUCTION_HowToMoveUp]: HowToMoveUp,
+  [INSTRUCTION_AvoidingObstacles]: AvoidingObstacles,
+  [INSTRUCTION_IntroducingHazards]: IntroducingHazards,
 }
 const INSTRUCTION_TIMER = 'instruction-timer'
 

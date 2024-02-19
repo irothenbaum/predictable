@@ -43,7 +43,7 @@ function LevelGroup(props) {
     setShowLost(false)
     const nextLevelDef = clone(props.levels[solutions.length])
     // remove any instructions that are schedule to display immediately
-    nextLevelDef.instructions = nextLevelDef.instructions.filter(
+    nextLevelDef.instructions = nextLevelDef.instructions?.filter(
       i => i.triggerDelayMS === 0,
     )
     setLevelDefinition(nextLevelDef)

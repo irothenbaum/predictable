@@ -108,6 +108,7 @@ MultiPanelInstructionalPrompt.propTypes = {
   renderStep: PropTypes.func.isRequired,
   onComplete: PropTypes.func.isRequired,
   totalSteps: PropTypes.number.isRequired,
+  className: PropTypes.string,
 }
 
 export default MultiPanelInstructionalPrompt
