@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useState} from 'react'
 import './PredictableGame.scss'
 import PropTypes from 'prop-types'
 import LevelGroupBuilder from './builder/LevelGroupBuilder'
@@ -26,7 +26,7 @@ const SceneMap = {
 }
 
 function PredictableGame(props) {
-  const [scene, setScene] = useState(SCENE_BUILDER)
+  const [scene, setScene] = useState(SCENE_CAMPAIGN)
 
   const Scene = SceneMap[scene]
 

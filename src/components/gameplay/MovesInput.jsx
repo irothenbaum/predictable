@@ -1,10 +1,10 @@
-import React, {useCallback, useContext, useEffect} from 'react'
+import React, {useCallback} from 'react'
 import './MovesInput.scss'
-import LevelContext from '../../contexts/LevelContext'
 import Icon, {PLAY, RESET} from '../utility/Icon'
 import {getArrowIconFromVelocity} from '../utilities'
 import useKeyListener from '../../hooks/useKeyListener'
 import {constructClassString} from '../../lib/utilities'
+import useLevelContext from '../../hooks/useLevelContext'
 
 /** @type {Array<Velocity>} */
 const MovementOptions = [
@@ -17,7 +17,7 @@ const MovementOptions = [
 
 function MovesInput(props) {
   const {moves, queueMove, popMove, revealingMoveIndex, playMoves} =
-    useContext(LevelContext)
+    useLevelContext()
 
   const keyHandler = useCallback(key => {
     switch (key) {

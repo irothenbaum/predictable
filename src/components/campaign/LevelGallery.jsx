@@ -1,13 +1,14 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import './LevelGallery.scss'
 import Player from '../environment/Player'
 import Scrollable from '../utility/Scrollable'
-import CampaignContext from '../../contexts/CampaignContext'
 import {constructClassString} from '../../lib/utilities'
 import PropTypes from 'prop-types'
 import {LevelsOrder} from '../../levels'
 import useKeyListener from '../../hooks/useKeyListener'
 import useDoOnceTimer from '../../hooks/useDoOnceTimer'
+import useCampaignContext from '../../hooks/useCampaignContext'
+import {flushCampaign} from '../../contexts/CampaignContext'
 
 // we want 3 levels on the screen at a time so the world height is 1/3 * window height + a spacer on top and bottom
 const RowHeight = window.innerHeight / 3
@@ -20,7 +21,7 @@ const AUTO_ADVANCE_TIMER = 'auto-advance-timer'
 const AUTO_ADVANCE_DELAY = 2000
 
 function LevelGallery(props) {
-  const {solutions, lastCompletedLevelNum} = useContext(CampaignContext)
+  const {solutions, lastCompletedLevelNum, score} = useCampaignContext()
   const [hoveredLevelNum, setHoveredLevelNum] = useState(lastCompletedLevelNum)
   const [containerHeight, setContainerHeight] = useState(0)
   const [containerWidth, setContainerWidth] = useState(0)
@@ -93,6 +94,16 @@ function LevelGallery(props) {
       ? props.transitionFromLevelNum
       : lastCompletedLevelNum
 
+  function restartCampaign() {
+    flushCampaign({
+      score: 0,
+      solutions: {},
+      lastCompletedLevelNum: -1,
+      lastCompletedLevelKey: null,
+    })
+    window.location.reload()
+  }
+
   return (
     <div
       className="level-gallery"
@@ -106,6 +117,9 @@ function LevelGallery(props) {
           }
         }
       }}>
+      <div className="level-gallery-score" onClick={restartCampaign}>
+        {score}
+      </div>
       <Scrollable
         hideMiniMap={true}
         transitionDuration={`0.5s`}

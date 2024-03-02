@@ -1,14 +1,14 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import './MainMenu.scss'
 import Button from '../utility/Button'
-import SettingsContext from '../../contexts/SettingsContext'
 import {SCENE_CAMPAIGN, SCENE_DAILY, SCENE_SETTINGS} from '../../lib/constants'
 import ButtonListSelector from '../utility/ButtonListSelector'
 import BackgroundHero from './BackgroundHero'
 import {constructClassString} from '../../lib/utilities'
+import useSettingsContext from '../../hooks/useSettingsContext'
 
 function MainMenu(props) {
-  const {goToScene} = useContext(SettingsContext)
+  const {goToScene} = useSettingsContext()
   const [isReady, setIsReady] = useState(false)
 
   return (

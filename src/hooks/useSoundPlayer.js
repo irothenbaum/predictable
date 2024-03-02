@@ -1,12 +1,12 @@
-import React, {useContext, useEffect, useRef} from 'react'
-import SettingsContext from '../contexts/SettingsContext'
+import React, {useEffect, useRef} from 'react'
 import {v4 as uuid} from 'uuid'
+import useSettingsContext from './useSettingsContext'
 
 const BASE_PATH = '/public/sounds/'
 export const SOUND_BUZZER = 'buzzer.mp3'
 
 function useSoundPlayer() {
-  const {areSoundsMuted} = useContext(SettingsContext)
+  const {areSoundsMuted} = useSettingsContext()
   const playingSounds = useRef([])
 
   /**

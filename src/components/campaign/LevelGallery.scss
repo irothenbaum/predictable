@@ -4,6 +4,17 @@
   width: 100%;
   height: 100%;
 
+  .level-gallery-score {
+    position: absolute;
+    top: all.$spaceMedium;
+    left: all.$spaceMedium;
+    font-size: all.$fontSize1;
+    color: all.$copyColorInverse;
+
+    z-index: 1000;
+    @include all.hover-cta();
+  }
+
   .level-gallery-world {
     width: 100%;
     position: relative;

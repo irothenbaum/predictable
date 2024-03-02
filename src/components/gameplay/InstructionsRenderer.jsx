@@ -1,5 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react'
-import LevelContext from '../../contexts/LevelContext'
+import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import {
   InstructionalShape,
@@ -7,6 +6,7 @@ import {
   INSTRUCTION_HowToMoveUp,
   INSTRUCTION_AvoidingObstacles,
   INSTRUCTION_IntroducingHazards,
+  INSTRUCTION_IntroducingPlatforms,
 } from '../../lib/constants'
 import useDoOnceTimer from '../../hooks/useDoOnceTimer'
 import WelcomeTip from './instructions/WelcomeTip'
@@ -14,18 +14,20 @@ import {isSameSquare} from '../../lib/utilities'
 import HowToMoveUp from './instructions/HowToMoveUp'
 import AvoidingObstacles from './instructions/AvoidingObstacles'
 import IntroducingHazards from './instructions/IntroducingHazards'
+import IntroducingPlatforms from './instructions/IntroducingPlatforms'
+import useLevelContext from '../../hooks/useLevelContext'
 
 const InstructionMap = {
   [INSTRUCTION_WELCOME]: WelcomeTip,
   [INSTRUCTION_HowToMoveUp]: HowToMoveUp,
   [INSTRUCTION_AvoidingObstacles]: AvoidingObstacles,
   [INSTRUCTION_IntroducingHazards]: IntroducingHazards,
+  [INSTRUCTION_IntroducingPlatforms]: IntroducingPlatforms,
 }
 const INSTRUCTION_TIMER = 'instruction-timer'
 
 function InstructionsRenderer(props) {
-  const {revealingMoveIndex, playerPiece, setIsPaused} =
-    useContext(LevelContext)
+  const {revealingMoveIndex, playerPiece, setIsPaused} = useLevelContext()
   const {setTimer} = useDoOnceTimer()
   const [showingInstructionKey, setShowingInstructionKey] = useState(null)
 
