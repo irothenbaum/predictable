@@ -7,6 +7,7 @@ import {
   INSTRUCTION_AvoidingObstacles,
   INSTRUCTION_IntroducingHazards,
   INSTRUCTION_IntroducingPlatforms,
+  INSTRUCTION_AvoidingObstaclesTwo,
 } from '../../lib/constants'
 import useDoOnceTimer from '../../hooks/useDoOnceTimer'
 import WelcomeTip from './instructions/WelcomeTip'
@@ -16,11 +17,13 @@ import AvoidingObstacles from './instructions/AvoidingObstacles'
 import IntroducingHazards from './instructions/IntroducingHazards'
 import IntroducingPlatforms from './instructions/IntroducingPlatforms'
 import useLevelContext from '../../hooks/useLevelContext'
+import AvoidingObstaclesTwo from './instructions/AvoidingObstaclesTwo'
 
 const InstructionMap = {
   [INSTRUCTION_WELCOME]: WelcomeTip,
   [INSTRUCTION_HowToMoveUp]: HowToMoveUp,
   [INSTRUCTION_AvoidingObstacles]: AvoidingObstacles,
+  [INSTRUCTION_AvoidingObstaclesTwo]: AvoidingObstaclesTwo,
   [INSTRUCTION_IntroducingHazards]: IntroducingHazards,
   [INSTRUCTION_IntroducingPlatforms]: IntroducingPlatforms,
 }
@@ -37,10 +40,11 @@ function InstructionsRenderer(props) {
   }
 
   useEffect(() => {
+    console.log(props.instructions)
     // this is kind of like a use effect as instructions should only ever change on new level start
     // TODO: This only really works with 1 triggerDelayMS right now because
     //  the timer would need to pause when the game time is paused (i.e., when showing instructions)
-    if (props.instructions && props.instructions.length) {
+    if (props.instructions && props.instructions.length > 0) {
       props.instructions
         .filter(i => typeof i.triggerDelayMS === 'number')
         .forEach(i => {
@@ -50,6 +54,8 @@ function InstructionsRenderer(props) {
             i.triggerDelayMS,
           )
         })
+    } else {
+      handleChangeShowingInstructionKey(null)
     }
   }, [props.instructions])
 

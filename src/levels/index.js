@@ -112,6 +112,13 @@ function pieceDefinitionToPiece(p, coordsToPieceMap) {
     Array.isArray(coordsToPieceMap[rightCoords]) &&
     !!coordsToPieceMap[rightCoords].find(p2 => p2.type === p.type)
 
+  // these pieces have no variant and cannot move
+  if ([PieceType.Player, PieceType.Goal].includes(p.type)) {
+    delete p.variant
+    p.columnChange = 0
+    p.rowChange = 0
+  }
+
   return {
     id: uuid(),
     type: p.type,

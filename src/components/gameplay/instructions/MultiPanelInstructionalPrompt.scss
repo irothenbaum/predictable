@@ -71,6 +71,11 @@
     text-align: center;
     margin: all.$spaceMedium;
     font-size: all.$fontSize1;
+
+    & > div {
+      max-width: 5rem;
+      margin: 0 auto;
+    }
   }
 
   .green-play {

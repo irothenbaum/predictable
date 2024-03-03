@@ -23,7 +23,7 @@ function IntroducingHazards(props) {
               This is what a hazard looks like. Be careful not to run into one!
             </p>
             <div className="icon-wrapper">
-              <Hazard piece={{}} />
+              <Hazard piece={{type: null}} />
             </div>
           </div>
         )
@@ -36,7 +36,7 @@ function IntroducingHazards(props) {
               square each turn. The arrow indicates the direction it will move.
             </p>
             <div className="icon-wrapper">
-              <Hazard piece={{velocity: {columnChange: 1}}} />
+              <Hazard piece={{type: null, velocity: {columnChange: 1}}} />
             </div>
           </div>
         )

@@ -5,23 +5,10 @@ import Button from '../utility/Button'
 import Level, {LevelInner} from '../gameplay/Level'
 import SelectInput from '../utility/SelectInput'
 import {LevelDefinitionShape, PieceType, Variant} from '../../lib/constants'
-import Player from '../environment/Player'
-import Hazard from '../environment/Hazard'
-import Obstacle from '../environment/Obstacle'
-import Platform from '../environment/Platform'
-import Goal from '../environment/Goal'
+import {PieceTypeToComponent} from '../utilities'
 import {isSameSquare} from '../../lib/utilities'
 import {v4 as uuid} from 'uuid'
-import Modal from '../utility/Modal'
 import PropTypes from 'prop-types'
-
-const PieceTypeToComponent = {
-  [PieceType.Player]: Player,
-  [PieceType.Hazard]: Hazard,
-  [PieceType.Obstacle]: Obstacle,
-  [PieceType.Platform]: Platform,
-  [PieceType.Goal]: Goal,
-}
 
 const VariantLabels = {
   '': 'None',

@@ -69,7 +69,7 @@
           "row": 0,
           "column": 0,
           "rowChange": 0,
-          "columnChange": 1
+          "columnChange": 0
         },
         {
           "type": "obstacle",
@@ -120,7 +120,7 @@
           "row": 0,
           "column": 2,
           "rowChange": 0,
-          "columnChange": -1
+          "columnChange": 0
         },
         {
           "type": "hazard",
@@ -160,7 +160,7 @@
           "row": 0,
           "column": 2,
           "rowChange": 0,
-          "columnChange": -1
+          "columnChange": 0
         },
         {
           "type": "player",

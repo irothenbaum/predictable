@@ -71,8 +71,7 @@
           "row": 0,
           "column": 2,
           "rowChange": 0,
-          "columnChange": 0,
-          "variant": "left-end"
+          "columnChange": 0
         },
         {
           "type": "obstacle",
@@ -124,8 +123,7 @@
           "row": 4,
           "column": 3,
           "rowChange": 0,
-          "columnChange": 0,
-          "variant": "middle"
+          "columnChange": 0
         },
         {
           "type": "obstacle",

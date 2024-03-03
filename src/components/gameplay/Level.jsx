@@ -10,24 +10,11 @@ import {
 } from '../../lib/constants'
 import PropTypes from 'prop-types'
 import Scrollable from '../utility/Scrollable'
-
-import Player from '../environment/Player'
-import Hazard from '../environment/Hazard'
-import Obstacle from '../environment/Obstacle'
-import Platform from '../environment/Platform'
+import {PieceTypeToComponent} from '../utilities'
 import MovesInput from './MovesInput'
 import {convertRemToPixels} from '../../lib/utilities'
-import Goal from '../environment/Goal'
 import useLevelControl from '../../hooks/useLevelControl'
 import InstructionsRenderer from './InstructionsRenderer'
-
-const PieceTypeToComponent = {
-  [PieceType.Player]: Player,
-  [PieceType.Hazard]: Hazard,
-  [PieceType.Obstacle]: Obstacle,
-  [PieceType.Platform]: Platform,
-  [PieceType.Goal]: Goal,
-}
 
 /**
  * @param {Piece} piece

@@ -87,6 +87,7 @@ export const squareSizeRemScale = 5
 export const INSTRUCTION_WELCOME = 'welcome'
 export const INSTRUCTION_HowToMoveUp = 'HowToMoveUp'
 export const INSTRUCTION_AvoidingObstacles = 'AvoidingObstacles'
+export const INSTRUCTION_AvoidingObstaclesTwo = 'AvoidingObstaclesTwo'
 export const INSTRUCTION_IntroducingHazards = 'IntroducingHazards'
 export const INSTRUCTION_IntroducingPlatforms = 'IntroducingPlatforms'
 
