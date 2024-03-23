@@ -40,7 +40,6 @@ function InstructionsRenderer(props) {
   }
 
   useEffect(() => {
-    console.log(props.instructions)
     // this is kind of like a use effect as instructions should only ever change on new level start
     // TODO: This only really works with 1 triggerDelayMS right now because
     //  the timer would need to pause when the game time is paused (i.e., when showing instructions)

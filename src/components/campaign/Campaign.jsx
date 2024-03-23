@@ -137,10 +137,10 @@ function Campaign(props) {
   return (
     <CampaignContext.Provider
       value={{
-        lastCompletedLevelNum: lastCompletedLevelNum,
+        lastCompletedLevelNum: lastCompletedLevelNum + 1,
         score: score,
         solutions: solutions,
-        lastCompletedLevelKey: LevelsOrder[lastCompletedLevelNum],
+        lastCompletedLevelKey: LevelsOrder[lastCompletedLevelNum + 1],
       }}>
       {gameStatus === STATUS_GALLERY ? (
         <LevelGallery

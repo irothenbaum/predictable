@@ -29,7 +29,8 @@ function LevelGallery(props) {
     x: 0,
     y: WorldHeight - window.innerHeight,
   })
-  const {isTimerSet, setTimer} = useDoOnceTimer()
+  const [hasSelected, setHasSelected] = useState(false)
+  const {setTimer} = useDoOnceTimer()
 
   useEffect(() => {
     // start us off on the last completed level
@@ -72,9 +73,11 @@ function LevelGallery(props) {
           break
 
         case 'Enter':
+          setHasSelected(true)
           setTimer(
             SELECT_TIMER,
             () => {
+              setHasSelected(false)
               props.onSelectLevel(LevelsOrder[hoveredLevelNum])
             },
             SELECT_DELAY,
@@ -87,7 +90,6 @@ function LevelGallery(props) {
   useKeyListener(keyHandler)
   // --------------------------------------------------------
 
-  const hasSelected = isTimerSet(SELECT_TIMER)
   const effectiveLastCompletedNum =
     typeof props.transitionFromLevelNum === 'number' &&
     props.transitionFromLevelNum === lastCompletedLevelNum - 1

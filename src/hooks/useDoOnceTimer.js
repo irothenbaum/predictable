@@ -1,48 +1,46 @@
-import {useState, useRef, useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
+// this hook handles creating timers (like setTimeout) that cancel when unmounted
 function useDoOnceTimer() {
-  const [timers, setTimers] = useState({})
-  const [activeTimers, setTimerKeys] = useState([])
+  const timers = useRef({})
 
+  // when we unmount, we cancel all timers
   useEffect(() => {
-    setTimerKeys(Object.keys(timers))
-  }, [timers, setTimerKeys])
+    return () => cancelAllTimers()
+  }, [])
 
   const setTimer = (key, func, delay) => {
-    if (timers[key]) {
-      cancelTimer(key)
-    }
-
-    setTimers({
-      ...timers,
+    cancelTimer(key)
+    // create a new timer for this key
+    timers.current = {
+      ...timers.current,
       [key]: setTimeout(() => {
         cancelTimer(key)
         func()
       }, delay),
-    })
+    }
   }
 
   const cancelTimer = key => {
     if (isTimerSet(key)) {
-      clearTimeout(timers[key])
+      clearTimeout(timers.current[key])
     }
 
-    let newTimers = {...timers}
+    let newTimers = {...timers.current}
     delete newTimers[key]
-    setTimers(newTimers)
+    timers.current = newTimers
   }
 
   const cancelAllTimers = () => {
-    Object.values(timers).forEach(clearTimeout)
-    setTimers({})
+    Object.values(timers.current).forEach(clearTimeout)
+    timers.current = {}
   }
 
   const isTimerSet = key => {
-    return typeof timers[key] === 'number'
+    return typeof timers.current[key] === 'number'
   }
 
   return {
-    activeTimers,
     isTimerSet,
     setTimer,
     cancelTimer,

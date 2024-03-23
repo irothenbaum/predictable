@@ -144,13 +144,6 @@
         {
           "type": "hazard",
           "row": 3,
-          "column": 0,
-          "rowChange": 0,
-          "columnChange": -1
-        },
-        {
-          "type": "hazard",
-          "row": 3,
           "column": 3,
           "rowChange": 0,
           "columnChange": -1
@@ -189,13 +182,6 @@
           "type": "hazard",
           "row": 1,
           "column": 0,
-          "rowChange": 0,
-          "columnChange": 1
-        },
-        {
-          "type": "hazard",
-          "row": 1,
-          "column": 3,
           "rowChange": 0,
           "columnChange": 1
         }
