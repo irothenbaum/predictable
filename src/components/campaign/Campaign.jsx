@@ -22,7 +22,7 @@ const LEVEL_TRANSITION_DELAY = 1000
 function Campaign(props) {
   const [solutions, setSolutions] = useState(HydratedCampaign.solutions)
   const [lastCompletedLevelNum, setLastCompletedLevelNum] = useState(
-    HydratedCampaign.lastCompletedLevelNum || -1,
+    HydratedCampaign.lastCompletedLevelNum,
   )
   const [score, setScore] = useState(HydratedCampaign.score)
   const [gameStatus, setGameStatus] = useState(STATUS_GALLERY)
@@ -137,10 +137,10 @@ function Campaign(props) {
   return (
     <CampaignContext.Provider
       value={{
-        lastCompletedLevelNum: lastCompletedLevelNum + 1,
+        lastCompletedLevelNum: lastCompletedLevelNum,
         score: score,
         solutions: solutions,
-        lastCompletedLevelKey: LevelsOrder[lastCompletedLevelNum + 1],
+        lastCompletedLevelKey: LevelsOrder[lastCompletedLevelNum],
       }}>
       {gameStatus === STATUS_GALLERY ? (
         <LevelGallery

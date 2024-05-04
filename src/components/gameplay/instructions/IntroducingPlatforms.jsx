@@ -26,7 +26,7 @@ function IntroducingPlatforms(props) {
               each turn.
             </p>
             <div className="icon-wrapper">
-              <Platform piece={{velocity: {rowChange: 3}}} />
+              <Platform piece={{velocity: {columnChange: 3}}} />
             </div>
           </div>
         )
@@ -39,7 +39,7 @@ function IntroducingPlatforms(props) {
               edge of the map!
             </p>
             <div className="icon-wrapper">
-              <Platform piece={{velocity: {rowChange: 3}}} />
+              <Platform piece={{velocity: {columnChange: 3}}} />
             </div>
           </div>
         )

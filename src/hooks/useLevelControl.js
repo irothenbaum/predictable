@@ -76,16 +76,12 @@ function useLevelControl(options) {
       }
     }
 
-    const prevCoordinate = {...playerPiece.position}
-    let nextCoordinate = applyVelocityToCoordinate(
+    const nextCoordinate = applyVelocityToCoordinate(
       playerPiece.position,
       nextMove,
       gameBoard,
+      true,
     )
-    if (nextCoordinate._warped) {
-      // player cannot warped, keep them on their previous square
-      nextCoordinate = prevCoordinate
-    }
 
     // clone pieces so react will rerender when we setPieces
     let piecesAfterPlayerMove = [...pieces]
@@ -188,25 +184,21 @@ function useLevelControl(options) {
                   playerPiece.position,
                   normalizedVelocity,
                   gameBoard,
+                  true,
                 )
-                // can only move the player if it wasn't a warped move
-                if (!playerNextCoord._warped) {
-                  playerPiece.position = playerNextCoord
-
-                  // we temporarily set the player's velocity so the animation timing works correctly in World.jsx
-                  playerPiece.velocity = p.velocity
-                }
+                // we temporarily set the player's velocity so the animation timing works correctly in World.jsx
+                playerPiece.velocity = p.velocity
+                playerPiece.position.column = playerNextCoord.column
               }
             }
           })
 
+          const enemyStepDelay = OPPONENT_MOVE_DELAY / (bucketNumber + 1)
           // we check if there any collisions after the world pieces move
           // NOTE: we need to check all pieces in case the player was on a platform that moved into an obstacle, knocked them off into a hazard
           if (checkForHazardCollision(pieces, playerPiece)) {
-            handleLose()
-            return
+            setTimer('enemy-move-lost', handleLose, enemyStepDelay)
           }
-
           // the pieces are updated in place, so we just want to trigger a refresh
           setPieces(prevPieces => [...prevPieces])
 
@@ -221,7 +213,7 @@ function useLevelControl(options) {
                   iterationsRemaining - 1,
                 )
               },
-              OPPONENT_MOVE_DELAY / (bucketNumber + 1),
+              enemyStepDelay,
             )
           }
         }
@@ -296,13 +288,33 @@ function checkForHazardCollision(pieces, playerPiece) {
  * @param {Coordinate} coord
  * @param {Velocity} velocity
  * @param {Board} gameBoard
- * @return {Coordinate & {_warped?:boolean}}
+ * @param {boolean?} constrainToBounds
+ * @return {Coordinate & {_warped?:boolean, _oobounds?:boolean}}
  */
-function applyVelocityToCoordinate(coord, velocity, gameBoard) {
-  // both columns and rows can wrap around the board
-  const nextColumn =
-    (gameBoard.width + coord.column + velocity.columnChange) % gameBoard.width
+function applyVelocityToCoordinate(
+  coord,
+  velocity,
+  gameBoard,
+  constrainToBounds,
+) {
+  let nextColumn
+  if (constrainToBounds) {
+    // remove the out of bounds
+    const boardWidth = gameBoard.width - 2
+    // and shift the piece over 1
+    const startCol = coord.column - 1
 
+    nextColumn =
+      Math.max(0, Math.min(boardWidth - 1, startCol + velocity.columnChange)) +
+      1
+
+    console.log(coord.column, startCol, nextColumn)
+  } else {
+    nextColumn =
+      (gameBoard.width + coord.column + velocity.columnChange) % gameBoard.width
+  }
+
+  // both columns and rows can wrap around the board
   const nextRow = Math.max(
     0,
     (gameBoard.height + coord.row + velocity.rowChange) % gameBoard.height,
@@ -312,6 +324,8 @@ function applyVelocityToCoordinate(coord, velocity, gameBoard) {
     row: nextRow,
     column: nextColumn,
 
+    // we know the coord is in the out of bounds of area if the column is 0 or the column is the last column
+    _oobounds: nextColumn === 0 || nextColumn === gameBoard.width - 1,
     // we know it warped if the difference in columns is greater than the velocity
     // (this is only true if velocity < board width, which is almost certainly always true)
     _warped:
@@ -330,21 +344,17 @@ function applyPieceVelocity(piece, gameBoard) {
   if (piece.velocity) {
     // we always normalize because our pieces move in 1 square increments
     const normalizedVelocity = normalizeVelocity(piece.velocity)
-    // we do some clever +1, +2 , -1 stuff here to support warping the piece around the board
-    // basically the piece will spend 2 turns outside the play area, first on the right (col: width + 1), then on the left (col: -1)
-
     piece.position = applyVelocityToCoordinate(
       {
         row: piece.position.row,
-        column: piece.position.column + 1,
+        column: piece.position.column,
       },
       normalizedVelocity,
       {
         height: gameBoard.height,
-        width: gameBoard.width + 2,
+        width: gameBoard.width,
       },
     )
-    piece.position.column -= 1
   }
 }
 

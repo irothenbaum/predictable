@@ -2,6 +2,15 @@
 
 $pieceMoveSpeed: 0.3s;
 
+@mixin candy-cane-background($deg: 135deg, $tintColor: rgba(0,0,0,0.2)) {
+  background-image: linear-gradient($deg,
+          transparent 0, transparent 25%,
+          $tintColor 25%, $tintColor 50%,
+          transparent 50%, transparent 75%,
+          $tintColor 75%, $tintColor 100%,
+  )
+}
+
 .world {
   position: relative;
 
@@ -17,7 +26,7 @@ $pieceMoveSpeed: 0.3s;
 
   .world-event-listener {
     cursor: pointer;
-    z-index: 100;
+    z-index: 200;
   }
 
   .world-piece-container {
@@ -84,6 +93,40 @@ $pieceMoveSpeed: 0.3s;
       border: 1px solid all.$sunbeamExtraSoft;
       border-bottom: 0;
       border-left: 0;
+    }
+
+    &:last-child {
+      .out-of-bounds-overlay {
+        &:after {
+          @include candy-cane-background(45deg)
+        }
+
+        &:before {
+          background: linear-gradient(270deg, all.$black, transparent) !important;
+        }
+      }
+    }
+  }
+
+  .out-of-bounds-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+
+    &:after {
+      content: '';
+      @include all.fixed-overlay();
+      position: absolute;
+      @include candy-cane-background()
+    }
+    &:before {
+      content: '';
+      @include all.fixed-overlay();
+      position: absolute;
+      background: linear-gradient(90deg, all.$black, transparent);
     }
   }
 }

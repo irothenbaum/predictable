@@ -18,7 +18,9 @@ function Square(props) {
         black: props.isBlack,
         bounce: props.bounce,
       })}
-      style={props.style}></div>
+      style={props.style}>
+      {props.children}
+    </div>
   )
 }
 
@@ -80,8 +82,11 @@ function World(props) {
                     return (
                       <Square
                         key={`${squareKey}-square`}
-                        isBlack={(row + column) % 2 === 1}
-                      />
+                        isBlack={(row + column) % 2 === 1}>
+                        {(column === 0 || column === props.dimensionX - 1) && (
+                          <div className="out-of-bounds-overlay" />
+                        )}
+                      </Square>
                     )
                   })}
               </div>
