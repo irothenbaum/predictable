@@ -8,18 +8,32 @@ import {PieceType, Variant} from './constants'
  * @returns {Promise<LevelDefinition>}
  */
 export async function generateLevelDefinition(seed, board, difficulty) {
+  if (board.width < 3 || board.height < 1) {
+    throw new Error('Board too small')
+  }
+
   // 1: generate a deterministic random number generator from the seed
   const rand = await randomGenerator(seed)
 
   // 2: find a path through the empty board utilizing up, down, left, right, and pause
-  const path = generatePath(rand, board)
+  const path = generatePath(rand, {...board, width: board.width - 2})
+  path.map(c => c.column++)
 
   // 3: generate a list of pieces based on the path
   const pieces = createPieceDefinitionsFromPath(rand, path, board)
 
   return {
     gameBoard: board,
-    pieces: pieces,
+    pieces: pieces.concat([
+      {
+        type: PieceType.Player,
+        ...path[0],
+      },
+      {
+        type: PieceType.Goal,
+        ...path[path.length - 1],
+      },
+    ]),
     _path: path,
   }
 }
@@ -134,8 +148,8 @@ function createPieceDefinitionsFromPath(rand, path, board) {
       a[c.row] = []
     }
 
-    // position is its position in the path
-    a[c.row].push({position: i, coordinate: c})
+    // pathLocation is its position in the path
+    a[c.row].push({pathLocation: i, coordinate: c})
     return a
   }, {})
 
@@ -153,7 +167,7 @@ function createPieceDefinitionsFromPath(rand, path, board) {
             // the first step is always valid for a platform
             i === 0 ||
             // every other step must be exactly 1 position away in the path and not the same square (not a stationary move)
-            (s.position === steps[i - 1].position + 1 &&
+            (s.pathLocation === steps[i - 1].pathLocation + 1 &&
               !isSameSquare(s.coordinate, steps[i - 1].coordinate))
           )
         })
@@ -169,7 +183,8 @@ function createPieceDefinitionsFromPath(rand, path, board) {
           thisRowPieces.push(
             ...new Array(board.width).fill(null).map((_, i) => ({
               type: PieceType.Hazard,
-              position: {row: rowVal, column: i},
+              row: rowVal,
+              column: i,
               variant: Variant.Middle, // if we're filling the row with hazards, they all get middle variant
               // 0 velocity
             })),
@@ -182,18 +197,17 @@ function createPieceDefinitionsFromPath(rand, path, board) {
         thisRowPieces.push({
           type: PieceType.Platform,
           // we rewind the platforms velocity to ensure it arrives at steps[0] position at the correct time
-          position: {
-            row: rowVal,
-            column:
-              // TODO: I don't think accurately accounts for the two out-of-bounds wrapper columns
-              // or maybe it does? I'm not sure, need to test
-              (steps[0].coordinate.column +
-                board.width +
-                2 -
-                platformVelocity * steps[0].position) %
-              (board.width + 2),
-          },
-          velocity: {rowChange: 0, columnChange: platformVelocity},
+          row: rowVal,
+          column:
+            // TODO: I don't think accurately accounts for the two out-of-bounds wrapper columns
+            // or maybe it does? I'm not sure, need to test
+            (steps[0].coordinate.column +
+              board.width +
+              2 -
+              platformVelocity * steps[0].pathLocation) %
+            (board.width + 2),
+          rowChange: 0,
+          columnChange: platformVelocity,
         })
       } else if (canBeAHazardRow && oneIn(2, rand)) {
         // TODO: here we create hazards (either with velocity or not) such that they will NOT touch any of the steps

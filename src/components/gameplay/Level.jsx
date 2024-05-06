@@ -143,6 +143,8 @@ function Level(props) {
       return
     }
 
+    console.log('LEVEL DEFINITION', props.levelDefinition)
+
     setMoves([])
     setPieces(props.levelDefinition.pieces)
     setGameBoard(props.levelDefinition.gameBoard)

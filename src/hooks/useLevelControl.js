@@ -307,8 +307,6 @@ function applyVelocityToCoordinate(
     nextColumn =
       Math.max(0, Math.min(boardWidth - 1, startCol + velocity.columnChange)) +
       1
-
-    console.log(coord.column, startCol, nextColumn)
   } else {
     nextColumn =
       (gameBoard.width + coord.column + velocity.columnChange) % gameBoard.width

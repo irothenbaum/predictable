@@ -26,7 +26,7 @@ const SceneMap = {
 }
 
 function PredictableGame(props) {
-  const [scene, setScene] = useState(SCENE_CAMPAIGN)
+  const [scene, setScene] = useState(SCENE_DAILY)
 
   const Scene = SceneMap[scene]
 
