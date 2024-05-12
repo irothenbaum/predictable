@@ -6,13 +6,16 @@ import YouLostOverlay from '../campaign/YouLostOverlay'
 import Level from '../gameplay/Level'
 import {instantiateLevelPieces} from '../../levels'
 
+// This seed creates an unwinnable level with 5x5 board
+const seed = '1715550360661' // '' + Date.now()
+
 function DailyChallenge(props) {
   const [levelDefinition, setLevelDefinition] = useState(null)
   const [showResults, setShowResults] = useState(false)
 
   useEffect(() => {
-    generateLevelDefinition('test2', {width: 5, height: 5}, 1).then(res => {
-      console.log('DAILY LEVEL:', res)
+    generateLevelDefinition(seed, {width: 5, height: 5}, 1).then(res => {
+      console.log('DAILY LEVEL:', seed, res)
       setLevelDefinition({
         gameBoard: res.gameBoard,
         pieces: instantiateLevelPieces(res.pieces),

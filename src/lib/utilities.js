@@ -126,16 +126,37 @@ export function clone(obj) {
 
 /**
  * @param {number} sides // returns [0 to sides)
- * @returns {number}
- */
-export function rollDice(sides) {
-  return Math.floor(Math.random() * sides)
+ * @param {Generator?} rand
+ * @returns {number}  */
+export function rollDice(sides, rand) {
+  // if there's no rand generator we can just use random and floor
+  if (!rand) {
+    return Math.floor(Math.random() * sides) + 1
+  }
+
+  // rand.next.val() is a number between 0 and 99 so if sides is <= 100 we can just the modulo that directly
+  if (sides <= 100) {
+    return (rand.next().value % sides) + 1
+  }
+
+  // modulo numerator needs to have a chance at being > sides for modulo to feel fair
+  // i.e., if sides was 1000, and we only used values between 0 and 99 it wouldn't be a fair dice roll since 900 values would be out of play
+  // so we make sure the value has a real chance at being > sides so modulo is more fair.
+  // by concatenating two digit number strings, we can generate a number > sides
+  let neededIterations = ('' + sides).length / 2
+  let numerator = ''
+  do {
+    numerator += '' + rand.next().value
+    neededIterations--
+  } while (neededIterations > 0)
+  return (parseInt(numerator) % sides) + 1
 }
 
 /**
  * @param {number?} sides // sides === 2 would be a real coin, 3 would be 1/3 chance
+ * @param {Generator?} rand
  * @returns {boolean}
  */
-export function flipCoin(sides = 2) {
-  return rollDice(sides) === 0
+export function flipCoin(sides = 2, rand) {
+  return rollDice(sides, rand) === 1
 }

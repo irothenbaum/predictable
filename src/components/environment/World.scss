@@ -18,10 +18,18 @@ $pieceMoveSpeed: 0.3s;
     position: absolute;
     top: 0;
     left: 0;
+    padding: all.$squareSize 0;
     height: 100%;
     width: 100%;
     z-index: 10;
     overflow: hidden;
+  }
+
+  .world-pieces-container-inner {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: visible;
   }
 
   .world-event-listener {
@@ -53,6 +61,54 @@ $pieceMoveSpeed: 0.3s;
     &.velocity-4 {
       transition-duration: calc($pieceMoveSpeed / 4);
     }
+  }
+
+  $shineWidth: 3px;
+
+  .world-row-margin {
+    width: calc(100% - 2 * #{all.$squareSize});
+    margin: 0 all.$squareSize;
+    height: all.$squareSize;
+    position: relative;
+    background: linear-gradient(0deg, all.$sunbeamSoft, transparent 50%);
+    border-bottom: $shineWidth solid all.$sunbeamHard;
+
+    &.top {
+      width: 100%;
+      margin: 0;
+
+      &:before, &:after {
+        content: '';
+        top: 50%;
+        position: absolute;
+        width: 6rem;
+        height: all.$squareSize;
+        background: all.$black;
+      }
+
+      &:before {
+        left: calc(-#{all.$squareSize / 6});
+        transform: rotateZ(60deg);
+      }
+
+      &:after {
+        right: calc(-#{all.$squareSize / 6});
+        transform: rotateZ(-60deg);
+      }
+    }
+
+    &.bottom {
+      position: absolute;
+      left: 0;
+      z-index: 1000;
+      bottom: all.$squareSize;
+      background: linear-gradient(0deg, all.$sunbeamSoft, transparent 30%);
+    }
+  }
+
+  .world-grid-container {
+    width: 100%;
+    height: 100%;
   }
 
   .world-row {

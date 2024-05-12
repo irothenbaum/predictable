@@ -12,9 +12,10 @@ import PropTypes from 'prop-types'
 import Scrollable from '../utility/Scrollable'
 import {PieceTypeToComponent} from '../utilities'
 import MovesInput from './MovesInput'
-import {convertRemToPixels} from '../../lib/utilities'
+import {constructClassString, convertRemToPixels} from '../../lib/utilities'
 import useLevelControl from '../../hooks/useLevelControl'
 import InstructionsRenderer from './InstructionsRenderer'
+import useLevelContext from '../../hooks/useLevelContext'
 
 /**
  * @param {Piece} piece
@@ -37,6 +38,8 @@ export function LevelInner(props) {
   const [containerWidth, setContainerWidth] = useState(0)
   const [scrollPos, setScrollPos] = useState(undefined)
 
+  const {gameBoard, pieces, hasWonLevel} = useLevelContext()
+
   // when the starting position changes, we need to scroll to it (converting rows/columns to x/y
   useEffect(() => {
     if (props.startingPosition) {
@@ -49,7 +52,7 @@ export function LevelInner(props) {
   }, [props.startingPosition])
 
   return (
-    <div className="level">
+    <div className={constructClassString('level', {'has-won': hasWonLevel})}>
       <div
         className="world-container"
         ref={r => {
@@ -63,7 +66,6 @@ export function LevelInner(props) {
           }
         }}>
         <Scrollable
-          transitionDuration={props.transitionDuration}
           scrollPos={scrollPos}
           hideMiniMap={
             worldWidth < window.innerWidth || worldHeight < window.innerHeight
@@ -74,9 +76,9 @@ export function LevelInner(props) {
           viewWidth={containerWidth}>
           <World
             renderPiece={renderPiece}
-            pieces={props.pieces}
-            dimensionX={props.gameBoard.width}
-            dimensionY={props.gameBoard.height}
+            pieces={pieces}
+            dimensionX={gameBoard.width}
+            dimensionY={gameBoard.height}
             onRenderWorld={board => {
               setWorldWidth(board.width)
               setWorldHeight(board.height)
@@ -92,14 +94,8 @@ export function LevelInner(props) {
 
 LevelInner.propTypes = {
   startingPosition: PositionShape,
-  gameBoard: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number,
-  }),
-  pieces: World.propTypes.pieces,
   onClickSquare: World.propTypes.onClickSquare,
   onHoverSquare: World.propTypes.onHoverSquare,
-  transitionDuration: PropTypes.string,
 }
 
 // --------------------------------------------------------------------------------
@@ -113,17 +109,22 @@ function Level(props) {
   const playerPiece = pieces.find(p => p.isPlayer)
 
   // call playMoves to submit the moves
-  const {playMoves, resetLevel, isShowingMoves, revealingMoveIndex} =
-    useLevelControl({
-      onWin: props.onWin,
-      onLose: props.onLose,
-      autoPlay: props.autoPlay,
-      pieces,
-      playerPiece,
-      setPieces,
-      moves,
-      gameBoard,
-    })
+  const {
+    playMoves,
+    resetLevel,
+    isShowingMoves,
+    revealingMoveIndex,
+    hasWonLevel,
+  } = useLevelControl({
+    onWin: props.onWin,
+    onLose: props.onLose,
+    autoPlay: props.autoPlay,
+    pieces,
+    playerPiece,
+    setPieces,
+    moves,
+    gameBoard,
+  })
 
   useEffect(() => {
     if (props.autoPlay) {
@@ -160,6 +161,7 @@ function Level(props) {
         gameBoard,
         setPieces,
         playerPiece,
+        hasWonLevel,
 
         isShowingMoves,
         revealingMoveIndex,
@@ -181,11 +183,7 @@ function Level(props) {
           })
         },
       }}>
-      <LevelInner
-        gameBoard={gameBoard}
-        pieces={pieces}
-        startingPosition={playerPiece?.position}
-      />
+      <LevelInner startingPosition={playerPiece?.position} />
       <InstructionsRenderer instructions={props.levelDefinition.instructions} />
       {!props.autoPlay && !isPausedFinal && <MovesInput />}
     </LevelContext.Provider>

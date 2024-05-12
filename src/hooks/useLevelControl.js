@@ -21,8 +21,10 @@ function useLevelControl(options) {
   const [revealingMoveIndex, setRevealingMoveIndex] = useState(null)
   const {setTimer, cancelAllTimers} = useDoOnceTimer()
   const [scoreSum, setScoreSum] = useState(0)
+  const [hasWon, setHasWon] = useState(false)
 
   const handleWin = () => {
+    setHasWon(true)
     cancelAllTimers()
     setIsShowingMoves(false)
     options.onWin({
@@ -259,6 +261,7 @@ function useLevelControl(options) {
     playMoves,
     isShowingMoves,
     revealingMoveIndex,
+    hasWonLevel: hasWon,
     resetLevel: () => {
       cancelAllTimers()
       setIsShowingMoves(false)
@@ -297,26 +300,26 @@ function applyVelocityToCoordinate(
   gameBoard,
   constrainToBounds,
 ) {
+  const colChange = velocity.columnChange || 0
+  const rowChange = velocity.rowChange || 0
   let nextColumn
+  let nextRow
   if (constrainToBounds) {
-    // remove the out of bounds
+    // the height doesn't have out of bounds so we use its value directly
+    const boardHeight = gameBoard.height
+
+    // remove the out of bounds from the width
     const boardWidth = gameBoard.width - 2
     // and shift the piece over 1
     const startCol = coord.column - 1
 
-    nextColumn =
-      Math.max(0, Math.min(boardWidth - 1, startCol + velocity.columnChange)) +
-      1
+    nextColumn = Math.max(0, Math.min(boardWidth - 1, startCol + colChange)) + 1
+    nextRow = Math.max(0, Math.min(boardHeight - 1, coord.row + rowChange))
   } else {
-    nextColumn =
-      (gameBoard.width + coord.column + velocity.columnChange) % gameBoard.width
-  }
+    nextColumn = (gameBoard.width + coord.column + colChange) % gameBoard.width
 
-  // both columns and rows can wrap around the board
-  const nextRow = Math.max(
-    0,
-    (gameBoard.height + coord.row + velocity.rowChange) % gameBoard.height,
-  )
+    nextRow = (gameBoard.height + coord.row + rowChange) % gameBoard.height
+  }
 
   return {
     row: nextRow,
@@ -327,8 +330,8 @@ function applyVelocityToCoordinate(
     // we know it warped if the difference in columns is greater than the velocity
     // (this is only true if velocity < board width, which is almost certainly always true)
     _warped:
-      Math.abs(nextColumn - coord.column) > Math.abs(velocity.columnChange) ||
-      Math.abs(nextRow - coord.row) > Math.abs(velocity.rowChange),
+      Math.abs(nextColumn - coord.column) > Math.abs(colChange) ||
+      Math.abs(nextRow - coord.row) > Math.abs(rowChange),
   }
 }
 

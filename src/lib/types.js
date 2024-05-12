@@ -13,6 +13,7 @@
  * @property {Player} playerPiece
  * @property {number} score
  * @property {Board} gameBoard
+ * @property {boolean} isLevelComplete
  */
 
 /**

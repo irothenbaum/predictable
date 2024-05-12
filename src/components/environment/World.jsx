@@ -67,50 +67,60 @@ function World(props) {
       className={constructClassString('world', props.className)}
       style={{
         width: `${props.dimensionX * squareSizeRemScale}rem`,
-        height: `${props.dimensionY * squareSizeRemScale}rem`,
+        height: `${
+          (props.dimensionY + 2) /*There's 2 aesthetic rows*/ *
+          squareSizeRemScale
+        }rem`,
       }}>
       <div>
-        {Array(props.dimensionY)
-          .fill(null)
-          .map((_, row) => {
+        <div className="world-row-margin top" />
+        <div className="world-grid-container">
+          {Array(props.dimensionY)
+            .fill(null)
+            .map((_, row) => {
+              return (
+                <div key={`${row}-row`} className="world-row">
+                  {Array(props.dimensionX)
+                    .fill(null)
+                    .map((_, column) => {
+                      const squareKey = getCoordinateKey({row, column})
+                      return (
+                        <Square
+                          key={`${squareKey}-square`}
+                          isBlack={(row + column) % 2 === 1}>
+                          {(column === 0 ||
+                            column === props.dimensionX - 1) && (
+                            <div className="out-of-bounds-overlay" />
+                          )}
+                        </Square>
+                      )
+                    })}
+                </div>
+              )
+            })}
+        </div>
+        <div className="world-row-margin bottom" />
+      </div>
+      <div className="world-pieces-container">
+        <div className="world-pieces-container-inner">
+          {props.pieces.map(piece => {
             return (
-              <div key={`${row}-row`} className="world-row">
-                {Array(props.dimensionX)
-                  .fill(null)
-                  .map((_, column) => {
-                    const squareKey = getCoordinateKey({row, column})
-                    return (
-                      <Square
-                        key={`${squareKey}-square`}
-                        isBlack={(row + column) % 2 === 1}>
-                        {(column === 0 || column === props.dimensionX - 1) && (
-                          <div className="out-of-bounds-overlay" />
-                        )}
-                      </Square>
-                    )
-                  })}
+              <div
+                className={constructClassString('world-piece-container', {
+                  _warped: piece.position._warped,
+                  [`velocity-${Math.abs(piece.velocity?.columnChange || 0)}`]:
+                    piece.velocity,
+                })}
+                key={piece.id}
+                style={{
+                  top: `${piece.position.row * squareSizeRemScale}rem`,
+                  left: `${piece.position.column * squareSizeRemScale}rem`,
+                }}>
+                {props.renderPiece(piece)}
               </div>
             )
           })}
-      </div>
-      <div className="world-pieces-container">
-        {props.pieces.map(piece => {
-          return (
-            <div
-              className={constructClassString('world-piece-container', {
-                _warped: piece.position._warped,
-                [`velocity-${Math.abs(piece.velocity?.columnChange || 0)}`]:
-                  piece.velocity,
-              })}
-              key={piece.id}
-              style={{
-                top: `${piece.position.row * squareSizeRemScale}rem`,
-                left: `${piece.position.column * squareSizeRemScale}rem`,
-              }}>
-              {props.renderPiece(piece)}
-            </div>
-          )
-        })}
+        </div>
       </div>
 
       <WorldEventListener
@@ -129,6 +139,7 @@ World.propTypes = {
   onRenderWorld: PropTypes.func,
   onClickSquare: PropTypes.func,
   onHoverSquare: PropTypes.func,
+  openDoor: PropTypes.bool,
 }
 
 World.defaultProps = {

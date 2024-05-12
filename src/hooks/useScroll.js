@@ -30,7 +30,7 @@ import {useEffect, useRef, useState} from 'react'
  */
 
 const DEFAULT_OPTIONS = {
-  zoomScale: 1.1,
+  zoomScale: 1,
   minZoom: 0.25,
   maxZoom: 2,
 }
@@ -58,6 +58,7 @@ function useScroll(ref, options) {
   // update the settingsRef when the options change
   useEffect(() => {
     const newSettings = {...DEFAULT_OPTIONS, ...options}
+    console.log('SETTINGS', newSettings)
     newSettings.maxY = valOrZero(
       newSettings.contentHeight - newSettings.viewHeight,
     )
