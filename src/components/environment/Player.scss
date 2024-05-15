@@ -1,17 +1,24 @@
 @use "../../styles/all";
 
 .player {
-  height: 0;
-  width: 0;
-  opacity: 0;
-  @include all.neon(all.$playerColor, all.$playerColorLight);
-  border-radius: 50%;
-  z-index: 1000;
-  transition: all all.$transition;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  &.ready {
-    opacity: 1;
+  .player-inner {
     height: #{all.$squareSizeRemScale - 1}rem;
     width: #{all.$squareSizeRemScale - 1}rem;
+    transform: translateY(all.$squareSize);
+    @include all.neon(all.$playerColor, all.$playerColorLight);
+    border-radius: 50%;
+    z-index: 1000;
+    transition: all all.$transition;
+  }
+
+  &.ready .player-inner {
+    transform: translateY(0);
   }
 }

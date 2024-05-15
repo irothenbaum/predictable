@@ -12,7 +12,7 @@ function Scrollable(props) {
     contentHeight: props.height,
     viewHeight: props.viewHeight,
     horizontalScrollKey: 'Shift',
-    zoomKey: ' ',
+    zoomKey: 'a',
   })
 
   // whenever our scrollPos changes, we also zoom back out to 1

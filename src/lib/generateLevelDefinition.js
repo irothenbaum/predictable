@@ -60,8 +60,6 @@ function generatePath(rand, board) {
     row: i,
   }))
 
-  console.log('primordialPath', primordialPath)
-
   // next we're going to create additional coordinates to connect the dots of out primordial path
   // this will introduce twists and turns
 
@@ -128,7 +126,7 @@ function generatePath(rand, board) {
     .reduce((a, e) => a.concat(e), [])
 
   shiftedPath.reverse()
-  console.log('FINAL', shiftedPath)
+  console.log('Player Path:', shiftedPath)
   return shiftedPath
 }
 
@@ -231,7 +229,7 @@ function createPieceDefinitionsFromPath(rand, path, board) {
                 board.width,
               )
             const finishingColumn =
-              (startingColumn * hazardVelocity * steps[0].pathLocation) %
+              (startingColumn + hazardVelocity * steps[0].pathLocation) %
               board.width
             stepsAndOtherHazards.push({
               pathLocation: steps[0].pathLocation,
@@ -248,7 +246,7 @@ function createPieceDefinitionsFromPath(rand, path, board) {
               })),
             )
           } catch (err) {
-            console.log('Could not find viable starting square, skipping')
+            console.warn('Could not find viable starting square, skipping')
           }
         }
       } else if (canBeAnObstacleRow) {
@@ -259,7 +257,7 @@ function createPieceDefinitionsFromPath(rand, path, board) {
     })
     .reduce((a, e) => a.concat(e), [])
 
-  console.log('Pieces', environmentPieces)
+  console.log('GENERATED PIECES:', environmentPieces)
 
   return environmentPieces
 }
@@ -288,12 +286,12 @@ function getStartingColumnFromDestinationCoordVelocityAndBoardWidth(
   playerStepLocation,
   boardWidth,
 ) {
-  return (
+  const retVal =
     (startingCoord.column +
       boardWidth * (playerStepLocation + 2) + // this is overkill but ensures we'll never have a negative column
       velocity * playerStepLocation) %
     boardWidth
-  )
+  return retVal
 }
 
 /**
@@ -317,9 +315,9 @@ function willStartingColumnAndVelocityCollideStepCoordinate(
   // then after step the piece is now warped to the far left
 
   const preCollisionColumn =
-    (startingColumn * velocity * (stepCoord.pathLocation - 1)) % boardWidth
+    (startingColumn + velocity * (stepCoord.pathLocation - 1)) % boardWidth
   const collisionColumn =
-    (startingColumn * velocity * stepCoord.pathLocation) % boardWidth
+    (startingColumn + velocity * stepCoord.pathLocation) % boardWidth
   const preSign = Math.sign(stepCoord.coordinate.column - preCollisionColumn)
   const postSign = Math.sign(stepCoord.coordinate.column - collisionColumn)
 

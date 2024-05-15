@@ -35,6 +35,9 @@ const DEFAULT_OPTIONS = {
   maxZoom: 2,
 }
 
+// how much to change each scroll
+const zoomAmount = 0.1
+
 function valOrZero(val) {
   return val || 0
 }
@@ -58,7 +61,6 @@ function useScroll(ref, options) {
   // update the settingsRef when the options change
   useEffect(() => {
     const newSettings = {...DEFAULT_OPTIONS, ...options}
-    console.log('SETTINGS', newSettings)
     newSettings.maxY = valOrZero(
       newSettings.contentHeight - newSettings.viewHeight,
     )
@@ -109,10 +111,12 @@ function useScroll(ref, options) {
      */
     const scrollHandler = e => {
       if (isZoomRef.current) {
-        const zoomChange =
-          e.deltaY > 0
-            ? 1 / settingsRef.current.zoomScale
-            : settingsRef.current.zoomScale
+        const zoomChange = e.deltaY > 0 ? 1 - zoomAmount : 1 + zoomAmount
+        console.log(
+          isZoomRef.current,
+          settingsRef.current.zoomScale,
+          zoomChange,
+        )
         setScale(s =>
           Math.max(
             settingsRef.current.minZoom,

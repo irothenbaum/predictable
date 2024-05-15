@@ -45,7 +45,7 @@
         width: all.$spaceSmall;
         height: all.$spaceSmall;
         background-color: all.$white;
-        border-radius: all.$spaceSmall / 2;
+        border-radius: calc(#{all.$spaceSmall} / 2);
       }
       &.selected {
         opacity: 1;

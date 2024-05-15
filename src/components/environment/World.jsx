@@ -35,7 +35,8 @@ Square.propTypes = {
 function World(props) {
   useEffect(() => {
     props.onRenderWorld({
-      height: convertRemToPixels(props.dimensionY * squareSizeRemScale),
+      // + 2 for the 2 hidden margin rows
+      height: convertRemToPixels((props.dimensionY + 2) * squareSizeRemScale),
       width: convertRemToPixels(props.dimensionX * squareSizeRemScale),
     })
   }, [props.dimensionX, props.dimensionY])
