@@ -20,5 +20,10 @@
     .world-row-margin.top {
       width: 100%;
     }
+
+    .player .player-inner {
+      transition-delay: 1s;
+      transform: translateY(-120%);
+    }
   }
 }

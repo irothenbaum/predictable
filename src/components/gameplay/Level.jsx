@@ -134,7 +134,7 @@ function Level(props) {
 
   // if we ever reset our moves, we also want to reset the level control
   useEffect(() => {
-    if (!moves || moves.length === 0) {
+    if (!props.autoPlay && (!moves || moves.length === 0)) {
       resetLevel()
     }
   }, [moves])
@@ -143,8 +143,6 @@ function Level(props) {
     if (!props.levelDefinition) {
       return
     }
-
-    console.log('LEVEL DEFINITION', props.levelDefinition)
 
     setMoves([])
     setPieces(props.levelDefinition.pieces)
@@ -169,6 +167,7 @@ function Level(props) {
         setIsPaused: setIsPaused,
         playMoves: playMoves,
 
+        /** @param {Velocity} move */
         queueMove: move => {
           setMoves(m => [...m, move])
         },

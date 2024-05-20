@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import moment from 'moment/moment'
 
 /**
  * @enum {string}
@@ -48,9 +49,14 @@ export const InstructionalShape = PropTypes.shape({
   instructionKey: PropTypes.string.isRequired,
 })
 
+export const GameBoardPropType = PropTypes.shape({
+  height: PropTypes.number,
+  width: PropTypes.number,
+})
+
 export const LevelDefinitionShape = PropTypes.shape({
   pieces: PropTypes.arrayOf(PiecePropType.piece),
-  gameBoard: PropTypes.object,
+  gameBoard: GameBoardPropType,
   instructions: PropTypes.arrayOf(InstructionalShape),
 })
 
@@ -81,6 +87,20 @@ export const InstructionalTipProps = {
 // this should match the rem scale in constants.scss
 export const squareSizeRemScale = 5
 
+export const DAILY_SEED = moment().format('YYYY-MM-DD')
+export const YESTERDAY_SEED = moment().subtract(1, 'days').format('YYYY-MM-DD')
+
+export const TUTORIAL_PUZZLE_KEY = 'tutorial'
+
+/**
+ * @param {string} dailySeed
+ * @param {string} scene
+ * @returns {string}
+ */
+export function getGameSeedFromDailySeedAndScene(dailySeed, scene) {
+  return `${dailySeed}-${scene}`
+}
+
 // --------------------------------------------------------------------------------
 // INSTRUCTION KEYS
 
@@ -98,5 +118,5 @@ export const SCENE_MENU = 'menu'
 export const SCENE_SETTINGS = 'settings'
 export const SCENE_DAILY = 'daily-challenge'
 export const SCENE_BUILDER = 'builder'
-
+export const SCENE_BONUS_CHALLENGE = 'bonus-challenge'
 export const SCENE_INTRO = 'intro'

@@ -28,7 +28,8 @@ function useLevelControl(options) {
     cancelAllTimers()
     setIsShowingMoves(false)
     options.onWin({
-      moves,
+      moves: moves,
+      lastMove: revealingMoveIndex,
       score: scoreSum,
       solvedAt: new Date(),
     })
@@ -38,7 +39,8 @@ function useLevelControl(options) {
     cancelAllTimers()
     setIsShowingMoves(false)
     options.onLose({
-      moves,
+      moves: moves,
+      lastMove: revealingMoveIndex,
       score: scoreSum,
       solvedAt: new Date(),
     })
@@ -46,7 +48,10 @@ function useLevelControl(options) {
 
   // this use effect steps us through the move reveals to see if the player wins/loses
   useEffect(() => {
-    if (typeof revealingMoveIndex !== 'number' || !playerPiece) {
+    if (
+      typeof revealingMoveIndex !== 'number' ||
+      (!playerPiece && !options.autoPlay)
+    ) {
       // do nothing, we're not actually revealing yet
       cancelAllTimers()
       return
@@ -68,22 +73,20 @@ function useLevelControl(options) {
     /** @type {Velocity} */
     let nextMove = moves[revealingMoveIndex]
 
-    if (!nextMove) {
-      if (options.autoPlay) {
-        nextMove = {rowChange: 0, columnChange: 0}
-      } else {
-        console.error('No Move to calculate')
-        cancelAllTimers()
-        return
-      }
+    if (!nextMove && !options.autoPlay) {
+      console.error('No Move to calculate')
+      cancelAllTimers()
+      return
     }
 
-    const nextCoordinate = applyVelocityToCoordinate(
-      playerPiece.position,
-      nextMove,
-      gameBoard,
-      true,
-    )
+    const nextCoordinate = nextMove
+      ? applyVelocityToCoordinate(
+          playerPiece.position,
+          nextMove,
+          gameBoard,
+          true,
+        )
+      : {row: -100, column: -100}
 
     // clone pieces so react will rerender when we setPieces
     let piecesAfterPlayerMove = [...pieces]

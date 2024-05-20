@@ -59,15 +59,13 @@ $shiftAmount: 3px;
   }
 
   &.disabled {
-    background-color: all.$darkGrey;
+    @include all.neon(all.$darkGrey, all.$grey);
     cursor: not-allowed;
     button {
       cursor: not-allowed;
-      background-color: all.$grey;
-      color: all.$nearBlack;
     }
 
-    &:hover:not(.clicked), &.focused:not(.clicked), &:focus:not(.clicked) {
+    &:before {
       animation: none !important;
     }
   }

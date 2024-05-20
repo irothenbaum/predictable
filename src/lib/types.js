@@ -3,7 +3,7 @@
 
 /**
  * @typedef {Object} SettingsContextData
- * @property {boolean} hasReadRules
+ * @property {Object<string, Array<Velocity>>} solvedPuzzles
  */
 
 /**
@@ -13,7 +13,6 @@
  * @property {Player} playerPiece
  * @property {number} score
  * @property {Board} gameBoard
- * @property {boolean} isLevelComplete
  */
 
 /**

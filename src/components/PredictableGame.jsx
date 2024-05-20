@@ -3,7 +3,10 @@ import './PredictableGame.scss'
 import PropTypes from 'prop-types'
 import LevelGroupBuilder from './builder/LevelGroupBuilder'
 import Campaign from './campaign/Campaign'
-import SettingsContext, {HydratedSettings} from '../contexts/SettingsContext'
+import SettingsContext, {
+  flushSettings,
+  HydratedSettings,
+} from '../contexts/SettingsContext'
 import {
   SCENE_MENU,
   SCENE_INTRO,
@@ -26,8 +29,10 @@ const SceneMap = {
 }
 
 function PredictableGame(props) {
-  const [scene, setScene] = useState(SCENE_DAILY)
-
+  const [scene, setScene] = useState(SCENE_MENU)
+  const [solvedPuzzles, setSolvedPuzzles] = useState(
+    HydratedSettings.solvedPuzzles || {},
+  )
   const Scene = SceneMap[scene]
 
   return (
@@ -35,8 +40,12 @@ function PredictableGame(props) {
       value={{
         scene,
         goToScene: setScene,
-
-        hasReadRules: HydratedSettings.hasReadRules,
+        solvedPuzzles,
+        markSolvedPuzzle: (key, moves) => {
+          const nextSolvedPuzzles = {...solvedPuzzles, [key]: moves}
+          setSolvedPuzzles(nextSolvedPuzzles)
+          flushSettings({solvedPuzzles: nextSolvedPuzzles})
+        },
       }}>
       {Scene && <Scene />}
     </SettingsContext.Provider>

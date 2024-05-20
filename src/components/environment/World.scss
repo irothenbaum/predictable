@@ -70,7 +70,7 @@ $pieceMoveSpeed: 0.3s;
     margin: 0 all.$squareSize;
     height: all.$squareSize;
     position: relative;
-    background: linear-gradient(0deg, all.$sunbeamSoft, transparent 50%);
+    background: linear-gradient(0deg, all.$sunbeamSoft, transparent 50%) transparent;
     border-bottom: $shineWidth solid all.$sunbeamHard;
 
     &.top {
@@ -131,12 +131,6 @@ $pieceMoveSpeed: 0.3s;
 
     position: relative;
     background-color: all.$worldColor;
-
-    &:first-child {
-      &:after {
-        border-left: 1px solid all.$sunbeamExtraSoft;
-      }
-    }
 
     &:after {
       content: '';

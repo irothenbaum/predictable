@@ -1,0 +1,17 @@
+@use '../../styles/all';
+
+.daily-level-results {
+  h2 {
+    font-size: 3rem;
+    color: all.$greenColorLight;
+    text-shadow: 0 4px all.$primaryColor;
+    text-align: center;
+    margin-bottom: all.$spaceExtraLarge;
+  }
+
+  .controls {
+    @include all.flex-row();
+    margin-top: all.$spaceLarge;
+    justify-content: space-between;
+  }
+}

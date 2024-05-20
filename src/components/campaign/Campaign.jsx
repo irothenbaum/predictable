@@ -122,6 +122,10 @@ function Campaign(props) {
       lastCompletedLevelNum: nextLastCompletedLevelNum,
       lastCompletedLevelKey: LevelsOrder[nextLastCompletedLevelNum],
     })
+
+    if (nextLastCompletedLevelNum === LevelsOrder.length - 1) {
+      // if we've completed all levels, we're done
+    }
   }
 
   const handleShowNextLevel = () => {

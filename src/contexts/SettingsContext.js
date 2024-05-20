@@ -5,7 +5,7 @@ const SESSION_CACHE_KEY = 'predictable-session'
  * @type {SettingsContextData}
  */
 export const DefaultSettings = {
-  hasReadRules: false,
+  solvedPuzzles: {},
 }
 
 const [SettingsContext, HydratedSettings, flushSettings] = contextFactory(

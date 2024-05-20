@@ -158,7 +158,11 @@ function createPieceDefinitionsFromPath(rand, path, board) {
     return a
   }, {})
 
+  let mustBeHazardNext = false
+
   const environmentPieces = Object.keys(pathGrouped)
+    // reverse so we start filling out from bottom up, this ensures more hazards closer to the goal
+    .reverse()
     .map(row => {
       const rowVal = parseInt(row)
       const thisRowPieces = []
@@ -214,43 +218,75 @@ function createPieceDefinitionsFromPath(rand, path, board) {
           rowChange: 0,
           columnChange: platformVelocity,
         })
-      } else if (canBeAHazardRow && flipCoin(2, rand)) {
-        // TODO: here we create hazards (either with velocity or not) such that they will NOT touch any of the steps
+      } else if (canBeAHazardRow && (mustBeHazardNext || flipCoin(2, rand))) {
         const hazardsToMake = rollDice(board.width - steps.length, rand)
-        const stepsAndOtherHazards = [...steps]
+        const createdHazards = []
         for (let i = 0; i < hazardsToMake; i++) {
           try {
             // TODO: the velocity of each hazard could be somehow based on difficulty
             const hazardVelocity = 1
             const startingColumn =
               getStartingColumnFromCoordinatesToAvoidAndBoardWidth(
-                stepsAndOtherHazards,
+                [...steps, ...createdHazards],
                 hazardVelocity,
                 board.width,
               )
             const finishingColumn =
               (startingColumn + hazardVelocity * steps[0].pathLocation) %
               board.width
-            stepsAndOtherHazards.push({
+            createdHazards.push({
               pathLocation: steps[0].pathLocation,
               coordinate: {row: rowVal, column: finishingColumn},
             })
 
-            // fill the row with hazards
-            thisRowPieces.push(
-              ...new Array(board.width).fill(null).map((_, i) => ({
-                type: PieceType.Hazard,
-                row: rowVal,
-                column: startingColumn,
-                columnChange: hazardVelocity,
-              })),
-            )
+            // add our new hazard
+            thisRowPieces.push({
+              type: PieceType.Hazard,
+              row: rowVal,
+              column: startingColumn,
+              columnChange: hazardVelocity,
+            })
+            mustBeHazardNext = false
           } catch (err) {
-            console.warn('Could not find viable starting square, skipping')
+            // if we haven't made any hazards, we want to prioritize it
+            mustBeHazardNext = createdHazards.length === 0
+            console.warn(
+              `Could not find viable starting square for Hazard at row ${rowVal}, skipping`,
+            )
           }
         }
       } else if (canBeAnObstacleRow) {
-        // TODO: here we create obstacles that will NOT touch any of the steps
+        const obstaclesToMake = rollDice(board.width - steps.length * 2, rand)
+        const stepsAndOtherObstacles = [...steps]
+        for (let i = 0; i < obstaclesToMake; i++) {
+          try {
+            const column = getStartingColumnFromCoordinatesToAvoidAndBoardWidth(
+              stepsAndOtherObstacles,
+              0,
+              board.width,
+            )
+            stepsAndOtherObstacles.push({
+              pathLocation: 0,
+              coordinate: {row: rowVal, column: column},
+            })
+
+            // don't create obstacles in the margins, but still add it to the stepsAndOtherObstacles array so we don't try it again
+            if (column === 0 || column === board.width - 1) {
+              // we don't want obstacles on the edges
+              continue
+            }
+            // add our new obstacle
+            thisRowPieces.push({
+              type: PieceType.Obstacle,
+              row: rowVal,
+              column: column,
+            })
+          } catch (err) {
+            console.warn(
+              `Could not find viable starting square for Obstacle at row ${rowVal}, skipping`,
+            )
+          }
+        }
       }
 
       return thisRowPieces
